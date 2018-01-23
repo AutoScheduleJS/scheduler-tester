@@ -1,6 +1,6 @@
 env:
   global:
-    - CC_TEST_REPORTER_ID=42
+    - CC_TEST_REPORTER_ID=724ebdc6c967eda5dac6260e8d3fb7d91bcfe47071c23ab56d78628c74be498b
 language: node_js
 cache:
   directories:
