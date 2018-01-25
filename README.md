@@ -12,7 +12,40 @@ test queries-scheduler with provided data (queries), without requesting agents.
 Inspect payload sent to conflict-resovler or agent-relay.
 
 flow dependency:
+- queries-scheduler
+  - schedule$
+- userstate-manager
+  - queryToStatePotentials
 
 structure dependency:
+- queries-scheduler
+  - IMaterial
 
-workflow:
+features:
+- user choose to use real module or mock
+- user configure modules
+  - agent-relay & conflict-resolver
+    - response (to send if empty) or real url or prompt user
+- user create queries and initial state
+- if module prompt user, display all context.
+- display materials on timeline. Could also display potentials if potential stream is accessible.
+- idempotent: use same core-logic whether using UI or CLI
+
+core-logic actions:
+- based on FLUX
+- default to loaded state & queries
+- import suite (queries)
+- use specific userstate
+- save current suite/userstate
+- add/edit/remove query from suite
+- add/edit/remove data from collection (json editor)
+- add/edit/remove collection
+- proceed (send to scheduler)
+- step: every step : exception
+
+state:
+- suites: Queries[][]
+- userstates: { collectionName: string, data: any[] }[][]
+- stepOption: Enum { every, exception }
+- onTestbenchUserstate: { collectionName: string, data: any[] }[]
+- onTestbenchQueries: Queries[]
