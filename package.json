@@ -37,6 +37,7 @@
   "homepage": "https://github.com/AutoScheduleJS/scheduler-tester#readme",
   "dependencies": {},
   "devDependencies": {
+    "@autoschedule/queries-fn": "^3.0.0",
     "@autoschedule/queries-scheduler": "^3.0.0",
     "@semantic-release/release-notes-generator": "^6.0.3",
     "@types/ramda": "github:types/npm-ramda#dist",
