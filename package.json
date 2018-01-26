@@ -1,6 +1,6 @@
 {
   "name": "@autoschedule/scheduler-tester",
-  "version": "0.0.0-development",
+  "version": "0.0.0",
   "description": "Tool to test queries-scheduler",
   "main": "dist/index.bundle.js",
   "types": "dist/index.d.ts",
@@ -21,51 +21,24 @@
     "type": "git",
     "url": "https://github.com/AutoScheduleJS/scheduler-tester.git"
   },
-  "private": false,
-  "publishConfig": {
-    "tag": "latest",
-    "access": "public"
-  },
-  "keywords": [
-    "state",
-    "autoschedule"
-  ],
+  "private": true,
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/AutoScheduleJS/scheduler-tester/issues"
-  },
-  "homepage": "https://github.com/AutoScheduleJS/scheduler-tester#readme",
   "dependencies": {},
   "devDependencies": {
     "@autoschedule/queries-fn": "^3.0.0",
     "@autoschedule/queries-scheduler": "^3.0.0",
-    "@semantic-release/release-notes-generator": "^6.0.3",
     "@types/ramda": "github:types/npm-ramda#dist",
     "ava": "^0.24.0",
     "concurrently": "^3.5.1",
-    "cz-conventional-changelog": "^2.1.0",
     "nyc": "^11.4.1",
     "prettier": "^1.9.2",
     "ramda": "^0.25.0",
     "rxjs": "^5.5.6",
-    "semantic-release": "^12.2.4",
-    "travis-deploy-once": "^4.3.3",
     "ts-loader": "^3.3.1",
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.6.0",
     "typedoc": "^0.9.0",
     "typescript": "^2.6.2",
     "webpack": "^3.10.0"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "release": {
-    "publish": [
-      "@semantic-release/npm",
-      "@semantic-release/github"
-    ]
   }
 }
