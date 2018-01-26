@@ -41,11 +41,11 @@ core-logic actions:
 - add/edit/remove data from collection (json editor)
 - add/edit/remove collection
 - proceed (send to scheduler)
-- step: every step : exception
+- step: every ; last
 
 state:
 - suites: Queries[][]
 - userstates: { collectionName: string, data: any[] }[][]
-- stepOption: Enum { every, exception }
+- stepOption: Enum { every, last }
 - onTestbenchUserstate: { collectionName: string, data: any[] }[]
 - onTestbenchQueries: Queries[]
