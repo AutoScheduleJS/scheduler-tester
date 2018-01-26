@@ -6,9 +6,9 @@ import 'rxjs/add/observable/zip';
 
 import { ICoreState, StepOption } from './core.state';
 
-import { onTestbenchQueriesReducer$ } from './onTestbenchQueries.reducer';
-import { onTestbenchUserstateReducer$ } from './onTestbenchUserstate.reducer';
-import { stepOptionReducer$ } from './stepOption.reducer';
+import { onTestbenchQueriesReducer$ } from './on-testbench-queries.reducer';
+import { onTestbenchUserstateReducer$ } from './on-testbench-userstate.reducer';
+import { stepOptionReducer$ } from './step-option.reducer';
 import { suitesReducer$ } from './suites.reducer';
 import { userstateReducer$ } from './userstates.reducer';
 
