@@ -1,4 +1,5 @@
 lib
+.cache
 src
 tsconfig.json
 tslint.json

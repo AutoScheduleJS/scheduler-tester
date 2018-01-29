@@ -1,0 +1,7 @@
+{
+  "compact": false,
+  "presets": [
+    ["env", { "loose": true, "modules": false }]
+  ],
+  "plugins": ["transform-vue-jsx"]
+}
