@@ -9,10 +9,10 @@ import { ICoreState, StepOption } from './core.state';
 import { onTestbenchQueriesReducer$ } from './on-testbench-queries.reducer';
 import { onTestbenchUserstateReducer$ } from './on-testbench-userstate.reducer';
 import { stepOptionReducer$ } from './step-option.reducer';
-import { suitesReducer$ } from './suites.reducer';
+import { suiteActionType, suitesReducer$ } from './suites.reducer';
 import { userstateReducer$ } from './userstates.reducer';
 
-export type actionType = any;
+export type actionType = suiteActionType;
 
 export const actionTrigger$: Subject<actionType> = new Subject();
 
