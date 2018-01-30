@@ -6,32 +6,35 @@ import { scan } from 'rxjs/operators';
 import { suitesType } from './core.state';
 import { actionType } from './core.store';
 
-export interface ISuitesLoadAction {
-  type: 'suitesLoad';
-  queries: ReadonlyArray<ReadonlyArray<Q.IQuery>>;
+/* tslint:disable:no-empty max-classes-per-file */
+
+export class SuitesLoadAction {
+  constructor(public queries: ReadonlyArray<ReadonlyArray<Q.IQuery>>) {}
 }
 
-export interface ISuitesNewAction {
-  type: 'suitesNew';
+export class SuitesNewAction {
+  constructor() {}
 }
 
-export interface ISuitesQueryNewAction {
-  type: 'suitesQueryNew';
-  suite: ReadonlyArray<Q.IQuery>;
+export class SuitesQueryNewAction {
+  constructor(public suite: ReadonlyArray<Q.IQuery>) {}
 }
 
-export interface ISuitesQueryUpdateAction {
-  type: 'suitesQueryUpdate';
-  suite: ReadonlyArray<Q.IQuery>;
-  old: Q.IQuery;
-  new: Q.IQuery;
+export class SuitesQueryUpdateAction {
+  constructor(
+    public suite: ReadonlyArray<Q.IQuery>,
+    public oldQuery: Q.IQuery,
+    public newQuery: Q.IQuery
+  ) {}
 }
+
+/* tslint:enable:no-empty */
 
 export type suiteActionType =
-  | ISuitesLoadAction
-  | ISuitesQueryUpdateAction
-  | ISuitesNewAction
-  | ISuitesQueryNewAction;
+  | SuitesLoadAction
+  | SuitesQueryUpdateAction
+  | SuitesNewAction
+  | SuitesQueryNewAction;
 
 export const suitesReducer$ = (
   init: suitesType,
@@ -39,22 +42,24 @@ export const suitesReducer$ = (
 ): Observable<suitesType> => {
   return action$.pipe(
     scan((state, action: any) => {
-      switch (action.type) {
-        case 'suitesLoad':
-          return handleLoad(state, action);
-        case 'suitesNew':
-          return handleNew(state);
-        case 'suitesQueryUpdate':
-          return handleQueryUpdate(state, action);
-        case 'suitesQueryNew':
-          return handleQueryNew(state, action);
+      if (action instanceof SuitesLoadAction) {
+        return handleLoad(state, action);
+      }
+      if (action instanceof SuitesQueryUpdateAction) {
+        return handleQueryUpdate(state, action);
+      }
+      if (action instanceof SuitesNewAction) {
+        return handleNew(state);
+      }
+      if (action instanceof SuitesQueryNewAction) {
+        return handleQueryNew(state, action);
       }
       return state;
     }, init)
   );
 };
 
-const handleLoad = (state: suitesType, action: ISuitesLoadAction): suitesType => {
+const handleLoad = (state: suitesType, action: SuitesLoadAction): suitesType => {
   return [...state, ...action.queries];
 };
 
@@ -73,12 +78,12 @@ const suiteToNewQuery = (suite: ReadonlyArray<Q.IQuery>): Q.IQuery => {
   return Q.queryFactory(Q.id((lastQuery ? lastQuery.id : 0) + 1));
 };
 
-const handleQueryNew = (state: suitesType, action: ISuitesQueryNewAction): suitesType => {
+const handleQueryNew = (state: suitesType, action: SuitesQueryNewAction): suitesType => {
   return mapSpecificSuite(state, action.suite, suite => [...suite, suiteToNewQuery(suite)]);
 };
 
-const handleQueryUpdate = (state: suitesType, action: ISuitesQueryUpdateAction): suitesType => {
+const handleQueryUpdate = (state: suitesType, action: SuitesQueryUpdateAction): suitesType => {
   return mapSpecificSuite(state, action.suite, suite =>
-    suite.map(query => (query !== action.old ? query : action.new))
+    suite.map(query => (query !== action.oldQuery ? query : action.newQuery))
   );
 };
