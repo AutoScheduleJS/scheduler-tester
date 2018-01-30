@@ -24,7 +24,8 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "vue": "^2.5.13"
+    "vue": "^2.5.13",
+    "vue-rx": "^5.0.0"
   },
   "devDependencies": {
     "@autoschedule/queries-fn": "^3.0.0",
