@@ -10,11 +10,14 @@ import { SuitesLoadAction } from '../core-state/suites.reducer';
 import suiteCmp from './suite/components';
 import userstateCmp from './userstate/components';
 
+import { stStepOption } from './step-option';
+
 Vue.use(VueRx, { Observable, Subject });
 
 [
   ...suiteCmp,
   ...userstateCmp,
+  stStepOption
 ].forEach(obj => Vue.component(obj.name, obj.cmp));
 
 export default new Vue({
@@ -27,6 +30,7 @@ export default new Vue({
     const state: ICoreState = this.state;
     return (
     <div>
+      <st-step-option {...{ actionTrigger$, state: state.stepOption }} />
       <st-suite-list {...{ actionTrigger$, state: state.suites }} />
       <st-userstate-list {...{ actionTrigger$, state: state.userstates }} />
     </div>
