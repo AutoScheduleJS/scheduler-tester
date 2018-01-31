@@ -12,9 +12,10 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
       actionTrigger$: Subject<suiteActionType>;
     } = a.data as any;
     const actionTrigger$ = data.actionTrigger$;
+    const CmpName = 'st-query';
     const queryCmps = data.suite.map((query, _, suite) => (
       <div>
-        <st-query {...{ actionTrigger$, query, suite }} />
+        <CmpName {...{ actionTrigger$, query, suite }} />
       </div>
     ));
     return (

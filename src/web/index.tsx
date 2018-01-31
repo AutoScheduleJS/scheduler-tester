@@ -7,16 +7,14 @@ import { ICoreState } from '../core-state/core.state';
 import { actionTrigger$, coreState$ } from '../core-state/core.store';
 import { SuitesLoadAction } from '../core-state/suites.reducer';
 
-import { stQuery } from './suites/query';
-import { stSuiteItem } from './suites/suite-item';
-import { stSuiteList } from './suites/suite-list';
+import suiteCmp from './suite/components';
+import userstateCmp from './userstate/components';
 
 Vue.use(VueRx, { Observable, Subject });
 
 [
-  stQuery,
-  stSuiteItem,
-  stSuiteList,
+  ...suiteCmp,
+  ...userstateCmp,
 ].forEach(obj => Vue.component(obj.name, obj.cmp));
 
 export default new Vue({
@@ -27,7 +25,12 @@ export default new Vue({
   },
   render(h) {
     const state: ICoreState = this.state;
-    return <st-suite-list {...{ actionTrigger$, state: state.suites }} />;
+    return (
+    <div>
+      <st-suite-list {...{ actionTrigger$, state: state.suites }} />
+      <st-userstate-list {...{ actionTrigger$, state: state.userstates }} />
+    </div>
+    );
   },
   subscriptions() {
     return {

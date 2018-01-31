@@ -15,8 +15,8 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
     const actionTrigger$ = data.actionTrigger$;
     return (
       <div>
-        <input
-          type="text"
+        <textarea
+          rows="5"
           value={JSON.stringify(data.query)}
           onBlur={e =>
             actionTrigger$.next(
