@@ -11,7 +11,7 @@ export const onTestbenchQueriesReducer$ = (
   action$: Observable<actionType>
 ): Observable<ReadonlyArray<IQuery>> => {
   return action$.pipe(
-    scan((state, action) => {
+    scan((state, action: any) => {
       return state;
     }, init)
   );

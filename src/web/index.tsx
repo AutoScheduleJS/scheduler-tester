@@ -5,6 +5,7 @@ import VueRx from 'vue-rx';
 
 import { ICoreState } from '../core-state/core.state';
 import { actionTrigger$, coreState$ } from '../core-state/core.store';
+import { SuitesLoadAction } from '../core-state/suites.reducer';
 
 import { stQuery } from './suites/query';
 import { stSuiteItem } from './suites/suite-item';
@@ -22,7 +23,7 @@ export default new Vue({
   el: '#app',
   beforeCreate() {
     const queries = [];
-    actionTrigger$.next({ type: 'suitesLoad', queries })
+    actionTrigger$.next(new SuitesLoadAction(queries));
   },
   render(h) {
     const state: ICoreState = this.state;

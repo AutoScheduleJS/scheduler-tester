@@ -11,7 +11,7 @@ export const userstateReducer$ = (
   action$: Observable<actionType>
 ): Observable<userstatesType> => {
   return action$.pipe(
-    scan((state, action) => {
+    scan((state, action: any) => {
       return state;
     }, init)
   );

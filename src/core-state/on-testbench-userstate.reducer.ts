@@ -11,7 +11,7 @@ export const onTestbenchUserstateReducer$ = (
   action$: Observable<actionType>
 ): Observable<ReadonlyArray<IUserstateCollection>> => {
   return action$.pipe(
-    scan((state, action) => {
+    scan((state, action: any) => {
       return state;
     }, init)
   );

@@ -2,7 +2,7 @@ import { Subject } from 'rxjs/Subject';
 import { FunctionalComponentOptions, VNode, VNodeData } from 'vue';
 
 import { suitesType } from '../../core-state/core.state';
-import { suiteActionType } from '../../core-state/suites.reducer';
+import { suiteActionType, SuitesNewAction } from '../../core-state/suites.reducer';
 
 const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
   functional: true,
@@ -20,7 +20,7 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
     return (
       <div>
         {suites}
-        <button onClick={() => actionTrigger$.next({ type: 'suitesNew' })} >ADD SUITE</button>
+        <button onClick={() => actionTrigger$.next(new SuitesNewAction())} >ADD SUITE</button>
       </div>
     );
   },

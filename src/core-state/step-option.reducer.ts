@@ -10,7 +10,7 @@ export const stepOptionReducer$ = (
   action$: Observable<actionType>
 ): Observable<StepOption> => {
   return action$.pipe(
-    scan((state, action) => {
+    scan((state, action: any) => {
       return state;
     }, init)
   );
