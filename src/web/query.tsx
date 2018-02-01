@@ -9,7 +9,7 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
   render(h, a): VNode {
     const data: VNodeData & {
       suite: ReadonlyArray<IQuery>;
-      query: IQuery;
+      item: IQuery;
       actionTrigger$: Subject<suiteActionType>;
     } = a.data as any;
     const actionTrigger$ = data.actionTrigger$;
@@ -17,10 +17,10 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
       <div>
         <textarea
           rows="5"
-          value={JSON.stringify(data.query)}
+          value={JSON.stringify(data.item)}
           onBlur={e =>
             actionTrigger$.next(
-              new SuitesQueryUpdateAction(data.suite, data.query, JSON.parse(e.target.value))
+              new SuitesQueryUpdateAction(data.suite, data.item, JSON.parse(e.target.value))
             )
           }
         />

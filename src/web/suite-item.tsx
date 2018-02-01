@@ -11,15 +11,15 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
       itemCmp: string;
     } = a.data as any;
     const actionTrigger$ = data.actionTrigger$;
-    const ItemCmp = data.itemCmp;
-    const queryCmps = data.suite.map((query, _, suite) => (
+    const ItemCmpName = data.itemCmp;
+    const itemCmps = data.suite.map((item, _, suite) => (
       <div>
-        <ItemCmp {...{ actionTrigger$, query, suite }} />
+        <ItemCmpName {...{ actionTrigger$, item, suite }} />
       </div>
     ));
     return (
       <div>
-        {queryCmps}
+        {itemCmps}
         <button onClick={() => actionTrigger$.next(data.newItemFn(data.suite))} >ADD ITEM</button>
       </div>
     );
