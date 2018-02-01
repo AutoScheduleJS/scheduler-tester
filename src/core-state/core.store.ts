@@ -6,13 +6,24 @@ import 'rxjs/add/observable/zip';
 
 import { ICoreState, StepOption } from './core.state';
 
-import { onTestbenchQueriesReducer$ } from './on-testbench-queries.reducer';
-import { onTestbenchUserstateReducer$ } from './on-testbench-userstate.reducer';
-import { stepOptionReducer$ } from './step-option.reducer';
+import {
+  onTestbenchQueriesActionType,
+  onTestbenchQueriesReducer$,
+} from './on-testbench-queries.reducer';
+import {
+  onTestbenchUserstateActionType,
+  onTestbenchUserstateReducer$,
+} from './on-testbench-userstate.reducer';
+import { stepOptionActionType, stepOptionReducer$ } from './step-option.reducer';
 import { suiteActionType, suitesReducer$ } from './suites.reducer';
-import { userstateReducer$ } from './userstates.reducer';
+import { userstateActionType, userstateReducer$ } from './userstates.reducer';
 
-export type actionType = suiteActionType;
+export type actionType =
+  | suiteActionType
+  | userstateActionType
+  | stepOptionActionType
+  | onTestbenchQueriesActionType
+  | onTestbenchUserstateActionType;
 
 export const actionTrigger$: Subject<actionType> = new Subject();
 
@@ -46,6 +57,6 @@ const initialStateObj: ICoreState = {
   stepOption: StepOption.every,
   suites: [],
   userstates: [],
-}
+};
 
 export const coreState$ = stateFn(initialStateObj, actionTrigger$);

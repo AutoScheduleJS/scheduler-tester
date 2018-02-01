@@ -5,9 +5,11 @@ import { scan } from 'rxjs/operators';
 
 import { actionType } from './core.store';
 
-export class OnTestbenchUpdateAction {
+export class OnTestbenchQueriesUpdateAction {
   constructor(public newSuite: ReadonlyArray<IQuery>) {}
 }
+
+export type onTestbenchQueriesActionType = OnTestbenchQueriesUpdateAction;
 
 export const onTestbenchQueriesReducer$ = (
   init: ReadonlyArray<IQuery>,
@@ -15,7 +17,7 @@ export const onTestbenchQueriesReducer$ = (
 ): Observable<ReadonlyArray<IQuery>> => {
   return action$.pipe(
     scan((state, action: any) => {
-      if (action instanceof OnTestbenchUpdateAction) {
+      if (action instanceof OnTestbenchQueriesUpdateAction) {
         return handleUpdate(action);
       }
       return state;
@@ -23,6 +25,6 @@ export const onTestbenchQueriesReducer$ = (
   );
 };
 
-const handleUpdate = (action: OnTestbenchUpdateAction): ReadonlyArray<IQuery> => {
+const handleUpdate = (action: OnTestbenchQueriesUpdateAction): ReadonlyArray<IQuery> => {
   return action.newSuite;
-}
+};

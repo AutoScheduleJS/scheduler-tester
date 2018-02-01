@@ -9,7 +9,7 @@ export class StepoptionUpdateAction {
   constructor(public value: StepOption) {}
 }
 
-export type suiteActionType = StepoptionUpdateAction;
+export type stepOptionActionType = StepoptionUpdateAction;
 
 export const stepOptionReducer$ = (
   init: StepOption,
