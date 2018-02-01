@@ -4,8 +4,10 @@ import { Subject } from 'rxjs/Subject';
 import Vue from 'vue';
 import VueRx from 'vue-rx';
 
+import { distinctUntilChanged } from 'rxjs/operators';
+
 import { ICoreState } from '../core-state/core.state';
-import { actionTrigger$, coreState$ } from '../core-state/core.store';
+import { actionTrigger$, actionType, coreState$ } from '../core-state/core.store';
 import { OnTestbenchQueriesUpdateAction } from '../core-state/on-testbench-queries.reducer';
 import { OnTestbenchUserstateUpdateAction } from '../core-state/on-testbench-userstate.reducer';
 import {
@@ -35,10 +37,8 @@ Vue.use(VueRx, { Observable, Subject });
 export default new Vue({
   el: '#app',
   beforeCreate() {
-    const queries = [];
-    const userstates = [];
-    actionTrigger$.next(new SuitesLoadAction(queries));
-    actionTrigger$.next(new UserstateLoadAction(userstates));
+    initializeState(actionTrigger$);
+    saveState(coreState$);
   },
   render(h) {
     const state: ICoreState = this.state;
@@ -114,3 +114,27 @@ export default new Vue({
     };
   },
 });
+
+const parseJsonOr = (key: string, defaultItm: any): any => {
+  const item = localStorage.getItem(key);
+  return !item ? defaultItm : JSON.parse(item);
+}
+
+const coreStateSuitesKey = 'core-state-suites';
+const coreStateUserstatesKey = 'core-state-userstates';
+
+const initializeState = (actionTrigger: Subject<actionType>): void => {
+  const queries = parseJsonOr(coreStateSuitesKey, []);
+  const userstates = parseJsonOr(coreStateUserstatesKey, []);
+  actionTrigger.next(new SuitesLoadAction(queries));
+  actionTrigger.next(new UserstateLoadAction(userstates));
+}
+
+const saveState = (state$: Observable<ICoreState>): void => {
+  state$.pipe(distinctUntilChanged((sa: ICoreState, sb: ICoreState) => {
+    return sa.suites === sb.suites && sa.userstates === sb.userstates
+  })).subscribe(state => {
+    localStorage.setItem(coreStateSuitesKey, JSON.stringify(state.suites));
+    localStorage.setItem(coreStateUserstatesKey, JSON.stringify(state.userstates));
+  })
+}
