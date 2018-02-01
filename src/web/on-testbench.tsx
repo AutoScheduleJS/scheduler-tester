@@ -23,7 +23,7 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
     ));
     return (
       <div>
-        <div>On test bench: </div>
+        <div>{ a.slots().default }</div>
         <select>{optionCmps}</select>
       </div>
     );

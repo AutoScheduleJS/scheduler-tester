@@ -1,8 +1,8 @@
 import { Subject } from 'rxjs/Subject';
 import { FunctionalComponentOptions, VNode, VNodeData } from 'vue';
 
-import { IUserstateCollection } from '../../core-state/userstate-collection.interface';
-import { userstateActionType, UserstateCollectionUpdateAction } from '../../core-state/userstates.reducer';
+import { IUserstateCollection } from '../core-state/userstate-collection.interface';
+import { userstateActionType, UserstateCollectionUpdateAction } from '../core-state/userstates.reducer';
 
 const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
   functional: true,

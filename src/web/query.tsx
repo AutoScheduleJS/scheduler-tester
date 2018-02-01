@@ -2,7 +2,7 @@ import { IQuery } from '@autoschedule/queries-fn';
 import { Subject } from 'rxjs/Subject';
 import { FunctionalComponentOptions, VNode, VNodeData } from 'vue';
 
-import { suiteActionType, SuitesQueryUpdateAction } from '../../core-state/suites.reducer';
+import { suiteActionType, SuitesQueryUpdateAction } from '../core-state/suites.reducer';
 
 const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
   functional: true,
