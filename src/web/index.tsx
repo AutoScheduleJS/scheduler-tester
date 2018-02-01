@@ -1,3 +1,4 @@
+import { css } from 'emotion';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import Vue from 'vue';
@@ -45,47 +46,65 @@ export default new Vue({
     const actionFnUserstate = e => new OnTestbenchUserstateUpdateAction(e);
     return (
       <div>
-        <st-step-option {...{ actionTrigger$, state: state.stepOption }} />
-        <div>Queries Suites: </div>
-        <st-suite-list
-          {...{
-            actionTrigger$,
-            itemCmp: 'st-query',
-            newItemFn: e => new SuitesQueryNewAction(e),
-            newSuiteFn: () => new SuitesNewAction(),
-            state: state.suites,
-          }}
-        />
-        <div>Userstate Suites: </div>
-        <st-suite-list
-          {...{
-            actionTrigger$,
-            itemCmp: 'st-userstate',
-            newItemFn: e => new UserstateCollectionNewAction(e),
-            newSuiteFn: () => new UserstateNewAction(),
-            state: state.userstates,
-          }}
-        />
-        <st-on-testbench
-          {...{
-            actionFn: actionFnQueries,
-            actionTrigger$,
-            state: state.onTestbenchQueries,
-            suite: state.suites,
-          }}
+        <div
+          class={css`
+            display: flex;
+            flex-direction: row;
+          `}
         >
-          Queries on test bench
-        </st-on-testbench>
-        <st-on-testbench
-          {...{
-            actionFn: actionFnUserstate,
-            actionTrigger$,
-            state: state.onTestbenchUserstate,
-            suite: state.userstates,
-          }}
-        >
-          Userstate on test bench
-        </st-on-testbench>
+          <div
+            class={css`
+              flex-shrink: 1;
+            `}
+          >
+            <st-step-option {...{ actionTrigger$, state: state.stepOption }} />
+            <div>Queries Suites: </div>
+            <st-suite-list
+              {...{
+                actionTrigger$,
+                itemCmp: 'st-query',
+                newItemFn: e => new SuitesQueryNewAction(e),
+                newSuiteFn: () => new SuitesNewAction(),
+                state: state.suites,
+              }}
+            />
+            <div>Userstate Suites: </div>
+            <st-suite-list
+              {...{
+                actionTrigger$,
+                itemCmp: 'st-userstate',
+                newItemFn: e => new UserstateCollectionNewAction(e),
+                newSuiteFn: () => new UserstateNewAction(),
+                state: state.userstates,
+              }}
+            />
+            <st-on-testbench
+              {...{
+                actionFn: actionFnQueries,
+                actionTrigger$,
+                state: state.onTestbenchQueries,
+                suite: state.suites,
+              }}
+            >
+              Queries on test bench
+            </st-on-testbench>
+            <st-on-testbench
+              {...{
+                actionFn: actionFnUserstate,
+                actionTrigger$,
+                state: state.onTestbenchUserstate,
+                suite: state.userstates,
+              }}
+            >
+              Userstate on test bench
+            </st-on-testbench>
+          </div>
+          <div
+            class={css`
+              flex-grow: 1;
+            `}
+          />
+        </div>
       </div>
     );
   },

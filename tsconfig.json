@@ -6,6 +6,13 @@
       "es6",
       "dom"
     ],
+    "plugins": [{
+      "name": "typescript-styled-plugin",
+      "tags": [
+        "css",
+        "keyframes"
+      ]
+    }],
     "types": [],
     "jsx": "preserve",
     "jsxFactory": "h",
