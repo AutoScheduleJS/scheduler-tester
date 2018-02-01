@@ -11,9 +11,9 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
       state: StepOption;
       actionTrigger$: Subject<stepOptionActionType>;
     } = a.data as any;
-    const actionTrigger$ = data.actionTrigger$;
     const getRadioChecked = (type: StepOption) => (type === data.state ? { checked: true } : {});
-    const handleRadioChange = e => actionTrigger$.next(new StepoptionUpdateAction(e.target.value));
+    const handleRadioChange = e =>
+      data.actionTrigger$.next(new StepoptionUpdateAction(e.target.value));
     return (
       <div>
         <div>Step option:</div>

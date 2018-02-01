@@ -15,14 +15,13 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
       item: IUserstateCollection;
       actionTrigger$: Subject<userstateActionType>;
     } = a.data as any;
-    const actionTrigger$ = data.actionTrigger$;
     return (
       <div>
         <textarea
           rows="5"
           value={JSON.stringify(data.item)}
           onBlur={e =>
-            actionTrigger$.next(
+            data.actionTrigger$.next(
               new UserstateCollectionUpdateAction(
                 data.userstateColls,
                 data.item,

@@ -12,14 +12,13 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
       item: IQuery;
       actionTrigger$: Subject<suiteActionType>;
     } = a.data as any;
-    const actionTrigger$ = data.actionTrigger$;
     return (
       <div>
         <textarea
           rows="5"
           value={JSON.stringify(data.item)}
           onBlur={e =>
-            actionTrigger$.next(
+            data.actionTrigger$.next(
               new SuitesQueryUpdateAction(data.suite, data.item, JSON.parse(e.target.value))
             )
           }

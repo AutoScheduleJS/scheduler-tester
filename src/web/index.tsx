@@ -34,7 +34,7 @@ Vue.use(VueRx, { Observable, Subject });
   Vue.component(obj.name, obj.cmp)
 );
 
-export default new Vue({
+const vueAppObj = {
   el: '#app',
   beforeCreate() {
     initializeState(actionTrigger$);
@@ -42,21 +42,10 @@ export default new Vue({
   },
   render(h) {
     const state: ICoreState = this.state;
-    const actionFnQueries = e => new OnTestbenchQueriesUpdateAction(e);
-    const actionFnUserstate = e => new OnTestbenchUserstateUpdateAction(e);
     return (
       <div>
-        <div
-          class={css`
-            display: flex;
-            flex-direction: row;
-          `}
-        >
-          <div
-            class={css`
-              flex-shrink: 1;
-            `}
-          >
+        <div class={displayFlex}>
+          <div class={flexShrink(1)}>
             <st-step-option {...{ actionTrigger$, state: state.stepOption }} />
             <div>Queries Suites: </div>
             <st-suite-list
@@ -80,7 +69,7 @@ export default new Vue({
             />
             <st-on-testbench
               {...{
-                actionFn: actionFnQueries,
+                actionFn: e => new OnTestbenchQueriesUpdateAction(e),
                 actionTrigger$,
                 state: state.onTestbenchQueries,
                 suite: state.suites,
@@ -90,7 +79,7 @@ export default new Vue({
             </st-on-testbench>
             <st-on-testbench
               {...{
-                actionFn: actionFnUserstate,
+                actionFn: e => new OnTestbenchUserstateUpdateAction(e),
                 actionTrigger$,
                 state: state.onTestbenchUserstate,
                 suite: state.userstates,
@@ -99,11 +88,7 @@ export default new Vue({
               Userstate on test bench
             </st-on-testbench>
           </div>
-          <div
-            class={css`
-              flex-grow: 1;
-            `}
-          />
+          <div class={flexGrow(1)} />
         </div>
       </div>
     );
@@ -113,12 +98,22 @@ export default new Vue({
       state: coreState$,
     };
   },
-});
+};
+
+const displayFlex = css`
+  display: flex;
+`;
+const flexShrink = (val: number) => css`
+  flex-shrink: ${val};
+`;
+const flexGrow = (val: number) => css`
+  flex-grow: ${val};
+`;
 
 const parseJsonOr = (key: string, defaultItm: any): any => {
   const item = localStorage.getItem(key);
   return !item ? defaultItm : JSON.parse(item);
-}
+};
 
 const coreStateSuitesKey = 'core-state-suites';
 const coreStateUserstatesKey = 'core-state-userstates';
@@ -128,13 +123,19 @@ const initializeState = (actionTrigger: Subject<actionType>): void => {
   const userstates = parseJsonOr(coreStateUserstatesKey, []);
   actionTrigger.next(new SuitesLoadAction(queries));
   actionTrigger.next(new UserstateLoadAction(userstates));
-}
+};
 
 const saveState = (state$: Observable<ICoreState>): void => {
-  state$.pipe(distinctUntilChanged((sa: ICoreState, sb: ICoreState) => {
-    return sa.suites === sb.suites && sa.userstates === sb.userstates
-  })).subscribe(state => {
-    localStorage.setItem(coreStateSuitesKey, JSON.stringify(state.suites));
-    localStorage.setItem(coreStateUserstatesKey, JSON.stringify(state.userstates));
-  })
-}
+  state$
+    .pipe(
+      distinctUntilChanged((sa: ICoreState, sb: ICoreState) => {
+        return sa.suites === sb.suites && sa.userstates === sb.userstates;
+      })
+    )
+    .subscribe(state => {
+      localStorage.setItem(coreStateSuitesKey, JSON.stringify(state.suites));
+      localStorage.setItem(coreStateUserstatesKey, JSON.stringify(state.userstates));
+    });
+};
+
+export default new Vue(vueAppObj);

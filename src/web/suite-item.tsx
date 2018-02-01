@@ -7,7 +7,7 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
     const data: VNodeData & {
       suite: ReadonlyArray<any>;
       actionTrigger$: Subject<any>;
-      newItemFn: (a: any) => any,
+      newItemFn: (a: any) => any;
       itemCmp: string;
     } = a.data as any;
     const actionTrigger$ = data.actionTrigger$;
@@ -20,7 +20,7 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
     return (
       <div>
         {itemCmps}
-        <button onClick={() => actionTrigger$.next(data.newItemFn(data.suite))} >ADD ITEM</button>
+        <button onClick={() => actionTrigger$.next(data.newItemFn(data.suite))}>ADD ITEM</button>
       </div>
     );
   },
