@@ -1,25 +1,26 @@
 import { IQuery } from '@autoschedule/queries-fn';
 import { Subject } from 'rxjs/Subject';
-import { FunctionalComponentOptions, VNode, VNodeData } from 'vue';
+import { FunctionalComponentOptions, VNode } from 'vue';
 
 import { suiteActionType, SuitesQueryUpdateAction } from '../core-state/suites.reducer';
 
-const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
+interface ICmpProps {
+  suite: ReadonlyArray<IQuery>;
+  item: IQuery;
+  actionTrigger$: Subject<suiteActionType>;
+}
+
+const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
   functional: true,
   render(h, a): VNode {
-    const data: VNodeData & {
-      suite: ReadonlyArray<IQuery>;
-      item: IQuery;
-      actionTrigger$: Subject<suiteActionType>;
-    } = a.data as any;
     return (
       <div>
         <textarea
           rows="5"
-          value={JSON.stringify(data.item)}
+          value={JSON.stringify(a.props.item)}
           onBlur={e =>
-            data.actionTrigger$.next(
-              new SuitesQueryUpdateAction(data.suite, data.item, JSON.parse(e.target.value))
+            a.props.actionTrigger$.next(
+              new SuitesQueryUpdateAction(a.props.suite, a.props.item, JSON.parse(e.target.value))
             )
           }
         />

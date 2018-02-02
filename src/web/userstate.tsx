@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs/Subject';
-import { FunctionalComponentOptions, VNode, VNodeData } from 'vue';
+import { FunctionalComponentOptions, VNode } from 'vue';
 
 import { IUserstateCollection } from '../core-state/userstate-collection.interface';
 import {
@@ -7,24 +7,25 @@ import {
   UserstateCollectionUpdateAction,
 } from '../core-state/userstates.reducer';
 
-const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
+interface ICmpProps {
+  userstateColls: ReadonlyArray<IUserstateCollection>;
+  item: IUserstateCollection;
+  actionTrigger$: Subject<userstateActionType>;
+}
+
+const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
   functional: true,
   render(h, a): VNode {
-    const data: VNodeData & {
-      userstateColls: ReadonlyArray<IUserstateCollection>;
-      item: IUserstateCollection;
-      actionTrigger$: Subject<userstateActionType>;
-    } = a.data as any;
     return (
       <div>
         <textarea
           rows="5"
-          value={JSON.stringify(data.item)}
+          value={JSON.stringify(a.props.item)}
           onBlur={e =>
-            data.actionTrigger$.next(
+            a.props.actionTrigger$.next(
               new UserstateCollectionUpdateAction(
-                data.userstateColls,
-                data.item,
+                a.props.userstateColls,
+                a.props.item,
                 JSON.parse(e.target.value)
               )
             )

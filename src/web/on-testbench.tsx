@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs/Subject';
-import { FunctionalComponentOptions, VNode, VNodeData } from 'vue';
+import { CreateElement, FunctionalComponentOptions, VNode } from 'vue';
 
 import { actionType } from '../core-state/core.store';
 
@@ -10,11 +10,10 @@ interface ICmpProps {
   actionTrigger$: Subject<any>;
 }
 
-const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
+const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
   functional: true,
   render(h, a): VNode {
-    const data: VNodeData & ICmpProps = a.data as any;
-    const optionCmps = data.suite.map(suiteToOptionCmp(data));
+    const optionCmps = a.props.suite.map(suiteToOptionCmp(a.props, h));
     return (
       <div>
         <div>{a.slots().default}</div>
@@ -24,7 +23,7 @@ const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
   },
 };
 
-const suiteToOptionCmp = (data: ICmpProps) => (item: ReadonlyArray<any>, i: number) => (
+const suiteToOptionCmp = (data: ICmpProps, h: CreateElement) => (item: ReadonlyArray<any>, i: number) => (
   <option
     value={i}
     onChange={e => data.actionTrigger$.next(data.actionFn(e.target.value))}

@@ -1,28 +1,36 @@
 import { Subject } from 'rxjs/Subject';
-import { FunctionalComponentOptions, VNode, VNodeData } from 'vue';
+import { FunctionalComponentOptions, VNode } from 'vue';
 
-const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
+interface ICmpProps {
+  state: any;
+  newSuiteFn: () => any;
+  newItemFn: (a: any) => any;
+  actionTrigger$: Subject<any>;
+  itemCmp: string;
+}
+
+const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
   functional: true,
   render(h, a): VNode {
-    const data: VNodeData & {
-      state: any;
-      newSuiteFn: () => any;
-      newItemFn: (a: any) => any;
-      actionTrigger$: Subject<any>;
-      itemCmp: string;
-    } = a.data as any;
-    const actionTrigger$ = data.actionTrigger$;
-    const suites = data.state.map(suite => (
+    const actionTrigger$ = a.props.actionTrigger$;
+    const suites = a.props.state.map(suite => (
       <div>
         <st-suite-item
-          {...{ actionTrigger$, suite, newItemFn: data.newItemFn, itemCmp: data.itemCmp }}
+          {...{
+            props: {
+              actionTrigger$,
+              itemCmp: a.props.itemCmp,
+              newItemFn: a.props.newItemFn,
+              suite,
+            },
+          }}
         />
       </div>
     ));
     return (
       <div>
         {suites}
-        <button onClick={() => actionTrigger$.next(data.newSuiteFn())}>ADD SUITE</button>
+        <button onClick={() => actionTrigger$.next(a.props.newSuiteFn())}>ADD SUITE</button>
       </div>
     );
   },

@@ -50,39 +50,47 @@ const vueAppObj = {
             <div>Queries Suites: </div>
             <st-suite-list
               {...{
-                actionTrigger$,
-                itemCmp: 'st-query',
-                newItemFn: e => new SuitesQueryNewAction(e),
-                newSuiteFn: () => new SuitesNewAction(),
-                state: state.suites,
+                props: {
+                  actionTrigger$,
+                  itemCmp: 'st-query',
+                  newItemFn: e => new SuitesQueryNewAction(e),
+                  newSuiteFn: () => new SuitesNewAction(),
+                  state: state.suites,
+                },
               }}
             />
             <div>Userstate Suites: </div>
             <st-suite-list
               {...{
-                actionTrigger$,
-                itemCmp: 'st-userstate',
-                newItemFn: e => new UserstateCollectionNewAction(e),
-                newSuiteFn: () => new UserstateNewAction(),
-                state: state.userstates,
+                props: {
+                  actionTrigger$,
+                  itemCmp: 'st-userstate',
+                  newItemFn: e => new UserstateCollectionNewAction(e),
+                  newSuiteFn: () => new UserstateNewAction(),
+                  state: state.userstates,
+                },
               }}
             />
             <st-on-testbench
               {...{
-                actionFn: e => new OnTestbenchQueriesUpdateAction(e),
-                actionTrigger$,
-                state: state.onTestbenchQueries,
-                suite: state.suites,
+                props: {
+                  actionFn: e => new OnTestbenchQueriesUpdateAction(e),
+                  actionTrigger$,
+                  state: state.onTestbenchQueries,
+                  suite: state.suites,
+                },
               }}
             >
               Queries on test bench
             </st-on-testbench>
             <st-on-testbench
               {...{
-                actionFn: e => new OnTestbenchUserstateUpdateAction(e),
-                actionTrigger$,
-                state: state.onTestbenchUserstate,
-                suite: state.userstates,
+                props: {
+                  actionFn: e => new OnTestbenchUserstateUpdateAction(e),
+                  actionTrigger$,
+                  state: state.onTestbenchUserstate,
+                  suite: state.userstates,
+                },
               }}
             >
               Userstate on test bench
