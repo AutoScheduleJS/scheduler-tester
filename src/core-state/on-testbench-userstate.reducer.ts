@@ -26,5 +26,5 @@ export const onTestbenchUserstateReducer$ = (
 };
 
 const handleUpdate = (action: OnTestbenchUserstateUpdateAction): ReadonlyArray<IUserstateCollection> => {
-  return action.newSuite;
+  return action.newSuite || [];
 };

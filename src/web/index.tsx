@@ -1,4 +1,8 @@
+import { IMaterial, IPotentiality, queriesToPipelineDebug$ } from '@autoschedule/queries-scheduler';
+import { queryToStatePotentials } from '@autoschedule/userstate-manager';
+
 import { css } from 'emotion';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import Vue from 'vue';
@@ -21,6 +25,7 @@ import {
   UserstateNewAction,
 } from '../core-state/userstates.reducer';
 
+import { stDemoViewer } from './demo-viewer';
 import { stOnTestbench } from './on-testbench';
 import { stQuery } from './query';
 import { stStepOption } from './step-option';
@@ -28,17 +33,21 @@ import { stSuiteItem } from './suite-item';
 import { stSuiteList } from './suite-list';
 import { stUserstate } from './userstate';
 
-Vue.use(VueRx, { Observable, Subject });
+const test = queriesToPipelineDebug$({ endDate: 0, startDate: 100 }, true)(
+  queryToStatePotentials([])
+)([{ id: 1, kind: 1, name: 'query' }])[0] as Observable<any>;
 
-[stQuery, stUserstate, stSuiteItem, stSuiteList, stStepOption, stOnTestbench].forEach(obj =>
-  Vue.component(obj.name, obj.cmp)
+Vue.use(VueRx, { Observable, Subject, BehaviorSubject });
+
+[stQuery, stUserstate, stSuiteItem, stSuiteList, stStepOption, stOnTestbench, stDemoViewer].forEach(
+  obj => Vue.component(obj.name, obj.cmp as any)
 );
 
 const vueAppObj = {
   el: '#app',
   beforeCreate() {
     initializeState(actionTrigger$);
-    saveState(coreState$);
+    // saveState(coreState$);
   },
   render(h) {
     const state: ICoreState = this.state;
@@ -46,7 +55,7 @@ const vueAppObj = {
       <div>
         <div class={displayFlex}>
           <div class={flexShrink(1)}>
-            <st-step-option {...{ actionTrigger$, state: state.stepOption }} />
+            <st-step-option {...{ props: { actionTrigger$, state: state.stepOption } }} />
             <div>Queries Suites: </div>
             <st-suite-list
               {...{
@@ -96,7 +105,9 @@ const vueAppObj = {
               Userstate on test bench
             </st-on-testbench>
           </div>
-          <div class={flexGrow(1)} />
+          <div class={flexGrow(1)}>
+            <st-demo-viewer {...{ props: { state } }} />
+          </div>
         </div>
       </div>
     );

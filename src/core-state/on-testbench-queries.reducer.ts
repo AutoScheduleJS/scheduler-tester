@@ -26,5 +26,5 @@ export const onTestbenchQueriesReducer$ = (
 };
 
 const handleUpdate = (action: OnTestbenchQueriesUpdateAction): ReadonlyArray<IQuery> => {
-  return action.newSuite;
+  return action.newSuite || [];
 };
