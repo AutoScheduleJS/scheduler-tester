@@ -28,50 +28,40 @@ const computeSchedule = new BehaviorSubject<ICoreState>({
 const cmp = {
   props: ['state'],
   render(h): VNode {
-    // const scheduler: IScheduler = this.scheduler;
-    const errors = this.errors;
+    const scheduler: IScheduler = this.scheduler;
     const state = this.state;
     return (
       <div>
         <button onClick={() => computeSchedule.next(state)}>GET SCHEDULE</button>
-        <div>{JSON.stringify(errors)}</div>
-        {/* <div>{JSON.stringify(scheduler.potentials)}</div> */}
-        {/* <div>{JSON.stringify(scheduler.materials)}</div> */}
+        <div>{JSON.stringify(scheduler.errors)}</div>
+        <div>{JSON.stringify(scheduler.potentials)}</div>
+        <div>{JSON.stringify(scheduler.materials)}</div>
       </div>
     );
   },
   subscriptions() {
     return {
-      // scheduler: stateToScheduler(this.computeSchedule),
-      errors: (computeSchedule as Observable<ICoreState>).pipe(
-        mergeMap(
-          state =>
-            queriesToPipelineDebug$({ endDate: 100, startDate: 0 }, true)(
-              queryToStatePotentials([])
-            )([...state.onTestbenchQueries.map(o => ({ ...o }))])[0] as Observable<any>
-        )
-      ),
+      scheduler: stateToScheduler(computeSchedule),
     };
   },
 };
 
-// const stateToScheduler = (computeSignal$: Observable<ICoreState>) =>
-//   computeSignal$
-//     .pipe(
-//       switchMap(state => {
-//         console.log('call with queries: ', [...state.onTestbenchQueries.map(o => ({ ...o }))]);
-//         return Observable.combineLatest(
-//           transformWithStart(
-//             queriesToPipelineDebug$({ endDate: 0, startDate: 100 }, true)(
-//               queryToStatePotentials([])
-//             )([...state.onTestbenchQueries.map(o => ({ ...o }))])
-//           ),
-//           (errors, potentials, materials) => ({ errors, potentials, materials })
-//         );
-//       })
-//     )
-//     .pipe(startWith({ errors: null, potentials: [], materials: [] }));
+const stateToScheduler = (computeSignal$: Observable<ICoreState>) =>
+  computeSignal$
+    .pipe(
+      switchMap(state =>
+        Observable.combineLatest(
+          transformWithStart(
+            queriesToPipelineDebug$({ endDate: 100, startDate: 0 }, true)(
+              queryToStatePotentials([])
+            )([...state.onTestbenchQueries.map(o => ({ ...o }))])
+          ),
+          (errors, potentials, materials) => ({ errors, potentials, materials })
+        )
+      )
+    )
+    .pipe(startWith({ errors: null, potentials: [], materials: [] }));
 
-// const transformWithStart = (obs: ReadonlyArray<Observable<any> | undefined>) =>
-//   obs.map(ob => (ob as Observable<any>).pipe(startWith(null)));
+const transformWithStart = (obs: ReadonlyArray<Observable<any> | undefined>) =>
+  obs.map(ob => (!ob ? Observable.of(null) : (ob as Observable<any>).pipe(startWith(null))));
 export const stDemoViewer = { name: 'st-demo-viewer', cmp };
