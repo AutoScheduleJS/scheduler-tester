@@ -17,18 +17,24 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
     return (
       <div>
         <div>{a.slots().default}</div>
-        <select>{optionCmps}</select>
+        <select
+          onChange={e =>
+            a.props.actionTrigger$.next(a.props.actionFn(a.props.suite[e.target.value]))
+          }
+        >
+          <option value="empty" />
+          {optionCmps}
+        </select>
       </div>
     );
   },
 };
 
-const suiteToOptionCmp = (data: ICmpProps, h: CreateElement) => (item: ReadonlyArray<any>, i: number) => (
-  <option
-    value={i}
-    onChange={e => data.actionTrigger$.next(data.actionFn(e.target.value))}
-    {...getOptionSelected(data.state, item)}
-  >
+const suiteToOptionCmp = (data: ICmpProps, h: CreateElement) => (
+  item: ReadonlyArray<any>,
+  i: number
+) => (
+  <option value={i} {...getOptionSelected(data.state, item)}>
     SUITE LENGTH: {item.length}
   </option>
 );
