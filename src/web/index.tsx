@@ -33,10 +33,6 @@ import { stSuiteItem } from './suite-item';
 import { stSuiteList } from './suite-list';
 import { stUserstate } from './userstate';
 
-const test = queriesToPipelineDebug$({ endDate: 0, startDate: 100 }, true)(
-  queryToStatePotentials([])
-)([{ id: 1, kind: 1, name: 'query' }])[0] as Observable<any>;
-
 Vue.use(VueRx, { Observable, Subject, BehaviorSubject });
 
 [stQuery, stUserstate, stSuiteItem, stSuiteList, stStepOption, stOnTestbench, stDemoViewer].forEach(

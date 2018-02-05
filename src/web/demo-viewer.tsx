@@ -44,17 +44,12 @@ const cmp = {
     return {
       // scheduler: stateToScheduler(this.computeSchedule),
       errors: (computeSchedule as Observable<ICoreState>).pipe(
-        mergeMap(state => {
-          try {
-            console.log('test');
-            return queriesToPipelineDebug$({ endDate: 0, startDate: 100 }, true)(
+        mergeMap(
+          state =>
+            queriesToPipelineDebug$({ endDate: 100, startDate: 0 }, true)(
               queryToStatePotentials([])
-            )([...state.onTestbenchQueries.map(o => ({ ...o }))])[0] as Observable<any>;
-          } catch (e) {
-            console.log(e);
-            return Observable.of(e);
-          }
-        })
+            )([...state.onTestbenchQueries.map(o => ({ ...o }))])[0] as Observable<any>
+        )
       ),
     };
   },
