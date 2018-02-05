@@ -1,33 +1,45 @@
 import { Subject } from 'rxjs/Subject';
-import { FunctionalComponentOptions, VNode, VNodeData } from 'vue';
+import { CreateElement, FunctionalComponentOptions, VNode } from 'vue';
 
 import { actionType } from '../core-state/core.store';
 
-const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
+interface ICmpProps {
+  state: ReadonlyArray<any>;
+  suite: ReadonlyArray<ReadonlyArray<any>>;
+  actionFn: (e: ReadonlyArray<any>) => actionType;
+  actionTrigger$: Subject<any>;
+}
+
+const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
   functional: true,
   render(h, a): VNode {
-    const data: VNodeData & {
-      state: ReadonlyArray<any>;
-      suite: ReadonlyArray<ReadonlyArray<any>>;
-      actionFn: (e: ReadonlyArray<any>) => actionType;
-      actionTrigger$: Subject<any>;
-    } = a.data as any;
-    const actionTrigger$ = data.actionTrigger$;
-    const getOptionSelected = (item: ReadonlyArray<any>) =>
-      item === data.state ? { selected: true } : {};
-    const handleSelectChange = e => actionTrigger$.next(data.actionFn(e.target.value));
-    const optionCmps = data.suite.map((item, i) => (
-      <option value={i} onChange={handleSelectChange} {...getOptionSelected(item)}>
-        SUITE LENGTH: {item.length}
-      </option>
-    ));
+    const optionCmps = a.props.suite.map(suiteToOptionCmp(a.props, h));
     return (
       <div>
-        <div>On test bench: </div>
-        <select>{optionCmps}</select>
+        <div>{a.slots().default}</div>
+        <select
+          onChange={e =>
+            a.props.actionTrigger$.next(a.props.actionFn(a.props.suite[e.target.value]))
+          }
+        >
+          <option value="empty" />
+          {optionCmps}
+        </select>
       </div>
     );
   },
 };
+
+const suiteToOptionCmp = (data: ICmpProps, h: CreateElement) => (
+  item: ReadonlyArray<any>,
+  i: number
+) => (
+  <option value={i} {...getOptionSelected(data.state, item)}>
+    SUITE LENGTH: {item.length}
+  </option>
+);
+
+const getOptionSelected = (state: ReadonlyArray<any>, item: ReadonlyArray<any>) =>
+  item === state ? { selected: true } : {};
 
 export const stOnTestbench = { name: 'st-on-testbench', cmp };

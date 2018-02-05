@@ -1,25 +1,38 @@
 import { Subject } from 'rxjs/Subject';
-import { FunctionalComponentOptions, VNode, VNodeData } from 'vue';
+import { FunctionalComponentOptions, VNode } from 'vue';
 
 import { StepOption } from '../core-state/core.state';
-import { StepoptionUpdateAction, suiteActionType } from '../core-state/step-option.reducer';
+import { stepOptionActionType, StepoptionUpdateAction } from '../core-state/step-option.reducer';
 
-const cmp: FunctionalComponentOptions<Record<string, any>, string[]> = {
+interface ICmpProps {
+  state: StepOption;
+  actionTrigger$: Subject<stepOptionActionType>;
+}
+
+const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
   functional: true,
   render(h, a): VNode {
-    const data: VNodeData & {
-      state: StepOption;
-      actionTrigger$: Subject<suiteActionType>;
-    } = a.data as any;
-    const actionTrigger$ = data.actionTrigger$;
-    const getRadioChecked = (type: StepOption) => type === data.state ? { checked: true } : { };
-    const handleRadioChange = (e) => actionTrigger$.next(new StepoptionUpdateAction(e.target.value));
+    const getRadioChecked = (type: StepOption) => (type === a.props.state ? { checked: true } : {});
+    const handleRadioChange = (type: StepOption) => _ =>
+      a.props.actionTrigger$.next(new StepoptionUpdateAction(type));
     return (
       <div>
         <div>Step option:</div>
-        <input id="rd-every" type="radio" name="step-option" { ...getRadioChecked(StepOption.every) } onChange={handleRadioChange} />
+        <input
+          id="rd-every"
+          type="radio"
+          name="step-option"
+          {...getRadioChecked(StepOption.every)}
+          onChange={handleRadioChange(StepOption.every)}
+        />
         <label for="rd-every">EVERY</label>
-        <input id="rd-last" type="radio" name="step-option" { ...getRadioChecked(StepOption.last) } onChange={handleRadioChange} />
+        <input
+          id="rd-last"
+          type="radio"
+          name="step-option"
+          {...getRadioChecked(StepOption.last)}
+          onChange={handleRadioChange(StepOption.last)}
+        />
         <label for="rd-last">LAST</label>
       </div>
     );
