@@ -52,8 +52,8 @@ const stateFn = (
 };
 
 const initialStateObj: ICoreState = {
-  onTestbenchQueries: [],
-  onTestbenchUserstate: [],
+  onTestbenchQueries: -1,
+  onTestbenchUserstate: -1,
   stepOption: StepOption.every,
   suites: [],
   userstates: [],

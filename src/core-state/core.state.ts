@@ -14,6 +14,6 @@ export interface ICoreState {
   readonly suites: suitesType;
   readonly userstates: userstatesType;
   readonly stepOption: StepOption;
-  readonly onTestbenchUserstate: ReadonlyArray<IUserstateCollection>;
-  readonly onTestbenchQueries: ReadonlyArray<IQuery>;
+  readonly onTestbenchUserstate: number;
+  readonly onTestbenchQueries: number;
 }

@@ -7,9 +7,11 @@ import { VNode } from 'vue';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 
-import { mergeMap, startWith, switchMap } from 'rxjs/operators';
+import { startWith, switchMap } from 'rxjs/operators';
 
 import { ICoreState } from '../core-state/core.state';
+import { coreState$ } from '../core-state/core.store';
+import { IQuery } from '@autoschedule/queries-fn';
 
 interface IScheduler {
   errors: any;
@@ -18,21 +20,18 @@ interface IScheduler {
 }
 
 const computeSchedule = new BehaviorSubject<ICoreState>({
-  onTestbenchQueries: [],
-  onTestbenchUserstate: [],
+  onTestbenchQueries: -1,
+  onTestbenchUserstate: -1,
   stepOption: 0,
   suites: [],
   userstates: [],
 });
 
 const cmp = {
-  props: ['state'],
   render(h): VNode {
     const scheduler: IScheduler = this.scheduler;
-    const state = this.state;
     return (
       <div>
-        <button onClick={() => computeSchedule.next(state)}>GET SCHEDULE</button>
         <div>{JSON.stringify(scheduler.errors)}</div>
         <div>{JSON.stringify(scheduler.potentials)}</div>
         <div>{JSON.stringify(scheduler.materials)}</div>
@@ -41,27 +40,30 @@ const cmp = {
   },
   subscriptions() {
     return {
-      scheduler: stateToScheduler(computeSchedule),
+      scheduler: stateToScheduler(),
     };
   },
 };
 
-const stateToScheduler = (computeSignal$: Observable<ICoreState>) =>
-  computeSignal$
+const stateToScheduler = () =>
+  coreState$
     .pipe(
-      switchMap(state =>
-        Observable.combineLatest(
+      switchMap((state: ICoreState) => {
+        return Observable.combineLatest(
           transformWithStart(
             queriesToPipelineDebug$({ endDate: 100, startDate: 0 }, true)(
               queryToStatePotentials([])
-            )([...state.onTestbenchQueries.map(o => ({ ...o }))])
+            )(stateToQueries(state))
           ),
           (errors, potentials, materials) => ({ errors, potentials, materials })
-        )
-      )
+        );
+      })
     )
     .pipe(startWith({ errors: null, potentials: [], materials: [] }));
 
+const stateToQueries = (state: ICoreState): ReadonlyArray<IQuery> => [
+  ...(state.suites[state.onTestbenchQueries] || []).map(o => ({ ...o })),
+];
 const transformWithStart = (obs: ReadonlyArray<Observable<any> | undefined>) =>
   obs.map(ob => (!ob ? Observable.of(null) : (ob as Observable<any>).pipe(startWith(null))));
 export const stDemoViewer = { name: 'st-demo-viewer', cmp };

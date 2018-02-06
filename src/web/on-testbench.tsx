@@ -4,9 +4,9 @@ import { CreateElement, FunctionalComponentOptions, VNode } from 'vue';
 import { actionType } from '../core-state/core.store';
 
 interface ICmpProps {
-  state: ReadonlyArray<any>;
+  state: number;
   suite: ReadonlyArray<ReadonlyArray<any>>;
-  actionFn: (e: ReadonlyArray<any>) => actionType;
+  actionFn: (e: number) => actionType;
   actionTrigger$: Subject<any>;
 }
 
@@ -19,7 +19,7 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
         <div>{a.slots().default}</div>
         <select
           onChange={e =>
-            a.props.actionTrigger$.next(a.props.actionFn(a.props.suite[e.target.value]))
+            a.props.actionTrigger$.next(a.props.actionFn(e.target.value))
           }
         >
           <option value="empty" />
@@ -34,12 +34,12 @@ const suiteToOptionCmp = (data: ICmpProps, h: CreateElement) => (
   item: ReadonlyArray<any>,
   i: number
 ) => (
-  <option value={i} {...getOptionSelected(data.state, item)}>
+  <option value={i} {...getOptionSelected(data.state, i)}>
     SUITE LENGTH: {item.length}
   </option>
 );
 
-const getOptionSelected = (state: ReadonlyArray<any>, item: ReadonlyArray<any>) =>
-  item === state ? { selected: true } : {};
+const getOptionSelected = (state: number, itemIndex: number) =>
+  itemIndex === state ? { selected: true } : {};
 
 export const stOnTestbench = { name: 'st-on-testbench', cmp };

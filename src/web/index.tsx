@@ -1,6 +1,3 @@
-import { IMaterial, IPotentiality, queriesToPipelineDebug$ } from '@autoschedule/queries-scheduler';
-import { queryToStatePotentials } from '@autoschedule/userstate-manager';
-
 import { css } from 'emotion';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';

@@ -12,9 +12,9 @@ export class OnTestbenchUserstateUpdateAction {
 export type onTestbenchUserstateActionType = OnTestbenchUserstateUpdateAction;
 
 export const onTestbenchUserstateReducer$ = (
-  init: ReadonlyArray<IUserstateCollection>,
+  init: number,
   action$: Observable<actionType>
-): Observable<ReadonlyArray<IUserstateCollection>> => {
+): Observable<number> => {
   return action$.pipe(
     scan((state, action: any) => {
       if (action instanceof OnTestbenchUserstateUpdateAction) {

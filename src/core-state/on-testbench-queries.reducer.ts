@@ -6,15 +6,15 @@ import { scan } from 'rxjs/operators';
 import { actionType } from './core.store';
 
 export class OnTestbenchQueriesUpdateAction {
-  constructor(public newSuite: ReadonlyArray<IQuery>) {}
+  constructor(public newSuiteIndex: number) {}
 }
 
 export type onTestbenchQueriesActionType = OnTestbenchQueriesUpdateAction;
 
 export const onTestbenchQueriesReducer$ = (
-  init: ReadonlyArray<IQuery>,
+  init: number,
   action$: Observable<actionType>
-): Observable<ReadonlyArray<IQuery>> => {
+): Observable<number> => {
   return action$.pipe(
     scan((state, action: any) => {
       if (action instanceof OnTestbenchQueriesUpdateAction) {
@@ -25,6 +25,6 @@ export const onTestbenchQueriesReducer$ = (
   );
 };
 
-const handleUpdate = (action: OnTestbenchQueriesUpdateAction): ReadonlyArray<IQuery> => {
-  return action.newSuite || [];
+const handleUpdate = (action: OnTestbenchQueriesUpdateAction): number => {
+  return action.newSuiteIndex || -1;
 };
