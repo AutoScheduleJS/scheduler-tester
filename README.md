@@ -49,3 +49,11 @@ state:
 - stepOption: Enum { every, last }
 - onTestbenchUserstate: { collectionName: string, data: any[] }[]
 - onTestbenchQueries: Queries[]
+
+vuejs:
+- functional component
+- vue-rx to manage state
+- .tsx instead of .vue
+- can't access ref in functional component
+- no support for type checking when user set component's props
+- highly composable
