@@ -75,7 +75,13 @@ const mapSpecificSuite = (
 
 const suiteToNewQuery = (suite: ReadonlyArray<Q.IQuery>): Q.IQuery => {
   const lastQuery = suite[suite.length - 1];
-  return Q.queryFactory(Q.id((lastQuery ? lastQuery.id : 0) + 1));
+  return Q.queryFactory(
+    Q.id((lastQuery ? lastQuery.id : 0) + 1),
+    Q.start(1),
+    Q.end(5),
+    Q.duration(Q.timeDuration(4, 2)),
+    Q.transforms([Q.need()], [], [])
+  );
 };
 
 const handleQueryNew = (state: suitesType, action: SuitesQueryNewAction): suitesType => {
@@ -84,6 +90,6 @@ const handleQueryNew = (state: suitesType, action: SuitesQueryNewAction): suites
 
 const handleQueryUpdate = (state: suitesType, action: SuitesQueryUpdateAction): suitesType => {
   return mapSpecificSuite(state, action.suite, suite =>
-    suite.map(query => (query !== action.oldQuery ? query : action.newQuery))
+    suite.map(query => (query !== action.oldQuery ? query : Q.sanitize(action.newQuery)))
   );
 };

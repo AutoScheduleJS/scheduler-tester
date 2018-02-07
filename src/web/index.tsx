@@ -24,7 +24,7 @@ import {
 
 import { stDemoViewer } from './demo-viewer';
 import { stOnTestbench } from './on-testbench';
-import { stQuery } from './query';
+import { stQueryCmps } from './query/index';
 import { stStepOption } from './step-option';
 import { stSuiteItem } from './suite-item';
 import { stSuiteList } from './suite-list';
@@ -32,7 +32,7 @@ import { stUserstate } from './userstate';
 
 Vue.use(VueRx, { Observable, Subject, BehaviorSubject });
 
-[stQuery, stUserstate, stSuiteItem, stSuiteList, stStepOption, stOnTestbench, stDemoViewer].forEach(
+[...stQueryCmps, stUserstate, stSuiteItem, stSuiteList, stStepOption, stOnTestbench, stDemoViewer].forEach(
   obj => Vue.component(obj.name, obj.cmp as any)
 );
 
