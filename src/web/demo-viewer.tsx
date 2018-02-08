@@ -1,32 +1,43 @@
 import { IQuery } from '@autoschedule/queries-fn';
-import { IMaterial, IPotentiality, queriesToPipelineDebug$ } from '@autoschedule/queries-scheduler';
+import {
+  combineSchedulerObservables,
+  IMaterial,
+  IPotentiality,
+  queriesToPipelineDebug$,
+} from '@autoschedule/queries-scheduler';
 import { queryToStatePotentials } from '@autoschedule/userstate-manager';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { VNode } from 'vue';
 
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/of';
 
-import { startWith, switchMap, zip } from 'rxjs/operators';
+import { switchMap, zip } from 'rxjs/operators';
 
 import { ICoreState } from '../core-state/core.state';
 import { coreState$ } from '../core-state/core.store';
 
-interface IScheduler {
-  errors: any;
-  potentials: ReadonlyArray<IPotentiality>;
-  materials: ReadonlyArray<IMaterial>;
-}
+type IScheduler = [
+  any,
+  ReadonlyArray<IPotentiality>,
+  ReadonlyArray<IMaterial>,
+  ReadonlyArray<any>
+];
 
 const cmp = {
   render(h): VNode {
+    this.scheduler = this.scheduler || {};
+    Object.defineProperty(this.scheduler, 'nested', { configurable: false });
     const scheduler: IScheduler = this.scheduler;
     return (
       <div>
-        <div>{JSON.stringify(scheduler.errors)}</div>
-        <div>{JSON.stringify(scheduler.potentials)}</div>
-        <div>{JSON.stringify(scheduler.materials)}</div>
+        <div>{JSON.stringify(scheduler[0] || {})}</div>
+        <div>{JSON.stringify(scheduler[1] || [])}</div>
+        <div>{JSON.stringify(scheduler[2] || [])}</div>
+        <div>{JSON.stringify(scheduler[3] || [])}</div>
+        <button onClick={() => nextState$.next()}>NEXT</button>
       </div>
     );
   },
@@ -37,30 +48,28 @@ const cmp = {
   },
 };
 
+const nextState$ = new Subject<never>();
+
+/* tslint:disable:no-object-literal-type-assertion */
+
 const stateToScheduler = () =>
   coreState$.pipe(
     switchMap((state: ICoreState) => {
-      console.log('new state !', state);
-      return Observable.interval(1200).pipe(
+      const [er, pots, mats, press] = queriesToPipelineDebug$({ endDate: 100, startDate: 0 }, true)(
+        queryToStatePotentials([])
+      )(stateToQueries(state));
+      return nextState$.pipe(
         zip(
-          Observable.combineLatest(
-            transformWithStart(
-              queriesToPipelineDebug$({ endDate: 100, startDate: 0 }, true)(
-                queryToStatePotentials([])
-              )(stateToQueries(state))
-            ),
-            (errors, potentials, materials) => ({ errors, potentials, materials })
-          ),
+          combineSchedulerObservables(er as Observable<any>, pots, mats, press),
           (_, schedule) => schedule
         )
       );
-    }),
-    startWith({ errors: null, potentials: [], materials: [] })
+    })
   );
+/* tslint:enable:no-object-literal-type-assertion */
 
 const stateToQueries = (state: ICoreState): ReadonlyArray<IQuery> => [
   ...(state.suites[state.onTestbenchQueries] || []).map(o => ({ ...o })),
 ];
-const transformWithStart = (obs: ReadonlyArray<Observable<any> | undefined>) =>
-  obs.map(ob => (!ob ? Observable.of(null) : (ob as Observable<any>).pipe(startWith(null))));
+
 export const stDemoViewer = { name: 'st-demo-viewer', cmp };
