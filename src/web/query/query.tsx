@@ -2,7 +2,11 @@ import { IAtomicQuery, IGoalQuery, ITimeBoundary, ITimeDuration } from '@autosch
 import { Subject } from 'rxjs/Subject';
 import { FunctionalComponentOptions, VNode } from 'vue';
 
-import { suiteActionType, SuitesQueryUpdateAction } from '../../core-state/suites.reducer';
+import {
+  suiteActionType,
+  SuitesQueryDeleteAction,
+  SuitesQueryUpdateAction,
+} from '../../core-state/suites.reducer';
 
 type wholeQuery = IAtomicQuery & IGoalQuery;
 
@@ -24,6 +28,11 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
           value={JSON.stringify(q)}
           onBlur={e => updateFn(JSON.parse(e.target.value))}
         />
+        <button
+          onClick={() => a.props.actionTrigger$.next(new SuitesQueryDeleteAction(a.props.suite, q))}
+        >
+          DELETE
+        </button>
         <st-time-boundary
           {...{
             props: {

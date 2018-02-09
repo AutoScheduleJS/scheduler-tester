@@ -28,13 +28,21 @@ export class SuitesQueryUpdateAction {
   ) {}
 }
 
+export class SuitesQueryDeleteAction {
+  constructor(
+    public suite: ReadonlyArray<Q.IQuery>,
+    public oldQuery: Q.IQuery
+  ) {}
+}
+
 /* tslint:enable:no-empty */
 
 export type suiteActionType =
   | SuitesLoadAction
-  | SuitesQueryUpdateAction
   | SuitesNewAction
-  | SuitesQueryNewAction;
+  | SuitesQueryNewAction
+  | SuitesQueryUpdateAction
+  | SuitesQueryDeleteAction;
 
 export const suitesReducer$ = (
   init: suitesType,
@@ -53,6 +61,9 @@ export const suitesReducer$ = (
       }
       if (action instanceof SuitesQueryNewAction) {
         return handleQueryNew(state, action);
+      }
+      if (action instanceof SuitesQueryDeleteAction) {
+        return handleQueryDelete(state, action);
       }
       return state;
     }, init)
@@ -86,6 +97,10 @@ const suiteToNewQuery = (suite: ReadonlyArray<Q.IQuery>): Q.IQuery => {
 
 const handleQueryNew = (state: suitesType, action: SuitesQueryNewAction): suitesType => {
   return mapSpecificSuite(state, action.suite, suite => [...suite, suiteToNewQuery(suite)]);
+};
+
+const handleQueryDelete = (state: suitesType, action: SuitesQueryDeleteAction): suitesType => {
+  return mapSpecificSuite(state, action.suite, suite => suite.filter(q => q !== action.oldQuery));
 };
 
 const handleQueryUpdate = (state: suitesType, action: SuitesQueryUpdateAction): suitesType => {
