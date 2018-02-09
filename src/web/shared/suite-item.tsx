@@ -6,6 +6,7 @@ interface ICmpProps {
   actionTrigger$: Subject<any>;
   newItemFn: (a: any) => any;
   itemCmp: string;
+  extraProps: any | undefined;
 }
 
 const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
@@ -15,7 +16,9 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
     const ItemCmpName = a.props.itemCmp;
     const itemCmps = a.props.suite.map((item, _, suite) => (
       <div>
-        <ItemCmpName {...{ props: { actionTrigger$, item, suite } }} />
+        <ItemCmpName
+          {...{ props: { actionTrigger$, item, suite, ...(a.props.extraProps || {}) } }}
+        />
       </div>
     ));
     return (

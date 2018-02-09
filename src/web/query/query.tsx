@@ -1,4 +1,4 @@
-import { IAtomicQuery, IGoalQuery, ITimeBoundary, ITimeDuration } from '@autoschedule/queries-fn';
+import { ITimeBoundary, ITimeDuration } from '@autoschedule/queries-fn';
 import { Subject } from 'rxjs/Subject';
 import { FunctionalComponentOptions, VNode } from 'vue';
 
@@ -8,7 +8,8 @@ import {
   SuitesQueryUpdateAction,
 } from '../../core-state/suites.reducer';
 
-type wholeQuery = IAtomicQuery & IGoalQuery;
+import { defaultNeed } from './transform-need';
+import { pushTransform, wholeQuery } from './util';
 
 interface ICmpProps {
   suite: ReadonlyArray<wholeQuery>;
@@ -20,7 +21,9 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
   functional: true,
   render(h, a): VNode {
     const q = a.props.item;
+    const actionTrigger$ = a.props.actionTrigger$;
     const updateFn = updateAction(a.props);
+    const transforms = q.transforms;
     return (
       <div>
         <textarea
@@ -28,9 +31,7 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
           value={JSON.stringify(q)}
           onBlur={e => updateFn(JSON.parse(e.target.value))}
         />
-        <button
-          onClick={() => a.props.actionTrigger$.next(new SuitesQueryDeleteAction(a.props.suite, q))}
-        >
+        <button onClick={() => actionTrigger$.next(new SuitesQueryDeleteAction(a.props.suite, q))}>
           DELETE
         </button>
         <st-time-boundary
@@ -63,6 +64,19 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
         >
           duration
         </st-time-duration>
+        <st-suite-item
+          {...{
+            props: {
+              actionTrigger$,
+              extraProps: { query: q, qSuite: a.props.suite },
+              itemCmp: 'st-transform-need',
+              newItemFn: _ => updateFn(pushTransform(q, 'needs', { ...defaultNeed })),
+              suite: transforms ? transforms.needs : [],
+            },
+          }}
+        >
+          add need
+        </st-suite-item>
       </div>
     );
   },

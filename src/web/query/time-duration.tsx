@@ -11,7 +11,6 @@ interface ICmpProps {
 const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
   functional: true,
   render(h, a): VNode {
-    const defaultValue: ITimeDuration = { min: 1, target: 1 };
     return (
       <div>
         <div>{a.slots().default}</div>
@@ -20,10 +19,12 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
           value={JSON.stringify(a.props.timeDuration)}
           onBlur={e => a.props.actionFn(parseValue(e.target.value))}
         />
-        <button onClick={() => a.props.actionFn(defaultValue)}>default</button>
+        <button onClick={() => a.props.actionFn({...defaultValue})}>default</button>
       </div>
     );
   },
 };
+
+const defaultValue: ITimeDuration = { min: 1, target: 1 };
 
 export const stTimeDuration = { name: 'st-time-duration', cmp };

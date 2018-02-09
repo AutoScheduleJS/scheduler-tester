@@ -1,4 +1,3 @@
-import { IQuery } from '@autoschedule/queries-fn';
 import { Observable } from 'rxjs/Observable';
 
 import { scan } from 'rxjs/operators';
