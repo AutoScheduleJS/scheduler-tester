@@ -11,20 +11,16 @@ import { Subject } from 'rxjs/Subject';
 import { VNode } from 'vue';
 
 import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/of';
 
 import { switchMap, zip } from 'rxjs/operators';
 
-import { ICoreState } from '../core-state/core.state';
+import { ICoreState, StepOption } from '../core-state/core.state';
 import { coreState$ } from '../core-state/core.store';
 
-type IScheduler = [
-  any,
-  ReadonlyArray<IPotentiality>,
-  ReadonlyArray<IMaterial>,
-  ReadonlyArray<any>
-];
+type IScheduler = [any, ReadonlyArray<IPotentiality>, ReadonlyArray<IMaterial>, ReadonlyArray<any>];
 
 const cmp = {
   render(h): VNode {
@@ -58,12 +54,12 @@ const stateToScheduler = () =>
       const [er, pots, mats, press] = queriesToPipelineDebug$({ endDate: 100, startDate: 0 }, true)(
         queryToStatePotentials([])
       )(stateToQueries(state));
-      return nextState$.pipe(
-        zip(
-          combineSchedulerObservables(er as Observable<any>, pots, mats, press),
-          (_, schedule) => schedule
-        )
-      );
+      const err$: Observable<any> = er as Observable<any>;
+      return state.stepOption === StepOption.every
+        ? nextState$.pipe(
+            zip(combineSchedulerObservables(err$, pots, mats, press), (_, schedule) => schedule)
+          )
+        : Observable.forkJoin(err$, pots, mats, press);
     })
   );
 /* tslint:enable:no-object-literal-type-assertion */
