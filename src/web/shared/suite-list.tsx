@@ -7,6 +7,7 @@ interface ICmpProps {
   newItemFn: (a: any) => any;
   actionTrigger$: Subject<any>;
   itemCmp: string;
+  addLabel: string;
 }
 
 const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
@@ -24,13 +25,17 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
               suite,
             },
           }}
-        />
+        >
+          {a.props.addLabel || 'ADD ITEM'}
+        </st-suite-item>
       </div>
     ));
     return (
       <div>
         {suites}
-        <button onClick={() => actionTrigger$.next(a.props.newSuiteFn())}>ADD SUITE</button>
+        <button onClick={() => actionTrigger$.next(a.props.newSuiteFn())}>
+          {a.slots().default}
+        </button>
       </div>
     );
   },

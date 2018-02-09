@@ -22,7 +22,7 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
       <div>
         {itemCmps}
         <button onClick={() => actionTrigger$.next(a.props.newItemFn(a.props.suite))}>
-          ADD ITEM
+          {a.slots().default}
         </button>
       </div>
     );

@@ -25,14 +25,13 @@ import {
 import { stDemoViewer } from './demo-viewer';
 import { stOnTestbench } from './on-testbench';
 import { stQueryCmps } from './query/index';
+import { stSharedCmps } from './shared/index';
 import { stStepOption } from './step-option';
-import { stSuiteItem } from './suite-item';
-import { stSuiteList } from './suite-list';
 import { stUserstate } from './userstate';
 
 Vue.use(VueRx, { Observable, Subject, BehaviorSubject });
 
-[...stQueryCmps, stUserstate, stSuiteItem, stSuiteList, stStepOption, stOnTestbench, stDemoViewer].forEach(
+[...stSharedCmps, ...stQueryCmps, stUserstate, stStepOption, stOnTestbench, stDemoViewer].forEach(
   obj => Vue.component(obj.name, obj.cmp as any)
 );
 
@@ -54,25 +53,31 @@ const vueAppObj = {
               {...{
                 props: {
                   actionTrigger$,
+                  addLabel: 'ADD QUERY',
                   itemCmp: 'st-query',
                   newItemFn: e => new SuitesQueryNewAction(e),
                   newSuiteFn: () => new SuitesNewAction(),
                   state: state.suites,
                 },
               }}
-            />
+            >
+              ADD QUERIES SUITE
+            </st-suite-list>
             <div>Userstate Suites: </div>
             <st-suite-list
               {...{
                 props: {
                   actionTrigger$,
+                  addLabel: 'ADD USERSTATE',
                   itemCmp: 'st-userstate',
                   newItemFn: e => new UserstateCollectionNewAction(e),
                   newSuiteFn: () => new UserstateNewAction(),
                   state: state.userstates,
                 },
               }}
-            />
+            >
+              ADD USERSTATE SUITE
+            </st-suite-list>
             <st-on-testbench
               {...{
                 props: {
