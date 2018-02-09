@@ -12,7 +12,7 @@ interface ICmpProps {
 const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
   functional: true,
   render(h, a): VNode {
-    const getRadioChecked = (type: StepOption) => (type === a.props.state ? { checked: true } : {});
+    const getRadioChecked = (type: StepOption) => (type === a.props.state ? true : false);
     const handleRadioChange = (type: StepOption) => _ =>
       a.props.actionTrigger$.next(new StepoptionUpdateAction(type));
     return (
@@ -22,7 +22,7 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
           id="rd-every"
           type="radio"
           name="step-option"
-          {...getRadioChecked(StepOption.every)}
+          checked={getRadioChecked(StepOption.every)}
           onChange={handleRadioChange(StepOption.every)}
         />
         <label for="rd-every">EVERY</label>
@@ -30,7 +30,7 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
           id="rd-last"
           type="radio"
           name="step-option"
-          {...getRadioChecked(StepOption.last)}
+          checked={getRadioChecked(StepOption.last)}
           onChange={handleRadioChange(StepOption.last)}
         />
         <label for="rd-last">LAST</label>
