@@ -9,7 +9,7 @@ export const pushTransform = (
 ): wholeQuery => {
   const transforms = q.transforms || { needs: [], deletes: [], updates: [], inserts: [] };
   const newTransform = [...transforms[kind], transform];
-  return { ...q, transforms: { ...transform, [kind]: newTransform } };
+  return { ...q, transforms: { ...transforms, [kind]: newTransform } };
 };
 
 export const updateTransform = (
