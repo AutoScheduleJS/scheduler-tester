@@ -1,6 +1,8 @@
 import { ITimeBoundary } from '@autoschedule/queries-fn';
 import { FunctionalComponentOptions, VNode } from 'vue';
 
+import { displayFlex, flexGrow } from '../shared/style.css';
+
 import { parseValue } from './util';
 
 interface ICmpProps {
@@ -12,9 +14,10 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
   functional: true,
   render(h, a): VNode {
     return (
-      <div>
+      <div class={displayFlex}>
         <div>{a.slots().default}</div>
         <textarea
+          class={flexGrow(1)}
           rows="1"
           value={JSON.stringify(a.props.timeBoundary)}
           onBlur={e => a.props.actionFn(parseValue(e.target.value))}

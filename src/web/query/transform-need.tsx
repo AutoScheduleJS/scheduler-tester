@@ -4,6 +4,8 @@ import { FunctionalComponentOptions, VNode } from 'vue';
 
 import { suiteActionType, SuitesQueryUpdateAction } from '../../core-state/suites.reducer';
 
+import { displayFlex, flexGrow } from '../shared/style.css';
+
 import { parseValue, updateTransform, wholeQuery } from './util';
 
 interface ICmpProps {
@@ -18,9 +20,10 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
   render(h, a): VNode {
     const triggerUpdateFn = triggerUpdate(a.props.query, a.props);
     return (
-      <div>
+      <div class={displayFlex}>
         <div>Need: </div>
         <textarea
+          class={flexGrow(1)}
           rows="1"
           value={JSON.stringify(a.props.item)}
           onBlur={e => triggerUpdateFn(parseValue(e.target.value))}

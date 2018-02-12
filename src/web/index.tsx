@@ -22,6 +22,8 @@ import {
   UserstateNewAction,
 } from '../core-state/userstates.reducer';
 
+import { displayFlex, flexGrow, flexShrink, minWidth } from './shared/style.css';
+
 import { stDemoViewer } from './demo-viewer';
 import { stOnTestbench } from './on-testbench';
 import { stQueryCmps } from './query/index';
@@ -43,10 +45,13 @@ const vueAppObj = {
   },
   render(h) {
     const state: ICoreState = this.state;
+    Object.defineProperty(this.state, 'nested', { configurable: false });
     return (
       <div>
         <div class={displayFlex}>
-          <div class={flexShrink(1)}>
+          <div
+            class={css`${flexShrink(1)} ${minWidth('20%')}`}
+          >
             <st-step-option {...{ props: { actionTrigger$, state: state.stepOption } }} />
             <div>Queries Suites: </div>
             <st-suite-list
@@ -116,16 +121,6 @@ const vueAppObj = {
     };
   },
 };
-
-const displayFlex = css`
-  display: flex;
-`;
-const flexShrink = (val: number) => css`
-  flex-shrink: ${val};
-`;
-const flexGrow = (val: number) => css`
-  flex-grow: ${val};
-`;
 
 const parseJsonOr = (key: string, defaultItm: any): any => {
   const item = localStorage.getItem(key);
