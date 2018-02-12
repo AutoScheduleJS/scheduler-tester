@@ -10,6 +10,7 @@ import {
 
 import { defaultInsert } from './transform-insert';
 import { defaultNeed } from './transform-need';
+import { defaultUpdate } from './transform-update';
 import { pushTransform, wholeQuery } from './util';
 
 interface ICmpProps {
@@ -90,6 +91,19 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
           }}
         >
           add insert
+        </st-suite-item>
+        <st-suite-item
+          {...{
+            props: {
+              actionTrigger$,
+              extraProps: { query: q, qSuite: a.props.suite },
+              itemCmp: 'st-transform-update',
+              newItemFn: _ => updateFn(pushTransform(q, 'updates', { ...defaultUpdate })),
+              suite: transforms ? transforms.updates : [],
+            },
+          }}
+        >
+          add updates
         </st-suite-item>
       </div>
     );

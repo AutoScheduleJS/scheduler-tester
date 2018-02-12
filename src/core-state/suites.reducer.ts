@@ -29,10 +29,7 @@ export class SuitesQueryUpdateAction {
 }
 
 export class SuitesQueryDeleteAction {
-  constructor(
-    public suite: ReadonlyArray<Q.IQuery>,
-    public oldQuery: Q.IQuery
-  ) {}
+  constructor(public suite: ReadonlyArray<Q.IQuery>, public oldQuery: Q.IQuery) {}
 }
 
 /* tslint:enable:no-empty */
@@ -90,8 +87,7 @@ const suiteToNewQuery = (suite: ReadonlyArray<Q.IQuery>): Q.IQuery => {
     Q.id((lastQuery ? lastQuery.id : 0) + 1),
     Q.start(1),
     Q.end(5),
-    Q.duration(Q.timeDuration(4, 2)),
-    Q.transforms([Q.need()], [], [])
+    Q.duration(Q.timeDuration(4, 2))
   );
 };
 
