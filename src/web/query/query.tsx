@@ -8,6 +8,7 @@ import {
   SuitesQueryUpdateAction,
 } from '../../core-state/suites.reducer';
 
+import { defaultInsert } from './transform-insert';
 import { defaultNeed } from './transform-need';
 import { pushTransform, wholeQuery } from './util';
 
@@ -76,6 +77,19 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
           }}
         >
           add need
+        </st-suite-item>
+        <st-suite-item
+          {...{
+            props: {
+              actionTrigger$,
+              extraProps: { query: q, qSuite: a.props.suite },
+              itemCmp: 'st-transform-insert',
+              newItemFn: _ => updateFn(pushTransform(q, 'inserts', { ...defaultInsert })),
+              suite: transforms ? transforms.inserts : [],
+            },
+          }}
+        >
+          add insert
         </st-suite-item>
       </div>
     );
