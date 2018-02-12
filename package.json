@@ -28,7 +28,7 @@
     "vue-rx": "^5.0.0"
   },
   "devDependencies": {
-    "@autoschedule/queries-fn": "^4.0.0",
+    "@autoschedule/queries-fn": "^4.1.1",
     "@autoschedule/queries-scheduler": "^3.1.0",
     "@autoschedule/userstate-manager": "^2.0.0",
     "@types/ramda": "github:types/npm-ramda#dist",
