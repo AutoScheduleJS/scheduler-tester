@@ -38,7 +38,7 @@
     "babel-plugin-transform-vue-jsx": "^3.5.1",
     "babel-preset-env": "^1.6.1",
     "concurrently": "^3.5.1",
-    "emotion": "^9.0.0",
+    "emotion": "^9.0.1",
     "nyc": "^11.4.1",
     "parcel-bundler": "^1.5.1",
     "prettier": "^1.9.2",
@@ -49,6 +49,6 @@
     "tslint-config-prettier": "^1.6.0",
     "typedoc": "^0.10.0",
     "typescript": "^2.6.2",
-    "typescript-styled-plugin": "^0.4.0"
+    "typescript-styled-plugin": "^0.5.0"
   }
 }
