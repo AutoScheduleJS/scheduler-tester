@@ -24,15 +24,17 @@ type IScheduler = [any, ReadonlyArray<IPotentiality>, ReadonlyArray<IMaterial>, 
 
 const cmp = {
   render(h): VNode {
-    this.scheduler = this.scheduler || {};
-    Object.defineProperty(this.scheduler, 'nested', { configurable: false });
-    const scheduler: IScheduler = this.scheduler;
+    // const data: IScheduler = { ...(this.data || {}) };
+    // Object.values(data).forEach(
+    //   (entry, i) => (data[i] = Array.isArray(entry) ? [...entry] : { ...entry })
+    // );
+    const data: IScheduler = this.scheduler || [];
     return (
       <div>
-        <div>{JSON.stringify(scheduler[0] || {})}</div>
-        <div>{JSON.stringify(scheduler[1] || [])}</div>
-        <div>{JSON.stringify(scheduler[2] || [])}</div>
-        <div>{JSON.stringify(scheduler[3] || [])}</div>
+        <div>{displayData(data[0])}</div>
+        <div>{displayData(data[1])}</div>
+        <div>{displayData(data[2])}</div>
+        <div>{displayData(data[3])}</div>
         <button onClick={() => nextState$.next()}>NEXT</button>
       </div>
     );
@@ -43,6 +45,11 @@ const cmp = {
     };
   },
 };
+
+const displayData = (data: any) => {
+  const val = data || {};
+  return JSON.stringify(val);
+}
 
 const nextState$ = new Subject<never>();
 
