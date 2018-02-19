@@ -24,10 +24,6 @@ type IScheduler = [any, ReadonlyArray<IPotentiality>, ReadonlyArray<IMaterial>, 
 
 const cmp = {
   render(h): VNode {
-    // const data: IScheduler = { ...(this.data || {}) };
-    // Object.values(data).forEach(
-    //   (entry, i) => (data[i] = Array.isArray(entry) ? [...entry] : { ...entry })
-    // );
     const data: IScheduler = this.scheduler || [];
     return (
       <div>
