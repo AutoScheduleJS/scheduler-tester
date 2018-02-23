@@ -14,7 +14,8 @@
       ]
     }],
     "types": [],
-    "jsx": "react",
+    "jsx": "preserve",
+    "jsxFactory": "h",
     "allowSyntheticDefaultImports": true,
     "preserveConstEnums": true,
     "declaration": false,

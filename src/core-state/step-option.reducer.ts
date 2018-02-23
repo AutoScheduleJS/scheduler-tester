@@ -5,11 +5,11 @@ import { scan } from 'rxjs/operators';
 import { StepOption } from './core.state';
 import { actionType } from './core.store';
 
-export class StepoptionUpdateAction {
+export class StepOptionUpdateAction {
   constructor(public value: StepOption) {}
 }
 
-export type stepOptionActionType = StepoptionUpdateAction;
+export type stepOptionActionType = StepOptionUpdateAction;
 
 export const stepOptionReducer$ = (
   init: StepOption,
@@ -17,7 +17,7 @@ export const stepOptionReducer$ = (
 ): Observable<StepOption> => {
   return action$.pipe(
     scan((state, action: any) => {
-      if (action instanceof StepoptionUpdateAction) {
+      if (action instanceof StepOptionUpdateAction) {
         return handleUpdate(action);
       }
       return state;
@@ -25,6 +25,6 @@ export const stepOptionReducer$ = (
   );
 };
 
-const handleUpdate = (action: StepoptionUpdateAction): StepOption => {
+const handleUpdate = (action: StepOptionUpdateAction): StepOption => {
   return action.value;
 };

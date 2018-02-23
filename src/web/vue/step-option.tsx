@@ -2,7 +2,7 @@ import { Subject } from 'rxjs/Subject';
 import { FunctionalComponentOptions, VNode } from 'vue';
 
 import { StepOption } from '../../core-state/core.state';
-import { stepOptionActionType, StepoptionUpdateAction } from '../../core-state/step-option.reducer';
+import { stepOptionActionType, StepOptionUpdateAction } from '../../core-state/step-option.reducer';
 
 interface ICmpProps {
   state: StepOption;
@@ -14,7 +14,7 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
   render(h, a): VNode {
     const getRadioChecked = (type: StepOption) => (type === a.props.state ? true : false);
     const handleRadioChange = (type: StepOption) => _ =>
-      a.props.actionTrigger$.next(new StepoptionUpdateAction(type));
+      a.props.actionTrigger$.next(new StepOptionUpdateAction(type));
     return (
       <div>
         <div>Step option:</div>
