@@ -12,7 +12,7 @@
     "doc": "npm run build && typedoc --out docs/ dist/",
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once",
-    "start": "parcel src/index.html",
+    "start:vue": "parcel src/web/vue/index.html",
     "watch:ts": "tsc -w",
     "watch:ava": "ava -w build/**/*.test.js",
     "watch:test": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Ava\" -c \"blue.bold,magenta.bold\" \"npm run watch:ts\" \"npm run watch:ava\""

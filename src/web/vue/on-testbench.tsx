@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs/Subject';
 import { CreateElement, FunctionalComponentOptions, VNode } from 'vue';
 
-import { actionType } from '../core-state/core.store';
+import { actionType } from '../../core-state/core.store';
 
 interface ICmpProps {
   state: number;

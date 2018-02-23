@@ -1,8 +1,8 @@
 import { Subject } from 'rxjs/Subject';
 import { FunctionalComponentOptions, VNode } from 'vue';
 
-import { StepOption } from '../core-state/core.state';
-import { stepOptionActionType, StepoptionUpdateAction } from '../core-state/step-option.reducer';
+import { StepOption } from '../../core-state/core.state';
+import { stepOptionActionType, StepoptionUpdateAction } from '../../core-state/step-option.reducer';
 
 interface ICmpProps {
   state: StepOption;

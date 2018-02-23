@@ -1,15 +1,15 @@
-import { ITaskTransformNeed } from '@autoschedule/queries-fn';
+import { ITaskTransformInsert } from '@autoschedule/queries-fn';
 import { Subject } from 'rxjs/Subject';
 import { FunctionalComponentOptions, VNode } from 'vue';
 
-import { suiteActionType, SuitesQueryUpdateAction } from '../../core-state/suites.reducer';
+import { suiteActionType, SuitesQueryUpdateAction } from '../../../core-state/suites.reducer';
 
 import { displayFlex, flexGrow } from '../shared/style.css';
 
 import { parseValue, updateTransform, wholeQuery } from './util';
 
 interface ICmpProps {
-  item: ITaskTransformNeed;
+  item: ITaskTransformInsert;
   actionTrigger$: Subject<suiteActionType>;
   qSuite: ReadonlyArray<wholeQuery>;
   query: wholeQuery;
@@ -21,35 +21,33 @@ const cmp: FunctionalComponentOptions<ICmpProps, string[]> = {
     const triggerUpdateFn = triggerUpdate(a.props.query, a.props);
     return (
       <div class={displayFlex}>
-        <div>Need: </div>
+        <div>Insert: </div>
         <textarea
           class={flexGrow(1)}
           rows="1"
           value={JSON.stringify(a.props.item)}
           onBlur={e => triggerUpdateFn(parseValue(e.target.value))}
         />
-        <button onClick={() => triggerUpdateFn(defaultNeed)}>default</button>
+        <button onClick={() => triggerUpdateFn(defaultInsert)}>default</button>
       </div>
     );
   },
 };
 
-const triggerUpdate = (query: wholeQuery, props: ICmpProps) => (need: ITaskTransformNeed) => {
+const triggerUpdate = (query: wholeQuery, props: ICmpProps) => (insert: ITaskTransformInsert) => {
   props.actionTrigger$.next(
     new SuitesQueryUpdateAction(
       props.qSuite,
       query,
-      updateTransform(query, 'needs', props.item, need)
+      updateTransform(query, 'inserts', props.item, insert)
     )
   );
 };
 
-export const defaultNeed: ITaskTransformNeed = {
+export const defaultInsert: ITaskTransformInsert = {
   collectionName: 'col',
-  find: {},
-  quantity: 1,
-  ref: '1',
+  doc: {},
   wait: false,
 };
 
-export const stTransformNeed = { name: 'st-transform-need', cmp };
+export const stTransformInsert = { name: 'st-transform-insert', cmp };

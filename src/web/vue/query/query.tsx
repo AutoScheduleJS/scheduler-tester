@@ -6,7 +6,7 @@ import {
   suiteActionType,
   SuitesQueryDeleteAction,
   SuitesQueryUpdateAction,
-} from '../../core-state/suites.reducer';
+} from '../../../core-state/suites.reducer';
 
 import { defaultInsert } from './transform-insert';
 import { defaultNeed } from './transform-need';

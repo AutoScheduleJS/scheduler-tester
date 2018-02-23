@@ -17,8 +17,8 @@ import 'rxjs/add/observable/of';
 
 import { switchMap, zip } from 'rxjs/operators';
 
-import { ICoreState, StepOption } from '../core-state/core.state';
-import { coreState$ } from '../core-state/core.store';
+import { ICoreState, StepOption } from '../../core-state/core.state';
+import { coreState$ } from '../../core-state/core.store';
 
 type IScheduler = [any, ReadonlyArray<IPotentiality>, ReadonlyArray<IMaterial>, ReadonlyArray<any>];
 
