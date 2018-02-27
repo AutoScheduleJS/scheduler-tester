@@ -1,9 +1,7 @@
 import * as React from 'react';
 
-import { ICoreState, StepOption } from '../../../core-state/core.state';
-import { actionTrigger$ } from '../../../core-state/core.store';
-
-import { connect } from '../util/connect';
+import { IItemCmpProps } from './item-props.interface';
+import SuiteItem from './suite-item';
 
 interface IState {
   state: ReadonlyArray<any>;
@@ -11,22 +9,32 @@ interface IState {
 
 interface ICmpProps extends IState {
   action: (u: any) => void;
-  newSuiteFn: () => any;
   addLabel: string;
+  itemCmp: React.SFC<IItemCmpProps>;
+  newSuiteFn: () => any;
+  newItemFn: (a: any) => any;
 }
 
-const cmp: React.SFC<ICmpProps> = ({ action, addLabel, children, newSuiteFn, state }) => (
+const cmp: React.SFC<ICmpProps> = ({
+  action,
+  addLabel,
+  children,
+  itemCmp,
+  newItemFn,
+  newSuiteFn,
+  state,
+}) => (
   <div>
-    {stateToSuite(addLabel, state)}
+    {stateToSuite({ action, addLabel, itemCmp, newItemFn, state })}
     <button onClick={() => action(newSuiteFn())}>{children}</button>
   </div>
 );
 
-export default (selector: (s: ICoreState) => IState) => connect(selector, actionTrigger$)(cmp);
+export default cmp;
 
-const stateToSuite = (addLabel: string, state: ReadonlyArray<any>) =>
+const stateToSuite = ({ action, addLabel, itemCmp, newItemFn, state }) =>
   state.map(suite => (
     <div>
-      <StSuiteItem {...{}}>{addLabel || 'ADD ITEM'}}</StSuiteItem>
+      <SuiteItem {...{ action, itemCmp, newItemFn, suite }}>{addLabel || 'ADD ITEM'}}</SuiteItem>
     </div>
   ));
