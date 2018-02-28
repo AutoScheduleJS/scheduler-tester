@@ -10,7 +10,7 @@ interface IState {
 interface ICmpProps extends IState {
   action: (u: any) => void;
   addLabel: string;
-  itemCmp: React.SFC<IItemCmpProps>;
+  itemCmp: React.SFC<IItemCmpProps<any>>;
   newSuiteFn: () => any;
   newItemFn: (a: any) => any;
 }
@@ -35,6 +35,6 @@ export default cmp;
 const stateToSuite = ({ action, addLabel, itemCmp, newItemFn, state }) =>
   state.map(suite => (
     <div>
-      <SuiteItem {...{ action, itemCmp, newItemFn, suite }}>{addLabel || 'ADD ITEM'}}</SuiteItem>
+      <SuiteItem {...{ action, itemCmp, newItemFn, suite }}>{addLabel || 'ADD ITEM'}</SuiteItem>
     </div>
   ));

@@ -5,6 +5,7 @@ import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { actionTrigger$, coreState$ } from '@scheduler-tester/core-state/core.store';
 import { OnTestbenchQueriesUpdateAction } from '@scheduler-tester/core-state/on-testbench-queries.reducer';
 import { OnTestbenchUserstateUpdateAction } from '@scheduler-tester/core-state/on-testbench-userstate.reducer';
+import { SuitesNewAction, SuitesQueryNewAction } from '@scheduler-tester/core-state/suites.reducer';
 import {
   UserstateCollectionNewAction,
   UserstateNewAction,
@@ -13,6 +14,7 @@ import {
 import { connect } from './util/connect';
 
 import onTestbench from './on-testbench';
+import Query from './query/query';
 import suiteList from './shared/suite-list';
 import StepOption from './step-option';
 import UserState from './userstate/userstate';
@@ -32,12 +34,28 @@ const UserStateList = connect(
   actionTrigger$
 )(suiteList);
 
+const QueryList = connect(({ suites }: ICoreState) => ({ state: suites }), actionTrigger$)(
+  suiteList
+);
+
 const app = (
   <div>
     <div>
       <StepOption {...{ state$: coreState$ }} />
     </div>
     <div>
+      <div>Queries Suites: </div>
+      <QueryList
+        {...{
+          addLabel: 'ADD QUERY',
+          itemCmp: Query,
+          newItemFn: e => new SuitesQueryNewAction(e),
+          newSuiteFn: () => new SuitesNewAction(),
+          state$: coreState$,
+        }}
+      >
+        ADD QUERIES SUITE
+      </QueryList>
       <div>Userstate Suites: </div>
       <UserStateList
         {...{

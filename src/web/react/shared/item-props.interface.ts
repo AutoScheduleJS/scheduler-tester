@@ -1,5 +1,5 @@
-export interface IItemCmpProps {
+export interface IItemCmpProps<T> {
   action: (u: any) => void;
-  item: any;
-  suite: ReadonlyArray<any>;
+  item: T;
+  suite: ReadonlyArray<T>;
 }
