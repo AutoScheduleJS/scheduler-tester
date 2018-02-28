@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { UserstateCollectionUpdateAction } from '../../../core-state/userstates.reducer';
+import { UserstateCollectionUpdateAction } from '@scheduler-tester/core-state/userstates.reducer';
 
 import { IItemCmpProps } from '../shared/item-props.interface';
 

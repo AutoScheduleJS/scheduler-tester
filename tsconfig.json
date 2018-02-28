@@ -30,7 +30,10 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "moduleResolution": "node",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "@scheduler-tester/core-state/*": ["src/core-state/*"]
+    }
   },
   "exclude": [
     "node_modules"

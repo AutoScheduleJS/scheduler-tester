@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { ICoreState } from '../../core-state/core.state';
-import { actionTrigger$, actionType } from '../../core-state/core.store';
+import { ICoreState } from '@scheduler-tester/core-state/core.state';
+import { actionTrigger$, actionType } from '@scheduler-tester/core-state/core.store';
 
 import { connect } from './util/connect';
 

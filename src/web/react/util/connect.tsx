@@ -3,8 +3,8 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 
-import { ICoreState } from '../../../core-state/core.state';
-import { actionType } from '../../../core-state/core.store';
+import { ICoreState } from '@scheduler-tester/core-state/core.state';
+import { actionType } from '@scheduler-tester/core-state/core.store';
 
 export const connect = (
   selector: (s: ICoreState) => any = state => state,

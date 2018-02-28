@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { ICoreState, StepOption } from '../../core-state/core.state';
-import { actionTrigger$ } from '../../core-state/core.store';
-import { StepOptionUpdateAction } from '../../core-state/step-option.reducer';
+import { ICoreState, StepOption } from '@scheduler-tester/core-state/core.state';
+import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
+import { StepOptionUpdateAction } from '@scheduler-tester/core-state/step-option.reducer';
 
 import { connect } from './util/connect';
 

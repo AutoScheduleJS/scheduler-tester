@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { ICoreState } from '../../core-state/core.state';
-import { actionTrigger$, coreState$ } from '../../core-state/core.store';
-import { OnTestbenchQueriesUpdateAction } from '../../core-state/on-testbench-queries.reducer';
-import { OnTestbenchUserstateUpdateAction } from '../../core-state/on-testbench-userstate.reducer';
+import { ICoreState } from '@scheduler-tester/core-state/core.state';
+import { actionTrigger$, coreState$ } from '@scheduler-tester/core-state/core.store';
+import { OnTestbenchQueriesUpdateAction } from '@scheduler-tester/core-state/on-testbench-queries.reducer';
+import { OnTestbenchUserstateUpdateAction } from '@scheduler-tester/core-state/on-testbench-userstate.reducer';
 import {
   UserstateCollectionNewAction,
   UserstateNewAction,
-} from '../../core-state/userstates.reducer';
+} from '@scheduler-tester/core-state/userstates.reducer';
 
 import { connect } from './util/connect';
 
@@ -45,7 +45,7 @@ const app = (
           itemCmp: UserState,
           newItemFn: e => new UserstateCollectionNewAction(e),
           newSuiteFn: () => new UserstateNewAction(),
-          state$: coreState$
+          state$: coreState$,
         }}
       >
         ADD USERSTATE SUITE

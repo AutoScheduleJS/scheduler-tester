@@ -1,11 +1,11 @@
 import { Subject } from 'rxjs/Subject';
 import { FunctionalComponentOptions, VNode } from 'vue';
 
-import { IUserstateCollection } from '../../core-state/userstate-collection.interface';
+import { IUserstateCollection } from '@scheduler-tester/core-state/userstate-collection.interface';
 import {
   userstateActionType,
   UserstateCollectionUpdateAction,
-} from '../../core-state/userstates.reducer';
+} from '@scheduler-tester/core-state/userstates.reducer';
 
 interface ICmpProps {
   userstateColls: ReadonlyArray<IUserstateCollection>;

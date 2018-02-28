@@ -7,20 +7,20 @@ import VueRx from 'vue-rx';
 
 import { distinctUntilChanged } from 'rxjs/operators';
 
-import { ICoreState } from '../../core-state/core.state';
-import { actionTrigger$, actionType, coreState$ } from '../../core-state/core.store';
-import { OnTestbenchQueriesUpdateAction } from '../../core-state/on-testbench-queries.reducer';
-import { OnTestbenchUserstateUpdateAction } from '../../core-state/on-testbench-userstate.reducer';
+import { ICoreState } from '@scheduler-tester/core-state/core.state';
+import { actionTrigger$, actionType, coreState$ } from '@scheduler-tester/core-state/core.store';
+import { OnTestbenchQueriesUpdateAction } from '@scheduler-tester/core-state/on-testbench-queries.reducer';
+import { OnTestbenchUserstateUpdateAction } from '@scheduler-tester/core-state/on-testbench-userstate.reducer';
 import {
   SuitesLoadAction,
   SuitesNewAction,
   SuitesQueryNewAction,
-} from '../../core-state/suites.reducer';
+} from '@scheduler-tester/core-state/suites.reducer';
 import {
   UserstateCollectionNewAction,
   UserstateLoadAction,
   UserstateNewAction,
-} from '../../core-state/userstates.reducer';
+} from '@scheduler-tester/core-state/userstates.reducer';
 
 import { displayFlex, flexGrow, flexShrink, minWidth } from './shared/style.css';
 
