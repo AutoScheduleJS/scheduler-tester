@@ -3,17 +3,16 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 
-import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { actionType } from '@scheduler-tester/core-state/core.store';
 
 export const connect = (
-  selector: (s: ICoreState) => any = state => state,
-  actionSubject: Subject<actionType>
+  selector: (s: any) => any = state => state,
+  actionSubject?: Subject<actionType>
 ) => {
-  const action = { action: (val: actionType) => actionSubject.next(val) };
+  const action = actionSubject ? { action: (val: actionType) => actionSubject.next(val) } : {};
 
   return WrappedComponent => {
-    return class Connect extends React.Component<{ state$: Observable<ICoreState> }> {
+    return class Connect extends React.Component<{ state$: Observable<any> }> {
       private subscription;
       public componentWillMount() {
         this.subscription = this.props.state$

@@ -1,6 +1,3 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { actionTrigger$, coreState$ } from '@scheduler-tester/core-state/core.store';
 import { OnTestbenchQueriesUpdateAction } from '@scheduler-tester/core-state/on-testbench-queries.reducer';
@@ -10,13 +7,16 @@ import {
   UserstateCollectionNewAction,
   UserstateNewAction,
 } from '@scheduler-tester/core-state/userstates.reducer';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 import { connect } from './util/connect';
 
+import DemoViewer, { stateToScheduler } from './demo-viewer';
 import onTestbench from './on-testbench';
 import Query from './query/query';
 import suiteList from './shared/suite-list';
-import StepOption from './step-option';
+import StepSelect from './step-option';
 import UserState from './userstate/userstate';
 
 const OnTestbenchQueries = onTestbench(({ onTestbenchQueries, suites }) => ({
@@ -41,7 +41,7 @@ const QueryList = connect(({ suites }: ICoreState) => ({ state: suites }), actio
 const app = (
   <div>
     <div>
-      <StepOption {...{ state$: coreState$ }} />
+      <StepSelect {...{ state$: coreState$ }} />
     </div>
     <div>
       <div>Queries Suites: </div>
@@ -78,6 +78,9 @@ const app = (
       >
         Userstate on test bench
       </OnTestbenchUserstate>
+    </div>
+    <div>
+      <DemoViewer {...{ state$: stateToScheduler(coreState$) }} />
     </div>
   </div>
 );
