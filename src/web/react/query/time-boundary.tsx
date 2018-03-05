@@ -3,8 +3,6 @@ import * as React from 'react';
 
 import { displayFlex, flexGrow } from '../shared/style.css';
 
-import { parseValue } from './util';
-
 interface ICmpProps {
   timeBoundary: ITimeBoundary | undefined;
   actionFn: (a: ITimeBoundary | undefined) => void;
@@ -16,9 +14,9 @@ const cmp: React.SFC<ICmpProps> = ({ actionFn, timeBoundary, children }) => (
     <textarea
       className={flexGrow(1)}
       rows={1}
-      defaultValue={JSON.stringify(timeBoundary)}
+      defaultValue={JSON.stringify(timeBoundary ? timeBoundary.target : null)}
       key={valueToKey(timeBoundary)}
-      onBlur={e => actionFn(parseValue(e.currentTarget.value))}
+      onBlur={e => actionFn(inputValueToTimeBoundary(timeBoundary, e.currentTarget.value))}
     />
     <button onClick={() => actionFn({ ...defaultValue })}>default</button>
   </div>
@@ -27,6 +25,10 @@ const cmp: React.SFC<ICmpProps> = ({ actionFn, timeBoundary, children }) => (
 export default cmp;
 
 const defaultValue: ITimeBoundary = { min: 1, target: 1, max: 1 };
+
+const inputValueToTimeBoundary = (timeBoundary: ITimeBoundary | undefined, v: string) => {
+  return v.length === 0 ? undefined : {...(timeBoundary || {}), target: +v };
+}
 
 const valueToKey = (v: ITimeBoundary | undefined): string => {
   return v ? `${v.min}-${v.max}-${v.target}` : '---';
