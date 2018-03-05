@@ -13,12 +13,14 @@ interface ICmpProps extends IItemCmpProps<ITaskTransformNeed> {
 
 const cmp: React.SFC<ICmpProps> = ({ action, item, query, qSuite }) => {
   const triggerUpdateFn = triggerUpdate({ action, item, query, qSuite });
+  const itemStr = JSON.stringify(item);
   return (
     <div>
       <div>Need: </div>
       <textarea
         rows={1}
-        defaultValue={JSON.stringify(item)}
+        defaultValue={itemStr}
+        key={itemStr}
         onBlur={e => triggerUpdateFn(parseValue(e.currentTarget.value))}
       />
       <button onClick={() => triggerUpdateFn(defaultNeed)}>default</button>

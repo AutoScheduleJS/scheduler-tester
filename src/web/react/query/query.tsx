@@ -24,6 +24,7 @@ const cmp: React.SFC<IItemCmpProps<wholeQuery>> = ({ action, item, suite }) => {
       <textarea
         rows={5}
         defaultValue={JSON.stringify(item)}
+        key={JSON.stringify(item)}
         onBlur={e => updateFn(JSON.parse(e.currentTarget.value))}
       />
       <button onClick={() => action(new SuitesQueryDeleteAction(suite, item))}>DELETE</button>

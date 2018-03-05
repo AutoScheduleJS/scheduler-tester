@@ -14,6 +14,7 @@ const cmp: React.SFC<ICmpProps> = ({ actionFn, timeDuration, children }) => (
     <textarea
       rows={1}
       defaultValue={JSON.stringify(timeDuration)}
+      key={valueToString(timeDuration)}
       onBlur={e => actionFn(parseValue(e.currentTarget.value))}
     />
     <button onClick={() => actionFn({ ...defaultValue })}>default</button>
@@ -23,3 +24,7 @@ const cmp: React.SFC<ICmpProps> = ({ actionFn, timeDuration, children }) => (
 export default cmp;
 
 const defaultValue: ITimeDuration = { min: 1, target: 1 };
+
+const valueToString = (v: ITimeDuration | undefined) => {
+  return v ? `${v.min}-${v.target}` : '--';
+}

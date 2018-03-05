@@ -14,6 +14,7 @@ const cmp: React.SFC<ICmpProps> = ({ actionFn, timeBoundary, children }) => (
     <textarea
       rows={1}
       defaultValue={JSON.stringify(timeBoundary)}
+      key={valueToKey(timeBoundary)}
       onBlur={e => actionFn(parseValue(e.currentTarget.value))}
     />
     <button onClick={() => actionFn({ ...defaultValue })}>default</button>
@@ -23,3 +24,7 @@ const cmp: React.SFC<ICmpProps> = ({ actionFn, timeBoundary, children }) => (
 export default cmp;
 
 const defaultValue: ITimeBoundary = { min: 1, target: 1, max: 1 };
+
+const valueToKey = (v: ITimeBoundary | undefined): string => {
+  return v ? `${v.min}-${v.max}-${v.target}` : '---';
+};
