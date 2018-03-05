@@ -7,6 +7,7 @@ import {
   UserstateCollectionNewAction,
   UserstateNewAction,
 } from '@scheduler-tester/core-state/userstates.reducer';
+import { css } from 'emotion';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
@@ -15,6 +16,7 @@ import { connect } from './util/connect';
 import DemoViewer, { stateToScheduler } from './demo-viewer';
 import onTestbench from './on-testbench';
 import Query from './query/query';
+import { displayFlex, flexGrow, flexShrink, minWidth } from './shared/style.css';
 import suiteList from './shared/suite-list';
 import StepSelect from './step-option';
 import UserState from './userstate/userstate';
@@ -40,47 +42,49 @@ const QueryList = connect(({ suites }: ICoreState) => ({ state: suites }), actio
 
 const app = (
   <div>
-    <div>
-      <StepSelect {...{ state$: coreState$ }} />
-    </div>
-    <div>
-      <div>Queries Suites: </div>
-      <QueryList
-        {...{
-          addLabel: 'ADD QUERY',
-          itemCmp: Query,
-          newItemFn: e => new SuitesQueryNewAction(e),
-          newSuiteFn: () => new SuitesNewAction(),
-          state$: coreState$,
-        }}
+    <div className={displayFlex}>
+      <div
+        className={css`${flexShrink(1)} ${minWidth('20%')}`}
       >
-        ADD QUERIES SUITE
-      </QueryList>
-      <div>Userstate Suites: </div>
-      <UserStateList
-        {...{
-          addLabel: 'ADD USERSTATE',
-          itemCmp: UserState,
-          newItemFn: e => new UserstateCollectionNewAction(e),
-          newSuiteFn: () => new UserstateNewAction(),
-          state$: coreState$,
-        }}
-      >
-        ADD USERSTATE SUITE
-      </UserStateList>
-      <OnTestbenchQueries
-        {...{ state$: coreState$, actionFn: e => new OnTestbenchQueriesUpdateAction(e) }}
-      >
-        Queries on test bench
-      </OnTestbenchQueries>
-      <OnTestbenchUserstate
-        {...{ state$: coreState$, actionFn: e => new OnTestbenchUserstateUpdateAction(e) }}
-      >
-        Userstate on test bench
-      </OnTestbenchUserstate>
-    </div>
-    <div>
-      <DemoViewer {...{ state$: stateToScheduler(coreState$) }} />
+        <StepSelect {...{ state$: coreState$ }} />
+        <div>Queries Suites: </div>
+        <QueryList
+          {...{
+            addLabel: 'ADD QUERY',
+            itemCmp: Query,
+            newItemFn: e => new SuitesQueryNewAction(e),
+            newSuiteFn: () => new SuitesNewAction(),
+            state$: coreState$,
+          }}
+        >
+          ADD QUERIES SUITE
+        </QueryList>
+        <div>Userstate Suites: </div>
+        <UserStateList
+          {...{
+            addLabel: 'ADD USERSTATE',
+            itemCmp: UserState,
+            newItemFn: e => new UserstateCollectionNewAction(e),
+            newSuiteFn: () => new UserstateNewAction(),
+            state$: coreState$,
+          }}
+        >
+          ADD USERSTATE SUITE
+        </UserStateList>
+        <OnTestbenchQueries
+          {...{ state$: coreState$, actionFn: e => new OnTestbenchQueriesUpdateAction(e) }}
+        >
+          Queries on test bench
+        </OnTestbenchQueries>
+        <OnTestbenchUserstate
+          {...{ state$: coreState$, actionFn: e => new OnTestbenchUserstateUpdateAction(e) }}
+        >
+          Userstate on test bench
+        </OnTestbenchUserstate>
+      </div>
+      <div className={flexGrow(1)}>
+        <DemoViewer {...{ state$: stateToScheduler(coreState$) }} />
+      </div>
     </div>
   </div>
 );
