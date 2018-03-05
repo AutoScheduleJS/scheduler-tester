@@ -6,6 +6,7 @@ import {
 } from '@scheduler-tester/core-state/suites.reducer';
 
 import { IItemCmpProps } from '../shared/item-props.interface';
+import { width } from '../shared/style.css';
 
 import { pushTransform, wholeQuery } from './util';
 
@@ -22,6 +23,7 @@ const cmp: React.SFC<IItemCmpProps<wholeQuery>> = ({ action, item, suite }) => {
   return (
     <div>
       <textarea
+        className={width('100%')}
         rows={5}
         defaultValue={JSON.stringify(item)}
         key={JSON.stringify(item)}

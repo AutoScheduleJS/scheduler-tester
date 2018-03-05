@@ -1,6 +1,8 @@
 import { ITaskTransformUpdate } from '@autoschedule/queries-fn';
 import * as React from 'react';
 
+import { displayFlex, flexGrow } from '../shared/style.css';
+
 import { SuitesQueryUpdateAction } from '@scheduler-tester/core-state/suites.reducer';
 
 import { IItemCmpProps } from '../shared/item-props.interface';
@@ -15,10 +17,11 @@ const cmp: React.SFC<ICmpProps> = ({ action, item, query, qSuite }) => {
   const triggerUpdateFn = triggerUpdate({ action, item, query, qSuite });
   const itemStr = JSON.stringify(item);
   return (
-    <div>
-      <div>Update: </div>
+    <div className={displayFlex}>
+      <div>Update</div>
       <textarea
-        rows={1}
+        className={flexGrow(1)}
+        rows={3}
         defaultValue={itemStr}
         key={itemStr}
         onBlur={e => triggerUpdateFn(parseValue(e.currentTarget.value))}

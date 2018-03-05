@@ -1,6 +1,8 @@
 import { ITimeDuration } from '@autoschedule/queries-fn';
 import * as React from 'react';
 
+import { displayFlex, flexGrow } from '../shared/style.css';
+
 import { parseValue } from './util';
 
 interface ICmpProps {
@@ -9,9 +11,10 @@ interface ICmpProps {
 }
 
 const cmp: React.SFC<ICmpProps> = ({ actionFn, timeDuration, children }) => (
-  <div>
+  <div className={displayFlex}>
     <div>{children}</div>
     <textarea
+      className={flexGrow(1)}
       rows={1}
       defaultValue={JSON.stringify(timeDuration)}
       key={valueToString(timeDuration)}
