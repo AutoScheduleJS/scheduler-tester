@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { displayFlex, flexGrow } from '../shared/style.css';
+import { padding } from '../shared/style.css';
 
 interface ICmpProps {
   value: any;
@@ -10,33 +10,37 @@ interface ICmpProps {
 
 const cmp: React.SFC<ICmpProps> = ({ value, labels, updateFn }) => (
   <div>
-    {Object.keys(value)
-      .filter(findLabel(labels))
-      .map(k => {
-        const val = value[k];
-        if (typeof val === 'number') {
-          return (
-            <input
-              type="number"
-              defaultValue={'' + val}
-              key={val}
-              placeholder={findLabel(labels)(k)}
-              onBlur={e => updateFn({ ...value, [k]: e.currentTarget.value })}
-            />
-          );
-        }
-        if (typeof val === 'string') {
-          return (
-            <textarea
-              rows={3}
-              defaultValue={'' + val}
-              key={val}
-              placeholder={findLabel(labels)(k)}
-              onBlur={e => updateFn({ ...value, [k]: e.currentTarget.value })}
-            />
-          );
-        }
-      })}
+    {!value ? (
+      <span className={padding('0', '10px')}>undefined</span>
+    ) : (
+      Object.keys(value)
+        .filter(findLabel(labels))
+        .map(k => {
+          const val = value[k];
+          if (typeof val === 'number') {
+            return (
+              <input
+                type="number"
+                defaultValue={'' + val}
+                key={k+val}
+                placeholder={findLabel(labels)(k)}
+                onBlur={e => updateFn({ ...value, [k]: +e.currentTarget.value })}
+              />
+            );
+          }
+          if (typeof val === 'string') {
+            return (
+              <textarea
+                rows={3}
+                defaultValue={'' + val}
+                key={k+val}
+                placeholder={findLabel(labels)(k)}
+                onBlur={e => updateFn({ ...value, [k]: e.currentTarget.value })}
+              />
+            );
+          }
+        })
+    )}
   </div>
 );
 export default cmp;

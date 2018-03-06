@@ -12,6 +12,9 @@ export const flexShrink = (val: number) => css`
 export const flexGrow = (val: number) => css`
   flex-grow: ${val};
 `;
+export const padding = (a: string, b?: string, c?: string, d?: string) => css`
+  padding: ${a} ${b} ${c} ${d};
+`
 export const width = (val: string) => css`
   width: ${val};
 `
