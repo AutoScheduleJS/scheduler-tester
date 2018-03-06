@@ -13,7 +13,7 @@ import * as ReactDOM from 'react-dom';
 
 import { connect } from './util/connect';
 
-import DemoViewer, { stateToScheduler } from './demo-viewer';
+import DemoViewer, { stateToScheduler } from './demo/demo-viewer';
 import onTestbench from './on-testbench';
 import QsConfig from './qs-config';
 import Query from './query/query';

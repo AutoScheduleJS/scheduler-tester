@@ -6,6 +6,7 @@ import {
   queriesToPipelineDebug$,
 } from '@autoschedule/queries-scheduler';
 import { queryToStatePotentials } from '@autoschedule/userstate-manager';
+import { IConfig } from '@scheduler-tester/core-state/config.interface';
 import { ICoreState, StepOption } from '@scheduler-tester/core-state/core.state';
 import * as React from 'react';
 import { Observable } from 'rxjs/Observable';
@@ -13,19 +14,20 @@ import { Subject } from 'rxjs/Subject';
 
 import 'rxjs/add/observable/forkJoin';
 
-import { switchMap, zip } from 'rxjs/operators';
+import { map, switchMap, zip } from 'rxjs/operators';
 
 
-import { connect } from './util/connect';
+import { connect } from '../util/connect';
 
 interface ICmpProps {
+  config: IConfig;
   errors: any;
   pots: ReadonlyArray<IPotentiality>;
   mats: ReadonlyArray<IMaterial>;
   press: ReadonlyArray<any>;
 }
 
-const cmp: React.SFC<ICmpProps> = ({ errors, pots, mats, press }) => (
+const cmp: React.SFC<ICmpProps> = ({ config, errors, pots, mats, press }) => (
   <div>
     <div>{displayData(errors)}</div>
     <div>{displayData(pots)}</div>
@@ -35,7 +37,8 @@ const cmp: React.SFC<ICmpProps> = ({ errors, pots, mats, press }) => (
   </div>
 );
 
-const selector = ([errors, pots, mats, press]: [any, any, any, any]) => ({
+const selector = ([config, errors, pots, mats, press]: [any, any, any, any, any]) => ({
+  config,
   errors,
   mats,
   pots,
@@ -60,11 +63,12 @@ export const stateToScheduler = (state$) =>
         queryToStatePotentials([])
       )(stateToQueries(state));
       const err$: Observable<any> = er as Observable<any>;
-      return state.stepOption === StepOption.every
+      const result$ = state.stepOption === StepOption.every
         ? nextState$.pipe(
             zip(combineSchedulerObservables(err$, pots, mats, press), (_, schedule) => schedule)
           )
         : Observable.forkJoin(err$, pots, mats, press);
+      return result$.pipe(map(res => [state.config, ...res]));
     })
   );
 /* tslint:enable:no-object-literal-type-assertion */
