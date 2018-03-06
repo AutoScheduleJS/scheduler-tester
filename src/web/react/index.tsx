@@ -15,6 +15,7 @@ import { connect } from './util/connect';
 
 import DemoViewer, { stateToScheduler } from './demo-viewer';
 import onTestbench from './on-testbench';
+import QsConfig from './qs-config';
 import Query from './query/query';
 import { displayFlex, flexGrow, flexShrink, minWidth } from './shared/style.css';
 import suiteList from './shared/suite-list';
@@ -83,6 +84,7 @@ const app = (
         </OnTestbenchUserstate>
       </div>
       <div className={flexGrow(1)}>
+        <QsConfig {...{ state$: coreState$}} />
         <DemoViewer {...{ state$: stateToScheduler(coreState$) }} />
       </div>
     </div>

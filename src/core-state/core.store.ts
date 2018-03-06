@@ -6,6 +6,7 @@ import 'rxjs/add/observable/zip';
 
 import { ICoreState, StepOption } from './core.state';
 
+import { configActionType, configReducer$ } from './config.reducer';
 import {
   onTestbenchQueriesActionType,
   onTestbenchQueriesReducer$,
@@ -19,6 +20,7 @@ import { suiteActionType, suitesReducer$ } from './suites.reducer';
 import { userstateActionType, userstateReducer$ } from './userstates.reducer';
 
 export type actionType =
+  | configActionType
   | suiteActionType
   | userstateActionType
   | stepOptionActionType
@@ -32,12 +34,14 @@ const stateFn = (
   actions$: Observable<actionType>
 ): Observable<ICoreState> => {
   const obs: Observable<ICoreState> = Observable.zip(
+    configReducer$(initialState.config, actions$),
     suitesReducer$(initialState.suites, actions$),
     userstateReducer$(initialState.userstates, actions$),
     stepOptionReducer$(initialState.stepOption, actions$),
     onTestbenchUserstateReducer$(initialState.onTestbenchUserstate, actions$),
     onTestbenchQueriesReducer$(initialState.onTestbenchQueries, actions$),
-    (suites, userstates, stepOption, onTestbenchUserstate, onTestbenchQueries) => ({
+    (config, suites, userstates, stepOption, onTestbenchUserstate, onTestbenchQueries) => ({
+      config,
       onTestbenchQueries,
       onTestbenchUserstate,
       stepOption,
@@ -52,6 +56,7 @@ const stateFn = (
 };
 
 const initialStateObj: ICoreState = {
+  config: { endDate: 100, startDate: 0 },
   onTestbenchQueries: -1,
   onTestbenchUserstate: -1,
   stepOption: StepOption.last,

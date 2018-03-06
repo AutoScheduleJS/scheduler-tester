@@ -56,7 +56,7 @@ const nextState$ = new Subject<never>();
 export const stateToScheduler = (state$) =>
   state$.pipe(
     switchMap((state: ICoreState) => {
-      const [er, pots, mats, press] = queriesToPipelineDebug$({ endDate: 100, startDate: 0 }, true)(
+      const [er, pots, mats, press] = queriesToPipelineDebug$(state.config, true)(
         queryToStatePotentials([])
       )(stateToQueries(state));
       const err$: Observable<any> = er as Observable<any>;
