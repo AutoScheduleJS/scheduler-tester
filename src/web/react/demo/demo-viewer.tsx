@@ -1,4 +1,3 @@
-
 import {
   combineSchedulerObservables,
   IMaterial,
@@ -16,26 +15,52 @@ import 'rxjs/add/observable/forkJoin';
 
 import { map, switchMap, zip } from 'rxjs/operators';
 
-
 import { connect } from '../util/connect';
+
+import MaterialViewer from './material-viewer';
+import PotentialViewer from './potential-viewer';
+import PressureViewer from './pressure-viewer';
+import TimeLine from './timeline';
 
 interface ICmpProps {
   config: IConfig;
   errors: any;
-  pots: ReadonlyArray<IPotentiality>;
-  mats: ReadonlyArray<IMaterial>;
-  press: ReadonlyArray<any>;
+  pots: IPotentiality[];
+  mats: IMaterial[];
+  press: any[];
 }
 
 const cmp: React.SFC<ICmpProps> = ({ config, errors, pots, mats, press }) => (
   <div>
     <div>{displayData(errors)}</div>
-    <div>{displayData(pots)}</div>
-    <div>{displayData(mats)}</div>
-    <div>{displayData(press)}</div>
+    <TimeLine
+      {...{
+        ItemCmp: PotentialViewer,
+        config,
+        items: potsToPotsItem(pots || []),
+      }}
+    />
+    <TimeLine
+      {...{
+        ItemCmp: MaterialViewer,
+        config,
+        items: mats || [],
+      }}
+    />
+    <TimeLine
+      {...{
+        ItemCmp: PressureViewer,
+        config,
+        items: press || [],
+      }}
+    />
     <button onClick={() => nextState$.next()}>NEXT</button>
   </div>
 );
+
+const potsToPotsItem = (pots: IPotentiality[]) => {
+  return pots.map(pot => pot.places.map(place => ({ ...place, ...pot })));
+};
 
 const selector = ([config, errors, pots, mats, press]: [any, any, any, any, any]) => ({
   config,
@@ -56,18 +81,19 @@ const nextState$ = new Subject<never>();
 
 /* tslint:disable:no-object-literal-type-assertion */
 
-export const stateToScheduler = (state$) =>
+export const stateToScheduler = state$ =>
   state$.pipe(
     switchMap((state: ICoreState) => {
       const [er, pots, mats, press] = queriesToPipelineDebug$(state.config, true)(
         queryToStatePotentials([])
       )(stateToQueries(state));
       const err$: Observable<any> = er as Observable<any>;
-      const result$ = state.stepOption === StepOption.every
-        ? nextState$.pipe(
-            zip(combineSchedulerObservables(err$, pots, mats, press), (_, schedule) => schedule)
-          )
-        : Observable.forkJoin(err$, pots, mats, press);
+      const result$ =
+        state.stepOption === StepOption.every
+          ? nextState$.pipe(
+              zip(combineSchedulerObservables(err$, pots, mats, press), (_, schedule) => schedule)
+            )
+          : Observable.forkJoin(err$, pots, mats, press);
       return result$.pipe(map(res => [state.config, ...res]));
     })
   );
