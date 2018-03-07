@@ -33,21 +33,21 @@ interface ICmpProps {
 const cmp: React.SFC<ICmpProps> = ({ config, errors, pots, mats, press }) => (
   <div>
     <div>{displayData(errors)}</div>
-    <TimeLine
+    Potentials: <TimeLine
       {...{
         ItemCmp: PotentialViewer,
         config,
         items: potsToPotsItem(pots || []),
       }}
     />
-    <TimeLine
+    Materials: <TimeLine
       {...{
         ItemCmp: MaterialViewer,
         config,
         items: mats || [],
       }}
     />
-    <TimeLine
+    Pressure: <TimeLine
       {...{
         ItemCmp: PressureViewer,
         config,
