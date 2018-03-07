@@ -13,11 +13,13 @@ import * as ReactDOM from 'react-dom';
 
 import { connect } from './util/connect';
 
+import { displayFlex, flexGrow, flexShrink, minWidth } from './shared/style.css';
+
 import DemoViewer, { stateToScheduler } from './demo/demo-viewer';
 import onTestbench from './on-testbench';
+import PrettyPrintState from './pretty-print-state';
 import QsConfig from './qs-config';
 import Query from './query/query';
-import { displayFlex, flexGrow, flexShrink, minWidth } from './shared/style.css';
 import suiteList from './shared/suite-list';
 import StepSelect from './step-option';
 import UserState from './userstate/userstate';
@@ -82,6 +84,7 @@ const app = (
         >
           Userstate on test bench
         </OnTestbenchUserstate>
+        <PrettyPrintState {...{ state$: coreState$ }} />
       </div>
       <div className={flexGrow(1)}>
         <QsConfig {...{ state$: coreState$}} />
