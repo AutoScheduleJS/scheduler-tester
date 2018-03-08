@@ -13,7 +13,7 @@ import * as ReactDOM from 'react-dom';
 
 import { connect } from './util/connect';
 
-import { displayFlex, flexGrow, flexShrink, minWidth } from './shared/style.css';
+import { displayFlex, flexGrow, flexShrink, maxWidth, minWidth } from './shared/style.css';
 
 import DemoViewer, { stateToScheduler } from './demo/demo-viewer';
 import onTestbench from './on-testbench';
@@ -47,7 +47,11 @@ const app = (
   <div>
     <div className={displayFlex}>
       <div
-        className={css`${flexShrink(1)} ${minWidth('20%')}`}
+        className={css`
+          ${flexShrink(1)}
+          ${maxWidth('30%')}
+          ${minWidth('20%')}
+        `}
       >
         <StepSelect {...{ state$: coreState$ }} />
         <div>Queries Suites: </div>
@@ -87,7 +91,7 @@ const app = (
         <PrettyPrintState {...{ state$: coreState$ }} />
       </div>
       <div className={flexGrow(1)}>
-        <QsConfig {...{ state$: coreState$}} />
+        <QsConfig {...{ state$: coreState$ }} />
         <DemoViewer {...{ state$: stateToScheduler(coreState$) }} />
       </div>
     </div>

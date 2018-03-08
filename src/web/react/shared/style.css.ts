@@ -9,6 +9,9 @@ export const flexShrink = (val: number) => css`
 export const flexGrow = (val: number) => css`
   flex-grow: ${val};
 `;
+export const maxWidth = (val: string) => css`
+  max-width: ${val};
+`;
 export const minWidth = (val: string) => css`
   min-width: ${val};
 `;
