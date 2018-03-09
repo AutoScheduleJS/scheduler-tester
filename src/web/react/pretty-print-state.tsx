@@ -26,16 +26,13 @@ const cmp: React.SFC<ICmpProps> = ({ state }) => (
     } };`}
     <br />
     {'const queries: Q.IQuery[] = ['}
-    {state.onTestbenchQueries === -1
-      ? ''
-      : state.suites[state.onTestbenchQueries].map(queryToPrettyPrint)}
+    {emptyOrFn(state.suites[state.onTestbenchQueries], s => s.map(queryToPrettyPrint))}
     {'];'}
     <br />
-    {`const testStateManager = queryToStatePotentials([${
-      state.onTestbenchUserstate === -1
-        ? ''
-        : state.userstates[state.onTestbenchUserstate].map(userstateToPrettyPrint)
-    }])`}
+    {`const testStateManager = queryToStatePotentials([${emptyOrFn(
+      state.userstates[state.onTestbenchUserstate],
+      s => s.map(userstateToPrettyPrint)
+    )}])`}
     <br />
     {`return queriesToPipeline$(config)(testStateManager)(queries).pipe(map(result => { t.true(result.length > 0); }));`}
   </div>
@@ -44,6 +41,8 @@ const cmp: React.SFC<ICmpProps> = ({ state }) => (
 const selector = (state: ICoreState) => ({ state });
 
 export default connect(selector)(cmp);
+
+const emptyOrFn = <T extends any>(obj: T, fn: (o: T) => any) => (obj ? fn(obj) : '');
 
 const userstateToPrettyPrint = (col: IUserstateCollection) =>
   `{ collectionName: ${col.collectionName}, data: ${JSON.stringify(col.data)} }`;
