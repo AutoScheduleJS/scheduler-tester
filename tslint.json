@@ -6,6 +6,7 @@
     ],
     "jsRules": {},
     "rules": {
+      "no-console":false,
       "no-implicit-dependencies": false,
       "no-submodule-imports": [true, "rxjs", "@scheduler-tester/core-state"],
       "quotemark": [ true, "single", "jsx-double" ]

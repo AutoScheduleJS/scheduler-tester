@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
 import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/observable/of';
 
 import { map, switchMap, zip } from 'rxjs/operators';
 
@@ -33,21 +34,21 @@ interface ICmpProps {
 const cmp: React.SFC<ICmpProps> = ({ config, errors, pots, mats, press }) => (
   <div>
     <div>{displayData(errors)}</div>
-    Potentials: <TimeLine
+    Potentials:<TimeLine
       {...{
         ItemCmp: PotentialViewer,
         config,
         items: potsToPotsItem(pots || []),
       }}
     />
-    Materials: <TimeLine
+    Materials:<TimeLine
       {...{
         ItemCmp: MaterialViewer,
         config,
         items: mats || [],
       }}
     />
-    Pressure: <TimeLine
+    Pressure:<TimeLine
       {...{
         ItemCmp: PressureViewer,
         config,
@@ -84,17 +85,22 @@ const nextState$ = new Subject<never>();
 export const stateToScheduler = state$ =>
   state$.pipe(
     switchMap((state: ICoreState) => {
-      const [er, pots, mats, press] = queriesToPipelineDebug$(state.config, true)(
-        queryToStatePotentials([])
-      )(stateToQueries(state));
-      const err$: Observable<any> = er as Observable<any>;
-      const result$ =
-        state.stepOption === StepOption.every
-          ? nextState$.pipe(
-              zip(combineSchedulerObservables(err$, pots, mats, press), (_, schedule) => schedule)
-            )
-          : Observable.forkJoin(err$, pots, mats, press);
-      return result$.pipe(map(res => [state.config, ...res]));
+      try {
+        const [er, pots, mats, press] = queriesToPipelineDebug$(state.config, true)(
+          queryToStatePotentials([])
+        )(stateToQueries(state));
+        const err$: Observable<any> = er as Observable<any>;
+        const result$ =
+          state.stepOption === StepOption.every
+            ? nextState$.pipe(
+                zip(combineSchedulerObservables(err$, pots, mats, press), (_, schedule) => schedule)
+              )
+            : Observable.forkJoin(err$, pots, mats, press);
+        return result$.pipe(map(res => [state.config, ...res]));
+      } catch (e) {
+        console.error(e);
+        return Observable.of([state.config, e, [], [], []]);
+      }
     })
   );
 /* tslint:enable:no-object-literal-type-assertion */
