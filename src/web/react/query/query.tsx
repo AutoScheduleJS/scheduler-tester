@@ -10,6 +10,7 @@ import { width } from '../shared/style.css';
 
 import { pushTransform, wholeQuery } from './util';
 
+import QueryLink, { pushLink } from './query-link';
 import TimeBoundary from './time-boundary';
 import TimeDuration from './time-duration';
 import TransformInsert, { defaultInsert } from './transform-insert';
@@ -85,7 +86,18 @@ const cmp: React.SFC<IItemCmpProps<wholeQuery>> = ({ action, item, suite }) => {
           suite: item.transforms ? item.transforms.updates : [],
         }}
       >
-        add updates
+        add update
+      </SuiteItem>
+      <SuiteItem
+        {...{
+          action,
+          extraProps: { query: item, qSuite: suite },
+          itemCmp: QueryLink,
+          newItemFn: _ => updateFn(pushLink(item)),
+          suite: item.links ? item.links : [],
+        }}
+      >
+        add link
       </SuiteItem>
     </div>
   );
