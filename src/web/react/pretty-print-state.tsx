@@ -1,5 +1,6 @@
 import {
   IQuery,
+  IQueryLink,
   ITaskTransformNeed,
   ITimeBoundary,
   ITimeDuration,
@@ -81,6 +82,10 @@ const queryToPrettyPrint = (q: IQuery) => {
                 trans.updates
               )}], [${prettyPrintArray(trans.inserts)}]),`;
             }
+            case 'links': {
+              const links = query[key] as ReadonlyArray<IQueryLink>;
+              return `Q.links(${prettyPrintLinks(links)}),`;
+            }
             default: {
               return '--';
             }
@@ -94,6 +99,17 @@ const queryToPrettyPrint = (q: IQuery) => {
 
 const prettyPrintArray = (items: ReadonlyArray<any>): string => {
   return items.map(item => JSON.stringify(item)).toString();
+};
+
+const prettyPrintLinks = (links: ReadonlyArray<IQueryLink>): string => {
+  return links
+    .map(
+      link =>
+        `Q.queryLink(${JSON.stringify(link.distance)}, '${link.origin}', ${link.queryId}, ${
+          link.potentialId
+        }${link.splitId ? ' ' + link.splitId : ''})`
+    )
+    .toString();
 };
 
 const prettyPrintNeeds = (needs: ReadonlyArray<ITaskTransformNeed>): string => {
