@@ -26,7 +26,7 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "@autoschedule/queries-fn": "^5.1.0",
+    "@autoschedule/queries-fn": "^6.0.0",
     "@autoschedule/queries-scheduler": "^3.2.0",
     "@autoschedule/userstate-manager": "^3.0.1",
     "@types/ramda": "github:types/npm-ramda#dist",
