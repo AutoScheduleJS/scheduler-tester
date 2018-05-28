@@ -2,6 +2,7 @@ import {
   IQueryInternal,
   IQueryLink,
   IQueryLinkInternal,
+  IQueryPositionInternal,
   IQueryTransformationInternal,
   ITaskTransformNeed,
   QueryKind,
@@ -59,7 +60,7 @@ const queryToPrettyPrint = (q: IQueryInternal) => {
               return `Q.${key}('${query[key]}'),`;
             }
             case 'position': {
-              return `Q.position(${query.position})`;
+              return `Q.position(${prettyPos(query.position)})`;
             }
             case 'kind': {
               const kind = query[key];
@@ -91,6 +92,22 @@ const queryToPrettyPrint = (q: IQueryInternal) => {
       ),
     </div>
   );
+};
+
+const prettyPos = (item: IQueryPositionInternal): string => {
+  return `${prettyObj(item)}`;
+};
+
+const prettyObj = (obj: any): string => {
+  if (typeof obj !== 'object') {
+    return obj;
+  }
+  return `{${Object.entries(obj).reduce((acc: string, [key, val]) => {
+    if (val == null) {
+      return acc;
+    }
+    return `${acc}, ${key}: ${prettyObj(val)}`;
+  }, '').substr(2)}}`;
 };
 
 const prettyPrintArray = (items: ReadonlyArray<any>): string => {
