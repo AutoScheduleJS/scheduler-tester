@@ -1,25 +1,21 @@
-import * as React from 'react';
-
+import { IQueryInternal, ITimeDurationInternal } from '@autoschedule/queries-fn';
 import {
   SuitesQueryDeleteAction,
   SuitesQueryUpdateAction,
 } from '@scheduler-tester/core-state/suites.reducer';
-
+import * as React from 'react';
 import { IItemCmpProps } from '../shared/item-props.interface';
 import { width } from '../shared/style.css';
-
-import { pushTransform, wholeQuery } from './util';
-
+import SuiteItem from '../shared/suite-item';
 import QueryLink, { pushLink } from './query-link';
 import TimeBoundary from './time-boundary';
 import TimeDuration from './time-duration';
 import TransformInsert, { defaultInsert } from './transform-insert';
 import TransformNeed, { defaultNeed } from './transform-need';
 import TransformUpdate, { defaultUpdate } from './transform-update';
+import { pushTransform } from './util';
 
-import SuiteItem from '../shared/suite-item';
-
-const cmp: React.SFC<IItemCmpProps<wholeQuery>> = ({ action, item, suite }) => {
+const cmp: React.SFC<IItemCmpProps<IQueryInternal>> = ({ action, item, suite }) => {
   const updateFn = updateAction({ action, item, suite });
   return (
     <div>
@@ -33,24 +29,28 @@ const cmp: React.SFC<IItemCmpProps<wholeQuery>> = ({ action, item, suite }) => {
       <button onClick={() => action(new SuitesQueryDeleteAction(suite, item))}>DELETE</button>
       <TimeBoundary
         {...{
-          actionFn: t => updateFn({ ...item, start: t }),
-          timeBoundary: item.start,
+          actionFn: t => updateFn({ ...item, position: { ...item.position, start: t } }),
+          timeBoundary: item.position.start,
         }}
       >
         start
       </TimeBoundary>
       <TimeBoundary
         {...{
-          actionFn: t => updateFn({ ...item, end: t }),
-          timeBoundary: item.end,
+          actionFn: t => updateFn({ ...item, position: { ...item.position, end: t } }),
+          timeBoundary: item.position.end,
         }}
       >
         end
       </TimeBoundary>
       <TimeDuration
         {...{
-          actionFn: t => updateFn({ ...item, duration: t }),
-          timeDuration: item.duration,
+          actionFn: t =>
+            updateFn({
+              ...item,
+              position: { ...item.position, duration: t as ITimeDurationInternal },
+            }),
+          timeDuration: item.position.duration,
         }}
       >
         duration
@@ -105,6 +105,6 @@ const cmp: React.SFC<IItemCmpProps<wholeQuery>> = ({ action, item, suite }) => {
 
 export default cmp;
 
-const updateAction = ({ action, item, suite }: IItemCmpProps<wholeQuery>) => (
-  newQuery: wholeQuery
+const updateAction = ({ action, item, suite }: IItemCmpProps<IQueryInternal>) => (
+  newQuery: IQueryInternal
 ) => action(new SuitesQueryUpdateAction(suite, item, newQuery));

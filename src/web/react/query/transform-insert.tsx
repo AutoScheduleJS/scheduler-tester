@@ -1,16 +1,13 @@
-import { ITaskTransformInsert } from '@autoschedule/queries-fn';
-import * as React from 'react';
-
-import { displayFlex, flexGrow } from '../shared/style.css';
-
+import { IQueryInternal, ITaskTransformInsert } from '@autoschedule/queries-fn';
 import { SuitesQueryUpdateAction } from '@scheduler-tester/core-state/suites.reducer';
+import * as React from 'react';
 import { IItemCmpProps } from '../shared/item-props.interface';
-
-import { parseValue, updateTransform, wholeQuery } from './util';
+import { displayFlex, flexGrow } from '../shared/style.css';
+import { parseValue, updateTransform } from './util';
 
 interface ICmpProps extends IItemCmpProps<ITaskTransformInsert> {
-  qSuite: ReadonlyArray<wholeQuery>;
-  query: wholeQuery;
+  qSuite: ReadonlyArray<IQueryInternal>;
+  query: IQueryInternal;
 }
 
 const cmp: React.SFC<ICmpProps> = ({ action, item, query, qSuite }) => {

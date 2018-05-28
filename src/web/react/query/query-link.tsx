@@ -1,14 +1,13 @@
-import { IQueryLink } from '@autoschedule/queries-fn';
+import { IQueryInternal, IQueryLink } from '@autoschedule/queries-fn';
 import { SuitesQueryUpdateAction } from '@scheduler-tester/core-state/suites.reducer';
 import * as React from 'react';
-
 import { IItemCmpProps } from '../shared/item-props.interface';
 import { displayFlex, flexGrow } from '../shared/style.css';
-import { parseValue, wholeQuery } from './util';
+import { parseValue } from './util';
 
 interface ICmpProps extends IItemCmpProps<IQueryLink> {
-  qSuite: ReadonlyArray<wholeQuery>;
-  query: wholeQuery;
+  qSuite: ReadonlyArray<IQueryInternal>;
+  query: IQueryInternal;
 }
 
 const cmp: React.SFC<ICmpProps> = ({ action, item, query, qSuite }) => {
@@ -32,25 +31,21 @@ const cmp: React.SFC<ICmpProps> = ({ action, item, query, qSuite }) => {
 export default cmp;
 
 const triggerUpdate = ({ action, qSuite, query, item }) => (update: IQueryLink) => {
-  action(
-    new SuitesQueryUpdateAction(qSuite, query, updateLink(query, item, update))
-  );
+  action(new SuitesQueryUpdateAction(qSuite, query, updateLink(query, item, update)));
 };
 
-export const pushLink = (q: wholeQuery): wholeQuery => {
-  const links = q.links || [];
-  return { ...q, links: [...links, defaultLink]}
-}
+export const pushLink = (q: IQueryInternal): IQueryInternal => {
+  const links = q.links || [];
+  return { ...q, links: [...links, defaultLink] };
+};
 
 const updateLink = (
-  q: wholeQuery,
+  q: IQueryInternal,
   oldLink: IQueryLink,
   newLink: IQueryLink
-): wholeQuery => {
+): IQueryInternal => {
   const links = q.links || [];
-  const newTransforms = links.map(
-    t => (t !== oldLink ? t : newLink)
-  );
+  const newTransforms = links.map(t => (t !== oldLink ? t : newLink));
   return { ...q, links: newTransforms };
 };
 
@@ -58,5 +53,5 @@ const defaultLink: IQueryLink = {
   distance: { max: 10, min: 5 },
   origin: 'end',
   potentialId: 0,
-  queryId: 0
-}
+  queryId: 0,
+};

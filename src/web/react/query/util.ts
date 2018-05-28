@@ -1,23 +1,21 @@
-import { IAtomicQuery, IGoalQuery, ITransformation } from '@autoschedule/queries-fn';
-
-export type wholeQuery = IAtomicQuery & IGoalQuery;
+import { IQueryInternal, IQueryTransformationInternal } from '@autoschedule/queries-fn';
 
 export const pushTransform = (
-  q: wholeQuery,
-  kind: keyof ITransformation,
+  q: IQueryInternal,
+  kind: keyof IQueryTransformationInternal,
   transform: any
-): wholeQuery => {
+): IQueryInternal => {
   const transforms = q.transforms || { needs: [], deletes: [], updates: [], inserts: [] };
   const newTransform = [...transforms[kind], transform];
   return { ...q, transforms: { ...transforms, [kind]: newTransform } };
 };
 
 export const updateTransform = (
-  q: wholeQuery,
-  kind: keyof ITransformation,
+  q: IQueryInternal,
+  kind: keyof IQueryTransformationInternal,
   oldTransform: any,
   newTransform: any
-): wholeQuery => {
+): IQueryInternal => {
   const transforms = q.transforms || { needs: [], deletes: [], updates: [], inserts: [] };
   const newTransforms = (transforms[kind] as ReadonlyArray<any>).map(
     t => (t !== oldTransform ? t : newTransform)

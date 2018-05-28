@@ -1,15 +1,13 @@
 import * as Q from '@autoschedule/queries-fn';
 import { Observable } from 'rxjs/Observable';
-
 import { scan } from 'rxjs/operators';
-
 import { suitesType } from './core.state';
 import { actionType } from './core.store';
 
 /* tslint:disable:no-empty max-classes-per-file */
 
 export class SuitesLoadAction {
-  constructor(public queries: ReadonlyArray<ReadonlyArray<Q.IQuery>>) {}
+  constructor(public queries: ReadonlyArray<ReadonlyArray<Q.IQueryInternal>>) {}
 }
 
 export class SuitesNewAction {
@@ -17,19 +15,19 @@ export class SuitesNewAction {
 }
 
 export class SuitesQueryNewAction {
-  constructor(public suite: ReadonlyArray<Q.IQuery>) {}
+  constructor(public suite: ReadonlyArray<Q.IQueryInternal>) {}
 }
 
 export class SuitesQueryUpdateAction {
   constructor(
-    public suite: ReadonlyArray<Q.IQuery>,
-    public oldQuery: Q.IQuery,
-    public newQuery: Q.IQuery
+    public suite: ReadonlyArray<Q.IQueryInternal>,
+    public oldQuery: Q.IQueryInternal,
+    public newQuery: Q.IQueryInternal
   ) {}
 }
 
 export class SuitesQueryDeleteAction {
-  constructor(public suite: ReadonlyArray<Q.IQuery>, public oldQuery: Q.IQuery) {}
+  constructor(public suite: ReadonlyArray<Q.IQueryInternal>, public oldQuery: Q.IQueryInternal) {}
 }
 
 /* tslint:enable:no-empty */
@@ -76,18 +74,16 @@ const handleNew = (state: suitesType): suitesType => {
 };
 
 const mapSpecificSuite = (
-  suites: ReadonlyArray<ReadonlyArray<Q.IQuery>>,
-  target: ReadonlyArray<Q.IQuery>,
-  fn: (s: ReadonlyArray<Q.IQuery>) => ReadonlyArray<Q.IQuery>
+  suites: ReadonlyArray<ReadonlyArray<Q.IQueryInternal>>,
+  target: ReadonlyArray<Q.IQueryInternal>,
+  fn: (s: ReadonlyArray<Q.IQueryInternal>) => ReadonlyArray<Q.IQueryInternal>
 ) => suites.map(suite => (suite !== target ? suite : fn(suite)));
 
-const suiteToNewQuery = (suite: ReadonlyArray<Q.IQuery>): Q.IQuery => {
+const suiteToNewQuery = (suite: ReadonlyArray<Q.IQueryInternal>): Q.IQueryInternal => {
   const lastQuery = suite[suite.length - 1];
   return Q.queryFactory(
     Q.id((lastQuery ? lastQuery.id : 0) + 1),
-    Q.start(1),
-    Q.end(5),
-    Q.duration(Q.timeDuration(4, 2))
+    Q.positionHelper(Q.start(1), Q.end(5), Q.duration(4, 2))
   );
 };
 

@@ -1,20 +1,15 @@
 import {
-  IQuery,
+  IQueryInternal,
   IQueryLink,
+  IQueryLinkInternal,
+  IQueryTransformationInternal,
   ITaskTransformNeed,
-  ITimeBoundary,
-  ITimeDuration,
-  ITransformation,
   QueryKind,
 } from '@autoschedule/queries-fn';
-import * as React from 'react';
-
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { IUserstateCollection } from '@scheduler-tester/core-state/userstate-collection.interface';
-
+import * as React from 'react';
 import { connect } from './util/connect';
-
-import { wholeQuery } from './query/util';
 
 interface ICmpProps {
   state: ICoreState;
@@ -48,14 +43,14 @@ const emptyOrFn = <T extends any>(obj: T, fn: (o: T) => any) => (obj ? fn(obj) :
 const userstateToPrettyPrint = (col: IUserstateCollection) =>
   `{ collectionName: ${col.collectionName}, data: ${JSON.stringify(col.data)} }`;
 
-const queryToPrettyPrint = (q: IQuery) => {
-  const query = q as wholeQuery;
+const queryToPrettyPrint = (q: IQueryInternal) => {
+  const query = q as IQueryInternal;
   return (
     <div>
       Q.queryFactory(
       {Object.keys(query)
         .map(k => {
-          const key = k as keyof wholeQuery;
+          const key = k as keyof IQueryInternal;
           switch (key) {
             case 'id': {
               return `Q.${key}(${query[key]}),`;
@@ -63,27 +58,28 @@ const queryToPrettyPrint = (q: IQuery) => {
             case 'name': {
               return `Q.${key}('${query[key]}'),`;
             }
-            case 'end':
-            case 'start': {
-              const tb = query[key] as ITimeBoundary;
-              return `Q.${key}(${tb.target}${minFilter(tb)}),`;
+            case 'position': {
+              return `Q.position(${query.position})`;
             }
             case 'kind': {
-              const kind = query[key] as QueryKind;
+              const kind = query[key];
               return kind !== QueryKind.Atomic ? `Q.kind(Q.QueryKind.${QueryKind[kind]}),` : '';
             }
-            case 'duration': {
-              const dur = query[key] as ITimeDuration;
-              return `Q.duration(Q.timeDuration(${dur.target}${minFilter(dur)})),`;
+            case 'splittable': {
+              const split = query[key];
+              if (!split) {
+                return '';
+              }
+              return `Q.splittable(${split})`;
             }
             case 'transforms': {
-              const trans = query[key] as ITransformation;
+              const trans = query[key] as IQueryTransformationInternal;
               return `Q.transforms([${prettyPrintNeeds(trans.needs)}], [${prettyPrintArray(
                 trans.updates
               )}], [${prettyPrintArray(trans.inserts)}]),`;
             }
             case 'links': {
-              const links = query[key] as ReadonlyArray<IQueryLink>;
+              const links = query[key] as IQueryLinkInternal[];
               return `Q.links(${prettyPrintLinks(links)}),`;
             }
             default: {
@@ -122,6 +118,3 @@ const prettyPrintNeeds = (needs: ReadonlyArray<ITaskTransformNeed>): string => {
     )
     .toString();
 };
-
-const minFilter = (time: { min?: number; target?: number }): string =>
-  time.min == null ? '' : time.min === time.target ? '' : ',' + time.min;

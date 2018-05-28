@@ -1,6 +1,5 @@
-import { IQuery } from '@autoschedule/queries-fn';
-
-import { IConfig } from './config.interface';
+import { IQueryInternal } from '@autoschedule/queries-fn';
+import { IConfig } from './config.interface';
 import { IUserstateCollection } from './userstate-collection.interface';
 
 export enum StepOption {
@@ -8,7 +7,7 @@ export enum StepOption {
   last,
 }
 
-export type suitesType = ReadonlyArray<ReadonlyArray<IQuery>>;
+export type suitesType = ReadonlyArray<ReadonlyArray<IQueryInternal>>;
 export type userstatesType = ReadonlyArray<ReadonlyArray<IUserstateCollection>>;
 
 export interface ICoreState {
