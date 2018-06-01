@@ -2,22 +2,19 @@ import {
   combineSchedulerObservables,
   IMaterial,
   IPotentiality,
+  placeToRange,
   queriesToPipelineDebug$,
 } from '@autoschedule/queries-scheduler';
 import { queryToStatePotentials } from '@autoschedule/userstate-manager';
 import { IConfig } from '@scheduler-tester/core-state/config.interface';
 import { ICoreState, StepOption } from '@scheduler-tester/core-state/core.state';
 import * as React from 'react';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
-
+import { Observable } from 'rxjs/Observable';
 import { map, switchMap, zip } from 'rxjs/operators';
-
+import { Subject } from 'rxjs/Subject';
 import { connect } from '../util/connect';
-
 import MaterialViewer from './material-viewer';
 import PotentialViewer from './potential-viewer';
 import PressureViewer from './pressure-viewer';
@@ -60,7 +57,7 @@ const cmp: React.SFC<ICmpProps> = ({ config, errors, pots, mats, press }) => (
 );
 
 const potsToPotsItem = (pots: IPotentiality[]) => {
-  return pots.map(pot => pot.places.map(place => ({ ...place, ...pot })));
+  return pots.map(pot => pot.places.map(place => ({ ...placeToRange(place), ...pot })));
 };
 
 const selector = ([config, errors, pots, mats, press]: [any, any, any, any, any]) => ({
@@ -86,10 +83,10 @@ export const stateToScheduler = state$ =>
   state$.pipe(
     switchMap((state: ICoreState) => {
       try {
-        const [er, pots, mats, press] = queriesToPipelineDebug$(state.config, true)(
+        const [er, pots, mats, press] = queriesToPipelineDebug$(state.config)(
           queryToStatePotentials([])
         )(stateToQueries(state));
-        const err$: Observable<any> = er as Observable<any>;
+        const err$ = er;
         const result$ =
           state.stepOption === StepOption.every
             ? nextState$.pipe(

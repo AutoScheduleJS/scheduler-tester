@@ -22,23 +22,23 @@ const cmp: React.SFC<ICmpProps> = ({ value, labels, updateFn }) => (
               <input
                 type="number"
                 defaultValue={'' + val}
-                key={k+val}
+                key={k + val}
                 placeholder={findLabel(labels)(k)}
                 onBlur={e => updateFn({ ...value, [k]: +e.currentTarget.value })}
               />
             );
           }
-          if (typeof val === 'string') {
-            return (
-              <textarea
-                rows={3}
-                defaultValue={'' + val}
-                key={k+val}
-                placeholder={findLabel(labels)(k)}
-                onBlur={e => updateFn({ ...value, [k]: e.currentTarget.value })}
-              />
-            );
-          }
+          // if (typeof val === 'string') {
+          return (
+            <textarea
+              rows={3}
+              defaultValue={'' + val}
+              key={k + val}
+              placeholder={findLabel(labels)(k)}
+              onBlur={e => updateFn({ ...value, [k]: e.currentTarget.value })}
+            />
+          );
+          // }
         })
     )}
   </div>
