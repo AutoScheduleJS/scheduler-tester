@@ -31,6 +31,10 @@ features:
 - display materials on timeline. Could also display potentials if potential stream is accessible.
 - idempotent: use same core-logic whether using UI or CLI
 
+UI:
+- horizontally splitted screen with editing panel for userstate/queries (tabs) & material's visualization (simple mode)
+- panels are not resizable (by hand), but there could be a 'focus' display for editing or visualization.
+
 core-logic actions:
 - based on FLUX
 - default to loaded state & queries
@@ -49,11 +53,3 @@ state:
 - stepOption: Enum { every, last }
 - onTestbenchUserstate: { collectionName: string, data: any[] }[]
 - onTestbenchQueries: Queries[]
-
-vuejs:
-- functional component
-- vue-rx to manage state
-- .tsx instead of .vue
-- can't access ref in functional component
-- no support for type checking when user set component's props
-- highly composable

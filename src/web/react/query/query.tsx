@@ -1,8 +1,6 @@
 import { IQueryInternal, ITimeDurationInternal } from '@autoschedule/queries-fn';
-import {
-  SuitesQueryDeleteAction,
-  SuitesQueryUpdateAction,
-} from '@scheduler-tester/core-state/suites.reducer';
+import { Button } from '@material-ui/core';
+import { SuitesQueryDeleteAction, SuitesQueryUpdateAction } from '@scheduler-tester/core-state/suites.reducer';
 import * as React from 'react';
 import { IItemCmpProps } from '../shared/item-props.interface';
 import { width } from '../shared/style.css';
@@ -26,7 +24,7 @@ const cmp: React.SFC<IItemCmpProps<IQueryInternal>> = ({ action, item, suite }) 
         key={JSON.stringify(item)}
         onBlur={e => updateFn(JSON.parse(e.currentTarget.value))}
       />
-      <button onClick={() => action(new SuitesQueryDeleteAction(suite, item))}>DELETE</button>
+      <Button onClick={() => action(new SuitesQueryDeleteAction(suite, item))}>DELETE</Button>
       <TimeBoundary
         {...{
           actionFn: t => updateFn({ ...item, position: { ...item.position, start: t } }),
