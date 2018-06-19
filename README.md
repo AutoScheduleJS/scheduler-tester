@@ -34,6 +34,8 @@ features:
 UI:
 - horizontally splitted screen with editing panel for userstate/queries (tabs) & material's visualization (simple mode)
 - panels are not resizable (by hand), but there could be a 'focus' display for editing or visualization.
+- new queries are generated from FAB -> scroll to top, unzoom visualization panel, create default query in selected suite.
+- randomize color for each query, that match material in visualization
 
 core-logic actions:
 - based on FLUX

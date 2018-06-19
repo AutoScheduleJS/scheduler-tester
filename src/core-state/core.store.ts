@@ -18,6 +18,7 @@ import {
 import { stepOptionActionType, stepOptionReducer$ } from './step-option.reducer';
 import { suiteActionType, suitesReducer$ } from './suites.reducer';
 import { userstateActionType, userstateReducer$ } from './userstates.reducer';
+import { IQueryInternal, QueryKind } from '@autoschedule/queries-fn';
 
 export type actionType =
   | configActionType
@@ -55,12 +56,22 @@ const stateFn = (
   return bs;
 };
 
+const initialSuite: ReadonlyArray<IQueryInternal> = [
+  {
+    id: 1,
+    kind: QueryKind.Atomic,
+    name: 'First Query',
+    position: { duration: { min: 2, target: 4 } },
+    splittable: false,
+  },
+];
+
 const initialStateObj: ICoreState = {
   config: { endDate: 100, startDate: 0 },
-  onTestbenchQueries: -1,
-  onTestbenchUserstate: -1,
+  onTestbenchQueries: 0,
+  onTestbenchUserstate: 0,
   stepOption: StepOption.last,
-  suites: [],
+  suites: [initialSuite],
   userstates: [],
 };
 
