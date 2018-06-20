@@ -5,15 +5,17 @@ import { TabsManager } from './tabs-manager/tabs-manager';
 import QueriesManager from './queries-manager/queries-manager';
 
 const app = (
-  <AppBar>
-    <Toolbar>
-      <Typography variant="title">Scheduler Lab</Typography>
-    </Toolbar>
+  <div>
+    <AppBar position='sticky'>
+      <Toolbar>
+        <Typography variant="title">Scheduler Lab</Typography>
+      </Toolbar>
+    </AppBar>
     <TabsManager labels={['Queries manager', 'User-state manager']}>
-      <QueriesManager/>
+      <QueriesManager />
       <span>Toto</span>
     </TabsManager>
-  </AppBar>
+  </div>
 );
 
 ReactDOM.render(app, document.getElementById('app'));
