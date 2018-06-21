@@ -1,5 +1,5 @@
 import {
-  IQueryInternal,
+  IQuery,
   IQueryLink,
   IQueryLinkInternal,
   IQueryPositionInternal,
@@ -44,14 +44,14 @@ const emptyOrFn = <T extends any>(obj: T, fn: (o: T) => any) => (obj ? fn(obj) :
 const userstateToPrettyPrint = (col: IUserstateCollection) =>
   `{ collectionName: ${col.collectionName}, data: ${JSON.stringify(col.data)} }`;
 
-const queryToPrettyPrint = (q: IQueryInternal) => {
-  const query = q as IQueryInternal;
+const queryToPrettyPrint = (q: IQuery) => {
+  const query = q as IQuery;
   return (
     <div>
       Q.queryFactory(
       {Object.keys(query)
         .map(k => {
-          const key = k as keyof IQueryInternal;
+          const key = k as keyof IQuery;
           switch (key) {
             case 'id': {
               return `Q.${key}(${query[key]}),`;

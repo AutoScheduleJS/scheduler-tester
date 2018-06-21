@@ -1,4 +1,4 @@
-import { IQueryInternal } from '@autoschedule/queries-fn';
+import { IQuery } from '@autoschedule/queries-fn';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
 import * as React from 'react';
@@ -6,7 +6,7 @@ import QueryCard from '../query-card';
 import { connect } from '../util/connect';
 
 interface IQueriesManagerFromState {
-  queries: ReadonlyArray<IQueryInternal>;
+  queries: ReadonlyArray<IQuery>;
 }
 interface IQueriesManagerProps extends IQueriesManagerFromState {}
 

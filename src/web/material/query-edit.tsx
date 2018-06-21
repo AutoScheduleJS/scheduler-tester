@@ -1,12 +1,20 @@
-import { IQueryInternal } from '@autoschedule/queries-fn';
-import { Dialog, withStyles, DialogTitle, DialogActions, Button } from '@material-ui/core';
+import { IQuery } from '@autoschedule/queries-fn';
+import {
+  Dialog,
+  withStyles,
+  DialogTitle,
+  DialogActions,
+  Button,
+  DialogContent,
+  TextField,
+} from '@material-ui/core';
 import * as React from 'react';
 import withMobileDialog from './util/withMobileDialog';
 
 const styles = _ => ({});
 
 interface IqueryEditProps {
-  query: IQueryInternal;
+  query: IQuery;
   open: boolean;
   onClose: () => void;
 }
@@ -15,16 +23,14 @@ class QueryEdit extends React.PureComponent<
   IqueryEditProps & { classes: any; fullScreen: boolean }
 > {
   state = {
-    editOpened: false,
+    ...this.props.query,
   };
 
-  closeEditDialog() {
-    this.setState({ editOpened: false });
-  }
-
-  openEditDialog() {
-    this.setState({ editOpened: true });
-  }
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value,
+    });
+  };
 
   render() {
     const { fullScreen, open, onClose } = this.props;
@@ -36,6 +42,9 @@ class QueryEdit extends React.PureComponent<
         aria-labelledby="query-edit-dialog-title"
       >
         <DialogTitle id="query-edit-dialog-title">Edit Query</DialogTitle>
+        <DialogContent>
+          <TextField label="name" value={this.state.name} onChange={this.handleChange('name')} />
+        </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>cancel</Button>
           <Button onClick={onClose} color="primary">

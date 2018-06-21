@@ -1,4 +1,4 @@
-import { IQueryInternal, QueryKind } from '@autoschedule/queries-fn';
+import { IQuery, QueryKind } from '@autoschedule/queries-fn';
 import {
   Card,
   CardActions,
@@ -20,10 +20,10 @@ const styles = _ => ({
 
 interface IqueryCardProps {
   classes: any;
-  query: IQueryInternal;
+  query: IQuery;
 }
 
-const QueryDisplayKind: React.SFC<{ query: IQueryInternal }> = ({ query }) => {
+const QueryDisplayKind: React.SFC<{ query: IQuery }> = ({ query }) => {
   const kind = query.kind;
   return (
     <Typography>Query kind: {kind === QueryKind.Atomic ? 'atomic' : 'placeholder'}</Typography>

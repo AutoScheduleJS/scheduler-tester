@@ -1,4 +1,4 @@
-import { IQueryInternal, ITimeDurationInternal } from '@autoschedule/queries-fn';
+import { IQuery, ITimeDurationInternal } from '@autoschedule/queries-fn';
 import { Button } from '@material-ui/core';
 import { SuitesQueryDeleteAction, SuitesQueryUpdateAction } from '@scheduler-tester/core-state/suites.reducer';
 import * as React from 'react';
@@ -13,7 +13,7 @@ import TransformNeed, { defaultNeed } from './transform-need';
 import TransformUpdate, { defaultUpdate } from './transform-update';
 import { pushTransform } from './util';
 
-const cmp: React.SFC<IItemCmpProps<IQueryInternal>> = ({ action, item, suite }) => {
+const cmp: React.SFC<IItemCmpProps<IQuery>> = ({ action, item, suite }) => {
   const updateFn = updateAction({ action, item, suite });
   return (
     <div>
@@ -103,6 +103,6 @@ const cmp: React.SFC<IItemCmpProps<IQueryInternal>> = ({ action, item, suite }) 
 
 export default cmp;
 
-const updateAction = ({ action, item, suite }: IItemCmpProps<IQueryInternal>) => (
-  newQuery: IQueryInternal
+const updateAction = ({ action, item, suite }: IItemCmpProps<IQuery>) => (
+  newQuery: IQuery
 ) => action(new SuitesQueryUpdateAction(suite, item, newQuery));

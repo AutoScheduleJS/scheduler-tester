@@ -31,6 +31,9 @@ features:
 - display materials on timeline. Could also display potentials if potential stream is accessible.
 - idempotent: use same core-logic whether using UI or CLI
 
+
+NOTES:
+- query-edit keep internal state in-memory ; should be one unique query-edit instead of one per query. Use Redux ?
 UI:
 - horizontally splitted screen with editing panel for userstate/queries (tabs) & material's visualization (simple mode)
 - panels are not resizable (by hand), but there could be a 'focus' display for editing or visualization.

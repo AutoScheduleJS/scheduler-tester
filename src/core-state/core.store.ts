@@ -18,7 +18,7 @@ import {
 import { stepOptionActionType, stepOptionReducer$ } from './step-option.reducer';
 import { suiteActionType, suitesReducer$ } from './suites.reducer';
 import { userstateActionType, userstateReducer$ } from './userstates.reducer';
-import { IQueryInternal, QueryKind } from '@autoschedule/queries-fn';
+import { IQuery, QueryKind } from '@autoschedule/queries-fn';
 
 export type actionType =
   | configActionType
@@ -56,7 +56,7 @@ const stateFn = (
   return bs;
 };
 
-const initialSuite: ReadonlyArray<IQueryInternal> = [
+const initialSuite: ReadonlyArray<IQuery> = [
   {
     id: 1,
     kind: QueryKind.Atomic,
