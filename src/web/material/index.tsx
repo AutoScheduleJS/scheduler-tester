@@ -1,7 +1,7 @@
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { TabsManager } from './tabs-manager';
+import { TabsManager } from './shared/tabs-manager';
 import QueriesManager from './queries-manager';
 import { QueryEdit } from './query-edit';
 

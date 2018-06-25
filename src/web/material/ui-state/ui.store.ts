@@ -29,6 +29,7 @@ const initialStateObj: UIState = {
   edit: {
     query: false,
   },
+  editTab: 0
 };
 
 export const uiState$ = stateFn(initialStateObj, uiActionTrigger$);
