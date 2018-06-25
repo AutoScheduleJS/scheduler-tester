@@ -10,7 +10,8 @@ import {
   withStyles,
 } from '@material-ui/core';
 import * as React from 'react';
-import QueryEdit from './query-edit';
+import { uiActionTrigger$ } from './ui-state/ui.store';
+import { EditQueryAction } from './ui-state/edit.ui.reducer';
 
 const styles = _ => ({
   card: {
@@ -31,16 +32,8 @@ const QueryDisplayKind: React.SFC<{ query: IQuery }> = ({ query }) => {
 };
 
 class QueryCard extends React.PureComponent<IqueryCardProps> {
-  state = {
-    editOpened: false,
-  };
-
-  closeEditDialog() {
-    this.setState({ editOpened: false });
-  }
-
   openEditDialog() {
-    this.setState({ editOpened: true });
+    uiActionTrigger$.next(new EditQueryAction(this.props.query));
   }
 
   render() {
@@ -58,11 +51,6 @@ class QueryCard extends React.PureComponent<IqueryCardProps> {
             </IconButton>
           </CardActions>
         </Card>
-        <QueryEdit
-          query={query}
-          open={this.state.editOpened}
-          onClose={this.closeEditDialog.bind(this)}
-        />
       </div>
     );
   }

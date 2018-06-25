@@ -1,8 +1,9 @@
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { TabsManager } from './tabs-manager/tabs-manager';
-import QueriesManager from './queries-manager/queries-manager';
+import { TabsManager } from './tabs-manager';
+import QueriesManager from './queries-manager';
+import { QueryEdit } from './query-edit';
 
 const app = (
   <div>
@@ -15,6 +16,7 @@ const app = (
       <QueriesManager />
       <span>Toto</span>
     </TabsManager>
+    <QueryEdit />
   </div>
 );
 

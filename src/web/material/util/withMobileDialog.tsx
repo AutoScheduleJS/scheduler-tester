@@ -16,7 +16,7 @@ const withMobileDialog = <P extends {}>(options?: { breakpoint: Breakpoint }) =>
     return <Component fullScreen={isWidthDown(breakpoint, props.width)} {...props} />;
   }
 
-  return withWidth()(WithMobileDialog);
+  return withWidth()(WithMobileDialog) as any;
 };
 
 export default withMobileDialog;
