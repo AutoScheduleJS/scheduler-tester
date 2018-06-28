@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
-export const connect = (selector: (s: any) => any = state => state, state$: Observable<any>) => {
-  return WrappedComponent => {
-    return class Connect extends React.Component<{}> {
+export const connect = <T, U>(selector: (s: T) => U, state$: Observable<T>) => {
+  return <C, U>(WrappedComponent: React.ComponentType<C & U & { children?: React.ReactNode }>) => {
+    return class Connect extends React.Component<C> {
       private subscription;
       public componentWillMount() {
-        this.subscription = state$.pipe(map(selector)).subscribe(this.setState.bind(this));
+        this.subscription = state$.pipe(map(selector)).subscribe(res => this.setState(res));
       }
 
       public componentWillUnmount() {
@@ -15,7 +15,8 @@ export const connect = (selector: (s: any) => any = state => state, state$: Obse
       }
 
       public render() {
-        return <WrappedComponent {...this.state} {...this.props} />;
+        const state = this.state as Readonly<U>;
+        return <WrappedComponent {...state} {...this.props} />;
       }
     };
   };

@@ -1,13 +1,16 @@
+import { Tab, Tabs } from '@material-ui/core';
 import * as React from 'react';
-import { Tabs, Tab } from '@material-ui/core';
 
-interface ITabManagerItemProps {
-  labels: string[];
+export interface ITabManagerFromState {
   activeIndex: number;
+}
+
+export interface ITabManagerProps {
+  labels: string[];
   onTabChange: (i: number) => void;
 }
 
-export class TabsManager extends React.PureComponent<ITabManagerItemProps> {
+export class TabsManager extends React.PureComponent<ITabManagerProps & ITabManagerFromState> {
   render() {
     const { activeIndex, children, labels, onTabChange } = this.props;
     if (!children) {

@@ -8,9 +8,8 @@ import { connect } from './util/connect';
 interface IQueriesManagerFromState {
   queries: ReadonlyArray<IQuery>;
 }
-interface IQueriesManagerProps extends IQueriesManagerFromState {}
 
-class QueriesManager extends React.PureComponent<IQueriesManagerProps> {
+class QueriesManager extends React.PureComponent<IQueriesManagerFromState> {
   render() {
     const { queries } = this.props;
     console.log(queries);
@@ -25,4 +24,4 @@ const selector = ({ onTestbenchQueries, suites }: ICoreState): IQueriesManagerFr
   queries: suites[onTestbenchQueries],
 });
 
-export default connect(selector, coreState$)(QueriesManager);
+export default connect(selector, coreState$)<{}, IQueriesManagerFromState>(QueriesManager);
