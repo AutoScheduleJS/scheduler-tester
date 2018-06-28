@@ -21,10 +21,10 @@ interface IQueryEditFromState {
   query: IQuery | false;
 }
 
-interface IqueryEditProps extends IQueryEditFromState {}
+interface IqueryEditProps {}
 
 class QueryEditCmp extends React.PureComponent<
-  IqueryEditProps & { classes: any; fullScreen: boolean }
+  IqueryEditProps & IQueryEditFromState & { classes: any; fullScreen: boolean }
 > {
   state = {
     ...(this.props.query as IQuery),
@@ -35,7 +35,7 @@ class QueryEditCmp extends React.PureComponent<
       return null;
     }
     return {
-      ...props.query
+      ...props.query,
     };
   }
 

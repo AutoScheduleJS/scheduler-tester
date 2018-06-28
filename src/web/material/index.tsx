@@ -1,21 +1,21 @@
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { TabsManager } from './tabs-manager';
+import { EditTabsManager } from './edit-tabs-manager';
 import QueriesManager from './queries-manager';
 import { QueryEdit } from './query-edit';
 
 const app = (
   <div>
-    <AppBar position='sticky'>
+    <AppBar position="sticky">
       <Toolbar>
         <Typography variant="title">Scheduler Lab</Typography>
       </Toolbar>
     </AppBar>
-    <TabsManager labels={['Queries manager', 'User-state manager']}>
+    <EditTabsManager labels={['Queries manager', 'User-state manager']}>
       <QueriesManager />
       <span>Toto</span>
-    </TabsManager>
+    </EditTabsManager>
     <QueryEdit />
   </div>
 );
