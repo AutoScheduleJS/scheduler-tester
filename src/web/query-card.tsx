@@ -9,9 +9,9 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core';
+import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import * as React from 'react';
-import { uiActionTrigger$ } from './ui-state/ui.store';
-import { EditQueryAction } from './ui-state/edit.ui.reducer';
+import { EditQueryAction } from '../core-state/edit.ui.reducer';
 
 const styles = _ => ({
   card: {
@@ -33,7 +33,7 @@ const QueryDisplayKind: React.SFC<{ query: IQuery }> = ({ query }) => {
 
 class QueryCard extends React.PureComponent<IqueryCardProps> {
   openEditDialog() {
-    uiActionTrigger$.next(new EditQueryAction(this.props.query));
+    actionTrigger$.next(new EditQueryAction(this.props.query));
   }
 
   render() {

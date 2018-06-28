@@ -25,5 +25,5 @@ export const onTestbenchQueriesReducer$ = (
 };
 
 const handleUpdate = (action: OnTestbenchQueriesUpdateAction): number => {
-  return action.newSuiteIndex != null ? action.newSuiteIndex : -1;
+  return action.newSuiteIndex != null ? action.newSuiteIndex : 0;
 };

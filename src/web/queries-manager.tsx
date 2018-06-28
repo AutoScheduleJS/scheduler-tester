@@ -12,7 +12,6 @@ interface IQueriesManagerFromState {
 class QueriesManager extends React.PureComponent<IQueriesManagerFromState> {
   render() {
     const { queries } = this.props;
-    console.log(queries);
     if (!queries) {
       return false;
     }

@@ -79,7 +79,7 @@ const mapSpecificSuite = (
   fn: (s: ReadonlyArray<Q.IQuery>) => ReadonlyArray<Q.IQuery>
 ) => suites.map(suite => (suite !== target ? suite : fn(suite)));
 
-const suiteToNewQuery = (suite: ReadonlyArray<Q.IQuery>): Q.IQuery => {
+export const suiteToNewQuery = (suite: ReadonlyArray<Q.IQuery>): Q.IQuery => {
   const lastQuery = suite[suite.length - 1];
   return Q.queryFactory(
     Q.id((lastQuery ? lastQuery.id : 0) + 1),

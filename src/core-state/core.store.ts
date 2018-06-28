@@ -1,7 +1,7 @@
 import { IQuery, QueryKind } from '@autoschedule/queries-fn';
 import { BehaviorSubject, Observable, Subject, zip } from 'rxjs';
 import { configActionType, configReducer$ } from './config.reducer';
-import { ICoreState, StepOption } from './core.state';
+import { ICoreState, StepOption, suitesType, userstatesType } from './core.state';
 import {
   onTestbenchQueriesActionType,
   onTestbenchQueriesReducer$,
@@ -13,6 +13,11 @@ import {
 import { stepOptionActionType, stepOptionReducer$ } from './step-option.reducer';
 import { suiteActionType, suitesReducer$ } from './suites.reducer';
 import { userstateActionType, userstateReducer$ } from './userstates.reducer';
+import { UIState } from '@scheduler-tester/core-state/ui.state';
+import { editUiReducer$, EditUI } from '@scheduler-tester/core-state/edit.ui.reducer';
+import { editTabUiReducer$ } from '@scheduler-tester/core-state/edit-tab.ui.reducer';
+import { globalUiReducer$ } from '@scheduler-tester/core-state/global.ui.reducer';
+import { withLatestFrom, map } from 'rxjs/operators';
 
 export type actionType =
   | configActionType
@@ -35,18 +40,33 @@ const stateFn = (
     stepOptionReducer$(initialState.stepOption, actions$),
     onTestbenchUserstateReducer$(initialState.onTestbenchUserstate, actions$),
     onTestbenchQueriesReducer$(initialState.onTestbenchQueries, actions$),
-    (config, suites, userstates, stepOption, onTestbenchUserstate, onTestbenchQueries) => ({
+    editUiReducer$(initialState.ui.edit, actions$),
+    editTabUiReducer$(initialState.ui.editTab, actions$),
+    (
+      config,
+      suites: suitesType,
+      userstates: userstatesType,
+      stepOption: StepOption,
+      onTestbenchUserstate: number,
+      onTestbenchQueries: number,
+      edit: EditUI,
+      editTab: number,
+    ) => ({
       config,
       onTestbenchQueries,
       onTestbenchUserstate,
       stepOption,
       suites,
       userstates,
+      ui: {
+        edit,
+        editTab,
+      },
     })
   );
 
   const bs = new BehaviorSubject(initialState);
-  obs.subscribe(v => bs.next(v));
+  obs.pipe(withLatestFrom(actions$), map(globalUiReducer$)).subscribe(v => bs.next(v));
   return bs;
 };
 
@@ -60,6 +80,13 @@ const initialSuite: ReadonlyArray<IQuery> = [
   },
 ];
 
+const initialUIStateObj: UIState = {
+  edit: {
+    query: false,
+  },
+  editTab: 0,
+};
+
 const initialStateObj: ICoreState = {
   config: { endDate: 100, startDate: 0 },
   onTestbenchQueries: 0,
@@ -67,6 +94,7 @@ const initialStateObj: ICoreState = {
   stepOption: StepOption.last,
   suites: [initialSuite],
   userstates: [],
+  ui: initialUIStateObj,
 };
 
 export const coreState$ = stateFn(initialStateObj, actionTrigger$);

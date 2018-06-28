@@ -1,19 +1,19 @@
 import { IQuery } from '@autoschedule/queries-fn';
 import {
-  Dialog,
-  withStyles,
-  DialogTitle,
-  DialogActions,
   Button,
+  Dialog,
+  DialogActions,
   DialogContent,
+  DialogTitle,
   TextField,
+  withStyles,
 } from '@material-ui/core';
+import { ICoreState } from '@scheduler-tester/core-state/core.state';
+import { actionTrigger$, coreState$ } from '@scheduler-tester/core-state/core.store';
 import * as React from 'react';
-import withMobileDialog from './util/withMobileDialog';
+import { CloseEditAction } from '../core-state/edit.ui.reducer';
 import { connect } from './util/connect';
-import { uiState$, uiActionTrigger$ } from './ui-state/ui.store';
-import { UIState } from './ui-state/ui.state';
-import { CloseEditAction } from './ui-state/edit.ui.reducer';
+import withMobileDialog from './util/withMobileDialog';
 
 const styles = _ => ({});
 
@@ -46,7 +46,7 @@ class QueryEditCmp extends React.PureComponent<
   };
 
   handleClose = (_: boolean) => {
-    uiActionTrigger$.next(new CloseEditAction());
+    actionTrigger$.next(new CloseEditAction());
   };
 
   render() {
@@ -73,10 +73,10 @@ class QueryEditCmp extends React.PureComponent<
   }
 }
 
-const selector = ({ edit }: UIState): IQueryEditFromState => ({
-  query: edit.query,
+const selector = ({ ui }: ICoreState): IQueryEditFromState => ({
+  query: ui.edit.query,
 });
 
 export const QueryEdit = withMobileDialog<{}>()(
-  connect(selector, uiState$)(withStyles(styles)(QueryEditCmp))
+  connect(selector, coreState$)(withStyles(styles)(QueryEditCmp))
 );

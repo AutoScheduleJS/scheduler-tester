@@ -23,5 +23,5 @@ export const onTestbenchUserstateReducer$ = (
 };
 
 const handleUpdate = (action: OnTestbenchUserstateUpdateAction): number => {
-  return action.newSuite != null ? action.newSuite : -1;
+  return action.newSuite != null ? action.newSuite : 0;
 };

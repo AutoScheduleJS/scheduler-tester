@@ -1,7 +1,7 @@
 import { IQuery } from '@autoschedule/queries-fn';
 import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
-import { uiActionType } from './ui.store';
+import { actionType } from './core.store';
 
 export class EditQueryAction {
   constructor(public query: IQuery) {}
@@ -19,10 +19,10 @@ export interface EditUI {
 
 export const editUiReducer$ = (
   init: EditUI,
-  action$: Observable<uiActionType>
+  action$: Observable<actionType>
 ): Observable<EditUI> => {
   return action$.pipe(
-    scan((state: EditUI, action: uiActionType) => {
+    scan((state: EditUI, action: actionType) => {
       if (action instanceof EditQueryAction) {
         return handleEditQuery(action);
       }

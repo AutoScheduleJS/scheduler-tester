@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom';
 import { EditTabsManager } from './edit-tabs-manager';
 import QueriesManager from './queries-manager';
 import { QueryEdit } from './query-edit';
+import { NewQueryButton } from './new-query';
 
 const app = (
   <div>
@@ -16,6 +17,7 @@ const app = (
       <QueriesManager />
       <span>Toto</span>
     </EditTabsManager>
+    <NewQueryButton />
     <QueryEdit />
   </div>
 );

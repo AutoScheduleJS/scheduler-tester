@@ -1,6 +1,7 @@
 import { IQuery } from '@autoschedule/queries-fn';
 import { IConfig } from './config.interface';
 import { IUserstateCollection } from './userstate-collection.interface';
+import { UIState } from '../core-state/ui.state';
 
 export enum StepOption {
   every,
@@ -17,4 +18,5 @@ export interface ICoreState {
   readonly stepOption: StepOption;
   readonly onTestbenchUserstate: number;
   readonly onTestbenchQueries: number;
+  readonly ui: UIState
 }
