@@ -1,5 +1,5 @@
 import { IQuery } from '@autoschedule/queries-fn';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
 import { uiActionType } from './ui.store';
 
@@ -22,7 +22,7 @@ export const editUiReducer$ = (
   action$: Observable<uiActionType>
 ): Observable<EditUI> => {
   return action$.pipe(
-    scan((state: any, action: uiActionType) => {
+    scan((state: EditUI, action: uiActionType) => {
       if (action instanceof EditQueryAction) {
         return handleEditQuery(action);
       }
@@ -36,7 +36,7 @@ export const editUiReducer$ = (
 
 const handleEditQuery = (action: EditQueryAction): EditUI => {
   return {
-    query: action.query
+    query: action.query,
   };
 };
 
@@ -44,4 +44,4 @@ const handleClose = (): EditUI => {
   return {
     query: false,
   };
-}
+};

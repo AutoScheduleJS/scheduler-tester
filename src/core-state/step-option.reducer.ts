@@ -1,7 +1,5 @@
-import { Observable } from 'rxjs/Observable';
-
+import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
-
 import { StepOption } from './core.state';
 import { actionType } from './core.store';
 
@@ -16,7 +14,7 @@ export const stepOptionReducer$ = (
   action$: Observable<actionType>
 ): Observable<StepOption> => {
   return action$.pipe(
-    scan((state, action: any) => {
+    scan((state: StepOption, action: stepOptionActionType) => {
       if (action instanceof StepOptionUpdateAction) {
         return handleUpdate(action);
       }

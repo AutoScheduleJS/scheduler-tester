@@ -1,5 +1,5 @@
 import * as Q from '@autoschedule/queries-fn';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
 import { suitesType } from './core.state';
 import { actionType } from './core.store';
@@ -44,7 +44,7 @@ export const suitesReducer$ = (
   action$: Observable<actionType>
 ): Observable<suitesType> => {
   return action$.pipe(
-    scan((state, action: any) => {
+    scan((state: suitesType, action: suiteActionType) => {
       if (action instanceof SuitesLoadAction) {
         return handleLoad(state, action);
       }

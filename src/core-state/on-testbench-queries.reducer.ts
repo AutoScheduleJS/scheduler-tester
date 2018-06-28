@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { scan } from 'rxjs/operators';
 
@@ -15,7 +15,7 @@ export const onTestbenchQueriesReducer$ = (
   action$: Observable<actionType>
 ): Observable<number> => {
   return action$.pipe(
-    scan((state, action: any) => {
+    scan((state: number, action: onTestbenchQueriesActionType) => {
       if (action instanceof OnTestbenchQueriesUpdateAction) {
         return handleUpdate(action);
       }
@@ -25,5 +25,5 @@ export const onTestbenchQueriesReducer$ = (
 };
 
 const handleUpdate = (action: OnTestbenchQueriesUpdateAction): number => {
-  return action.newSuiteIndex || -1;
+  return action.newSuiteIndex != null ? action.newSuiteIndex : -1;
 };

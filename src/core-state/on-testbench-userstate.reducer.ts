@@ -1,12 +1,9 @@
-import { Observable } from 'rxjs/Observable';
-
+import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
-
 import { actionType } from './core.store';
-import { IUserstateCollection } from './userstate-collection.interface';
 
 export class OnTestbenchUserstateUpdateAction {
-  constructor(public newSuite: ReadonlyArray<IUserstateCollection>) {}
+  constructor(public newSuite: number) {}
 }
 
 export type onTestbenchUserstateActionType = OnTestbenchUserstateUpdateAction;
@@ -16,7 +13,7 @@ export const onTestbenchUserstateReducer$ = (
   action$: Observable<actionType>
 ): Observable<number> => {
   return action$.pipe(
-    scan((state, action: any) => {
+    scan((state: number, action: onTestbenchUserstateActionType) => {
       if (action instanceof OnTestbenchUserstateUpdateAction) {
         return handleUpdate(action);
       }
@@ -25,6 +22,6 @@ export const onTestbenchUserstateReducer$ = (
   );
 };
 
-const handleUpdate = (action: OnTestbenchUserstateUpdateAction): ReadonlyArray<IUserstateCollection> => {
-  return action.newSuite || [];
+const handleUpdate = (action: OnTestbenchUserstateUpdateAction): number => {
+  return action.newSuite != null ? action.newSuite : -1;
 };

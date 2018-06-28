@@ -1,7 +1,5 @@
-import { Observable } from 'rxjs/Observable';
-
+import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
-
 import { userstatesType } from './core.state';
 import { actionType } from './core.store';
 import { IUserstateCollection } from './userstate-collection.interface';
@@ -41,7 +39,7 @@ export const userstateReducer$ = (
   action$: Observable<actionType>
 ): Observable<userstatesType> => {
   return action$.pipe(
-    scan((state, action: any) => {
+    scan((state: userstatesType, action: userstateActionType) => {
       if (action instanceof UserstateLoadAction) {
         return handleLoad(state, action);
       }
@@ -73,7 +71,10 @@ const mapSpecificSuite = (
   fn: (s: ReadonlyArray<IUserstateCollection>) => ReadonlyArray<IUserstateCollection>
 ) => suites.map(suite => (suite !== target ? suite : fn(suite)));
 
-const handleQueryNew = (state: userstatesType, action: UserstateCollectionNewAction): userstatesType => {
+const handleQueryNew = (
+  state: userstatesType,
+  action: UserstateCollectionNewAction
+): userstatesType => {
   return mapSpecificSuite(state, action.userstate, userstate => [
     ...userstate,
     { collectionName: 'collection', data: [] },

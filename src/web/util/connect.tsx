@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export const connect = <T, U>(selector: (s: T) => U, state$: Observable<T>) => {

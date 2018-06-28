@@ -1,7 +1,4 @@
-import 'rxjs/add/observable/zip';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject, Observable, Subject, zip } from 'rxjs';
 import { editTabUiReducer$ } from './edit-tab.ui.reducer';
 import { editUiActionType, editUiReducer$ } from './edit.ui.reducer';
 import { UIState } from './ui.state';
@@ -14,7 +11,7 @@ const stateFn = (
   initialState: UIState,
   actions$: Observable<uiActionType>
 ): Observable<UIState> => {
-  const obs: Observable<UIState> = Observable.zip(
+  const obs: Observable<UIState> = zip(
     editUiReducer$(initialState.edit, actions$),
     editTabUiReducer$(initialState.editTab, actions$),
     (edit, editTab) => ({

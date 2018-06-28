@@ -1,7 +1,5 @@
-import { Observable } from 'rxjs/Observable';
-
+import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
-
 import { IConfig } from './config.interface';
 import { actionType } from './core.store';
 
@@ -16,7 +14,7 @@ export const configReducer$ = (
   action$: Observable<actionType>
 ): Observable<IConfig> => {
   return action$.pipe(
-    scan((state, action: any) => {
+    scan((state: IConfig, action: configActionType) => {
       if (action instanceof ConfigUpdateAction) {
         return handleUpdate(action);
       }

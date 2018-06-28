@@ -1,12 +1,7 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-
-import 'rxjs/add/observable/zip';
-
-import { ICoreState, StepOption } from './core.state';
-
+import { IQuery, QueryKind } from '@autoschedule/queries-fn';
+import { BehaviorSubject, Observable, Subject, zip } from 'rxjs';
 import { configActionType, configReducer$ } from './config.reducer';
+import { ICoreState, StepOption } from './core.state';
 import {
   onTestbenchQueriesActionType,
   onTestbenchQueriesReducer$,
@@ -18,7 +13,6 @@ import {
 import { stepOptionActionType, stepOptionReducer$ } from './step-option.reducer';
 import { suiteActionType, suitesReducer$ } from './suites.reducer';
 import { userstateActionType, userstateReducer$ } from './userstates.reducer';
-import { IQuery, QueryKind } from '@autoschedule/queries-fn';
 
 export type actionType =
   | configActionType
@@ -34,7 +28,7 @@ const stateFn = (
   initialState: ICoreState,
   actions$: Observable<actionType>
 ): Observable<ICoreState> => {
-  const obs: Observable<ICoreState> = Observable.zip(
+  const obs: Observable<ICoreState> = zip(
     configReducer$(initialState.config, actions$),
     suitesReducer$(initialState.suites, actions$),
     userstateReducer$(initialState.userstates, actions$),

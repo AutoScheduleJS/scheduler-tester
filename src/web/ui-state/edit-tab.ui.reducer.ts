@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
 import { uiActionType } from './ui.store';
 
@@ -13,7 +13,7 @@ export const editTabUiReducer$ = (
   action$: Observable<uiActionType>
 ): Observable<number> => {
   return action$.pipe(
-    scan((state: any, action: uiActionType) => {
+    scan((state: number, action: uiActionType) => {
       if (action instanceof UpdateEditTab) {
         return handleUpdate(action);
       }
