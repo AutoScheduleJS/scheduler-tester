@@ -11,7 +11,8 @@
     "doc": "npm run build && typedoc --out docs/ dist/",
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once",
-    "start": "parcel src/web/index.html",
+    "clean": "del-cli .cache",
+    "start": "npm run clean && parcel src/web/index.html",
     "watch:ts": "tsc -w",
     "watch:ava": "ava -w build/**/*.test.js",
     "watch:test": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Ava\" -c \"blue.bold,magenta.bold\" \"npm run watch:ts\" \"npm run watch:ava\""
@@ -35,6 +36,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "concurrently": "^3.5.1",
+    "del-cli": "^1.1.0",
     "emotion": "^9.0.2",
     "nyc": "^11.6.0",
     "parcel-bundler": "^1.9.2",

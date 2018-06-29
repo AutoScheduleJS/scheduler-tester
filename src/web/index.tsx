@@ -2,9 +2,9 @@ import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { EditTabsManager } from './edit-tabs-manager';
+import { NewQueryButton } from './new-query';
 import QueriesManager from './queries-manager';
 import { QueryEdit } from './query-edit';
-import { NewQueryButton } from './new-query';
 
 const app = (
   <div>

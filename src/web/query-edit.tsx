@@ -45,8 +45,11 @@ class QueryEditCmp extends React.PureComponent<
     });
   };
 
-  handleClose = (_: boolean) => {
-    actionTrigger$.next(new CloseEditAction());
+  handleClose = (save: boolean) => {
+    if (!save) {
+      return actionTrigger$.next(new CloseEditAction());
+    }
+    // actionTrigger$.next() //global reducer to update query and close edit dialog
   };
 
   render() {
