@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
-import { StepOption } from './core.state';
+import { StepOption, ICoreState } from './core.state';
 import { actionType } from './core.store';
 
 export class StepOptionUpdateAction {
@@ -9,20 +9,16 @@ export class StepOptionUpdateAction {
 
 export type stepOptionActionType = StepOptionUpdateAction;
 
-export const stepOptionReducer$ = (
-  init: StepOption,
-  action$: Observable<actionType>
-): Observable<StepOption> => {
-  return action$.pipe(
-    scan((state: StepOption, action: stepOptionActionType) => {
-      if (action instanceof StepOptionUpdateAction) {
-        return handleUpdate(action);
-      }
-      return state;
-    }, init)
-  );
+export const stepOptionReducer$ = (state: ICoreState, action: actionType): ICoreState | false => {
+  if (action instanceof StepOptionUpdateAction) {
+    return handleUpdate(state, action);
+  }
+  return false;
 };
 
-const handleUpdate = (action: StepOptionUpdateAction): StepOption => {
-  return action.value;
+const handleUpdate = (state: ICoreState, action: StepOptionUpdateAction): ICoreState => {
+  return {
+    ...state,
+    stepOption: action.value,
+  };
 };

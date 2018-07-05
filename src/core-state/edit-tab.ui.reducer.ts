@@ -1,5 +1,4 @@
-import { Observable } from 'rxjs';
-import { scan } from 'rxjs/operators';
+import { ICoreState, coreStateL } from '@scheduler-tester/core-state/core.state';
 import { actionType } from './core.store';
 
 export class UpdateEditTab {
@@ -8,20 +7,13 @@ export class UpdateEditTab {
 
 export type editTabUiActionType = UpdateEditTab;
 
-export const editTabUiReducer$ = (
-  init: number,
-  action$: Observable<actionType>
-): Observable<number> => {
-  return action$.pipe(
-    scan((state: number, action: actionType) => {
-      if (action instanceof UpdateEditTab) {
-        return handleUpdate(action);
-      }
-      return state;
-    }, init)
-  );
+export const editTabUiReducer$ = (state: ICoreState, action: actionType): ICoreState | false => {
+  if (action instanceof UpdateEditTab) {
+    return handleUpdate(state, action);
+  }
+  return false;
 };
 
-const handleUpdate = (action: UpdateEditTab): number => {
-  return action.index;
+const handleUpdate = (state: ICoreState, action: UpdateEditTab): ICoreState => {
+  return coreStateL.ui.editTab.set(action.index)(state);
 };

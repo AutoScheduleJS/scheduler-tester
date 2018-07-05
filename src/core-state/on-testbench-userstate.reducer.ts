@@ -1,27 +1,26 @@
 import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
 import { actionType } from './core.store';
+import { ICoreState, coreStateL } from '@scheduler-tester/core-state/core.state';
 
 export class OnTestbenchUserstateUpdateAction {
-  constructor(public newSuite: number) {}
+  constructor(public newSuiteIndex: number) {}
 }
 
 export type onTestbenchUserstateActionType = OnTestbenchUserstateUpdateAction;
 
 export const onTestbenchUserstateReducer$ = (
-  init: number,
-  action$: Observable<actionType>
-): Observable<number> => {
-  return action$.pipe(
-    scan((state: number, action: onTestbenchUserstateActionType) => {
-      if (action instanceof OnTestbenchUserstateUpdateAction) {
-        return handleUpdate(action);
-      }
-      return state;
-    }, init)
-  );
+  state: ICoreState,
+  action: actionType
+): ICoreState | false => {
+  if (action instanceof OnTestbenchUserstateUpdateAction) {
+    return handleUpdate(state, action);
+  }
+  return false;
 };
 
-const handleUpdate = (action: OnTestbenchUserstateUpdateAction): number => {
-  return action.newSuite != null ? action.newSuite : 0;
+const handleUpdate = (state: ICoreState, action: OnTestbenchUserstateUpdateAction): ICoreState => {
+  return coreStateL.onTestbenchUserstate.set(
+    action.newSuiteIndex != null ? action.newSuiteIndex : 0
+  )(state);
 };

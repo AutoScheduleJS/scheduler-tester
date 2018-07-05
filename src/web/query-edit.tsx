@@ -14,6 +14,7 @@ import * as React from 'react';
 import { CloseEditAction } from '../core-state/edit.ui.reducer';
 import { connect } from './util/connect';
 import withMobileDialog from './util/withMobileDialog';
+import { UpdateQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
 
 const styles = _ => ({});
 
@@ -49,7 +50,7 @@ class QueryEditCmp extends React.PureComponent<
     if (!save) {
       return actionTrigger$.next(new CloseEditAction());
     }
-    // actionTrigger$.next() //global reducer to update query and close edit dialog
+    actionTrigger$.next(new UpdateQueryAction(this.props.query as IQuery, this.state));
   };
 
   render() {

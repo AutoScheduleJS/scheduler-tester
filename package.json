@@ -23,7 +23,9 @@
   },
   "private": true,
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "lens.ts": "^0.5.1"
+  },
   "devDependencies": {
     "@autoschedule/queries-fn": "^6.2.1",
     "@autoschedule/queries-scheduler": "^3.2.2",

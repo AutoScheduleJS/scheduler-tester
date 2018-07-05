@@ -1,4 +1,5 @@
 import { IQuery } from '@autoschedule/queries-fn';
+import { lens } from 'lens.ts';
 import { IConfig } from './config.interface';
 import { IUserstateCollection } from './userstate-collection.interface';
 import { UIState } from '../core-state/ui.state';
@@ -20,3 +21,5 @@ export interface ICoreState {
   readonly onTestbenchQueries: number;
   readonly ui: UIState
 }
+
+export const coreStateL = lens<ICoreState>();

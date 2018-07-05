@@ -1,7 +1,7 @@
 import { Button, Icon, withStyles } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
-import { AddQuery } from '@scheduler-tester/core-state/global.ui.reducer';
+import { AddQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
 import * as React from 'react';
 
 const styles = theme => ({
@@ -16,7 +16,7 @@ interface INewQueryButtonProps {}
 
 class NewQueryButtonImpl extends React.PureComponent<INewQueryButtonProps & { classes: any }> {
   handleNew = () => {
-    actionTrigger$.next(new AddQuery());
+    actionTrigger$.next(new AddQueryAction());
   };
 
   render() {

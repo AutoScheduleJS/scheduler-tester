@@ -1,6 +1,5 @@
 import { IQuery } from '@autoschedule/queries-fn';
-import { Observable } from 'rxjs';
-import { scan } from 'rxjs/operators';
+import { ICoreState, coreStateL } from '@scheduler-tester/core-state/core.state';
 import { actionType } from './core.store';
 
 export class EditQueryAction {
@@ -17,31 +16,22 @@ export interface EditUI {
   query: IQuery | false;
 }
 
-export const editUiReducer$ = (
-  init: EditUI,
-  action$: Observable<actionType>
-): Observable<EditUI> => {
-  return action$.pipe(
-    scan((state: EditUI, action: actionType) => {
-      if (action instanceof EditQueryAction) {
-        return handleEditQuery(action);
-      }
-      if (action instanceof CloseEditAction) {
-        return handleClose();
-      }
-      return state;
-    }, init)
-  );
+export const editUiReducer$ = (state: ICoreState, action: actionType): ICoreState | false => {
+  if (action instanceof EditQueryAction) {
+    return handleEditQuery(state, action);
+  }
+  if (action instanceof CloseEditAction) {
+    return handleClose(state);
+  }
+  return false;
 };
 
-const handleEditQuery = (action: EditQueryAction): EditUI => {
-  return {
-    query: action.query,
-  };
+const editUiL = coreStateL.ui.edit;
+
+const handleEditQuery = (state: ICoreState, action: EditQueryAction): ICoreState => {
+  return editUiL.query.set(action.query)(state);
 };
 
-const handleClose = (): EditUI => {
-  return {
-    query: false,
-  };
+const handleClose = (state: ICoreState): ICoreState => {
+  return editUiL.query.set(false)(state);
 };
