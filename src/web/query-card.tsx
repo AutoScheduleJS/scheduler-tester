@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import * as React from 'react';
-import { EditQueryAction } from '../core-state/edit.ui.reducer';
+import { EditQueryAction } from '@scheduler-tester/core-state/edit.ui.reducer';
 
 const styles = _ => ({
   card: {

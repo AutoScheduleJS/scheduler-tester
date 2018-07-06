@@ -11,7 +11,7 @@ import {
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { actionTrigger$, coreState$ } from '@scheduler-tester/core-state/core.store';
 import * as React from 'react';
-import { CloseEditAction } from '../core-state/edit.ui.reducer';
+import { CloseEditAction } from '@scheduler-tester/core-state/edit.ui.reducer';
 import { connect } from './util/connect';
 import withMobileDialog from './util/withMobileDialog';
 import { UpdateQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';

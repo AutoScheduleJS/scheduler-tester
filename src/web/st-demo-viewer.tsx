@@ -4,15 +4,15 @@ import {
   IPotentiality,
   placeToRange,
   queriesToPipelineDebug$,
-} from '@autoschedule/queries-scheduler';
-import { queryToStatePotentials } from '@autoschedule/userstate-manager';
+} from '../../../queries-scheduler/es';
+import { queryToStatePotentials } from '../../../userstate-manager/es';
 import { IConfig } from '@scheduler-tester/core-state/config.interface';
 import { ICoreState, StepOption } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
 import * as React from 'react';
 import { forkJoin, of, Subject } from 'rxjs';
 import { map, switchMap, zip } from 'rxjs/operators';
-import MaterialViewer from './material-viewer';
+import { MaterialViewer } from './material-viewer';
 import PotentialViewer from './potential-viewer';
 import PressureViewer from './pressure-viewer';
 import TimeLine from './timeline';
@@ -26,11 +26,11 @@ interface ICmpProps {
   press: any[];
 }
 
-class DemoViewerImpl extends React.PureComponent<ICmpProps> {
+class DemoViewerImpl extends React.PureComponent<ICmpProps & { className?: string }> {
   render() {
-    const { config, errors, pots, mats, press } = this.props;
+    const { className, config, errors, pots, mats, press } = this.props;
     return (
-      <div>
+      <div className={className}>
         <div>{displayData(errors)}</div>
         Potentials:<TimeLine
           {...{
@@ -107,6 +107,6 @@ const stateToQueries = (state: ICoreState): ReadonlyArray<any> => [
   ...(state.suites[state.onTestbenchQueries] || []).map(o => ({ ...o })),
 ];
 
-export const DemoViewer = connect(selector, stateToScheduler(coreState$))<{}, ICmpProps>(
+export const StDemoViewer = connect(selector, stateToScheduler(coreState$))<{}, ICmpProps>(
   DemoViewerImpl
 );

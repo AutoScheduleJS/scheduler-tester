@@ -1,5 +1,6 @@
-import { Tab, Tabs } from '@material-ui/core';
+import { Tab, Tabs, withStyles, createStyles } from '@material-ui/core';
 import * as React from 'react';
+import classNames from 'classnames';
 
 export interface ITabManagerFromState {
   activeIndex: number;
@@ -10,14 +11,21 @@ export interface ITabManagerProps {
   onTabChange: (i: number) => void;
 }
 
-export class TabsManager extends React.PureComponent<ITabManagerProps & ITabManagerFromState> {
+const styles = _ =>
+  createStyles({
+    root: {},
+  });
+
+class TabsManagerImp extends React.PureComponent<
+  ITabManagerProps & ITabManagerFromState & { classes: any; className?: string }
+> {
   render() {
-    const { activeIndex, children, labels, onTabChange } = this.props;
+    const { activeIndex, classes, className, children, labels, onTabChange } = this.props;
     if (!children) {
       return false;
     }
     return (
-      <div>
+      <div className={classNames(classes.root, className)}>
         <Tabs value={activeIndex} onChange={(_, i) => onTabChange(i)} centered>
           {labels.map(label => <Tab {...{ label }} />)}
         </Tabs>
@@ -26,3 +34,5 @@ export class TabsManager extends React.PureComponent<ITabManagerProps & ITabMana
     );
   }
 }
+
+export const TabsManager = withStyles(styles)(TabsManagerImp);

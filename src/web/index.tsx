@@ -1,12 +1,14 @@
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import { css } from 'emotion';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { DemoViewer } from './demo-viewer';
-import { EditTabsManager } from './edit-tabs-manager';
+import { StDemoViewer } from './st-demo-viewer';
 import { NewQueryButton } from './new-query';
 import QueriesManager from './queries-manager';
 import { QueryEdit } from './query-edit';
+import { StAppbar } from './st-appbar';
+import { StEdittabs } from './st-edittabs';
 
 const flexChild = css`
   flex-basis: 0;
@@ -19,27 +21,28 @@ const flexParent = css`
   height: 90%;
 `;
 
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+  },
+});
+
 const app = (
-  <div>
-    <AppBar position="sticky">
-      <Toolbar>
-        <Typography variant="title">Scheduler Lab</Typography>
-      </Toolbar>
-    </AppBar>
+  <MuiThemeProvider theme={theme}>
+    <CssBaseline />
+    <StAppbar />
     <div className={flexParent}>
+      <StEdittabs className={flexChild}>
+        <QueriesManager />
+        <span>Toto</span>
+      </StEdittabs>
       <div className={flexChild}>
-        <EditTabsManager labels={['Queries manager', 'User-state manager']}>
-          <QueriesManager />
-          <span>Toto</span>
-        </EditTabsManager>
-      </div>
-      <div className={flexChild}>
-        <DemoViewer />
+        <StDemoViewer />
       </div>
     </div>
     <NewQueryButton />
     <QueryEdit />
-  </div>
+  </MuiThemeProvider>
 );
 
 ReactDOM.render(app, document.getElementById('app'));

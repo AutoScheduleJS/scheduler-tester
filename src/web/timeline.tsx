@@ -16,7 +16,7 @@ export interface IItemProps<T extends ITimeItem> {
 interface ICmpProps<T extends ITimeItem> {
   config: IConfig;
   items: timeItems<T>;
-  ItemCmp: React.SFC<IItemProps<T>>;
+  ItemCmp: React.ComponentType<IItemProps<T>>;
 }
 const cmp = <T extends ITimeItem>({
   config,
@@ -46,7 +46,7 @@ const itemsArrayToCmp = <T extends ITimeItem>(
   computePosition: (item: ITimeItem, colorIndex: number) => string,
   colorIndex: number,
   items: timeItems<T>,
-  ItemCmp: React.SFC<IItemProps<T>>
+  ItemCmp: React.ComponentType<IItemProps<T>>
 ) => {
   let newColorIndex = colorIndex;
   return items.map(item => {
