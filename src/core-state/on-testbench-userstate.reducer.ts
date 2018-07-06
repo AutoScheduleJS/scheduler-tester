@@ -1,7 +1,5 @@
-import { Observable } from 'rxjs';
-import { scan } from 'rxjs/operators';
+import { coreStateL, ICoreState } from '@scheduler-tester/core-state/core.state';
 import { actionType } from './core.store';
-import { ICoreState, coreStateL } from '@scheduler-tester/core-state/core.state';
 
 export class OnTestbenchUserstateUpdateAction {
   constructor(public newSuiteIndex: number) {}

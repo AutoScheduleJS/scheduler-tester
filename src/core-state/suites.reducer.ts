@@ -1,7 +1,5 @@
 import * as Q from '@autoschedule/queries-fn';
-import { Observable } from 'rxjs';
-import { scan } from 'rxjs/operators';
-import { suitesType, ICoreState, coreStateL } from './core.state';
+import { coreStateL, ICoreState } from './core.state';
 import { actionType } from './core.store';
 
 /* tslint:disable:no-empty max-classes-per-file */

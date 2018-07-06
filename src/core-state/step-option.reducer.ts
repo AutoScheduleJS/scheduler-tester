@@ -1,6 +1,4 @@
-import { Observable } from 'rxjs';
-import { scan } from 'rxjs/operators';
-import { StepOption, ICoreState } from './core.state';
+import { ICoreState, StepOption } from './core.state';
 import { actionType } from './core.store';
 
 export class StepOptionUpdateAction {
