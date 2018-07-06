@@ -39,7 +39,7 @@
     "babel-preset-react": "^6.24.1",
     "concurrently": "^3.5.1",
     "del-cli": "^1.1.0",
-    "emotion": "^9.0.2",
+    "emotion": "^9.2.4",
     "nyc": "^11.6.0",
     "parcel-bundler": "^1.9.2",
     "parcel-plugin-typescript": "^1.0.0",
