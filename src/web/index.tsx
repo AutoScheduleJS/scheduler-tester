@@ -2,6 +2,7 @@ import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import { css } from 'emotion';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { DemoViewer } from './demo-viewer';
 import { EditTabsManager } from './edit-tabs-manager';
 import { NewQueryButton } from './new-query';
 import QueriesManager from './queries-manager';
@@ -33,7 +34,7 @@ const app = (
         </EditTabsManager>
       </div>
       <div className={flexChild}>
-        <p>Test</p>
+        <DemoViewer />
       </div>
     </div>
     <NewQueryButton />
