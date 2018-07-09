@@ -73,7 +73,7 @@ class QueryEditCmp extends React.PureComponent<
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose(false)}>cancel</Button>
-          <Button onClick={() => this.handleClose(true)} color="primary">
+          <Button onClick={() => this.handleClose(true)} color="secondary">
             {saveLabel}
           </Button>
         </DialogActions>
