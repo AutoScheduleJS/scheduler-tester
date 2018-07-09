@@ -21,7 +21,11 @@ export class UpdateQueryAction {
   constructor(public oldQuery: IQuery, public newQuery: IQuery) {}
 }
 
-export type globalUiActionType = AddQueryAction | UpdateQueryAction;
+export class DeleteQueryAction {
+  constructor(public query: IQuery) {}
+}
+
+export type globalUiActionType = AddQueryAction | UpdateQueryAction | DeleteQueryAction;
 
 export const globalUiReducer$ = (
   init: ICoreState,
@@ -60,6 +64,9 @@ const globalReducer = (state: ICoreState, action: actionType): ICoreState | fals
   if (action instanceof UpdateQueryAction) {
     return handleUpdateQuery(state, action);
   }
+  if (action instanceof DeleteQueryAction) {
+    return handleDeleteQuery(state, action);
+  }
   return false;
 };
 
@@ -72,7 +79,30 @@ const handleUpdateQuery = (state: ICoreState, action: UpdateQueryAction): ICoreS
   };
   const ui: UIState = {
     ...state.ui,
-    edit: { query: false },
+    edit: { query: false, isNew: false },
+  };
+  return {
+    ...suiteState,
+    ui,
+  };
+};
+
+const deleteFromArr = <T>(fn: (a: T) => boolean, arr: ReadonlyArray<T>): Array<T> => {
+  const i = arr.findIndex(fn);
+  const res = [...arr].splice(i, 1);
+  return res;
+}
+
+const handleDeleteQuery = (state: ICoreState, action: DeleteQueryAction): ICoreState => {
+  const suiteState: ICoreState = {
+    ...state,
+    suites: findAndUpdateSuite(state, s => {
+      return deleteFromArr(query => query === action.query, s);
+    }),
+  };
+  const ui: UIState = {
+    ...state.ui,
+    edit: { query: false, isNew: false },
   };
   return {
     ...suiteState,
@@ -105,6 +135,7 @@ const handleNewQuery = (state: ICoreState): ICoreState => {
     editTab: 0,
     edit: {
       query: newQuery,
+      isNew: true,
     },
   };
   return {

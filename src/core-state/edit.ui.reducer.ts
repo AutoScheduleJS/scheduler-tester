@@ -14,6 +14,7 @@ export type editUiActionType = EditQueryAction | CloseEditAction;
 
 export interface EditUI {
   query: IQuery | false;
+  isNew: boolean;
 }
 
 export const editUiReducer$ = (state: ICoreState, action: actionType): ICoreState | false => {

@@ -14,12 +14,13 @@ import * as React from 'react';
 import { CloseEditAction } from '@scheduler-tester/core-state/edit.ui.reducer';
 import { connect } from './util/connect';
 import withMobileDialog from './util/withMobileDialog';
-import { UpdateQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
+import { UpdateQueryAction, DeleteQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
 
 const styles = _ => ({});
 
 interface IQueryEditFromState {
   query: IQuery | false;
+  isNew: boolean;
 }
 
 interface IqueryEditProps {}
@@ -48,6 +49,9 @@ class QueryEditCmp extends React.PureComponent<
 
   handleClose = (save: boolean) => {
     if (!save) {
+      if (this.props.isNew) {
+        return actionTrigger$.next(new DeleteQueryAction(this.props.query as IQuery));
+      }
       return actionTrigger$.next(new CloseEditAction());
     }
     actionTrigger$.next(new UpdateQueryAction(this.props.query as IQuery, this.state));
@@ -55,6 +59,7 @@ class QueryEditCmp extends React.PureComponent<
 
   render() {
     const { fullScreen, query } = this.props;
+    const saveLabel = this.props.isNew ? 'create' : 'update';
     return (
       <Dialog
         fullScreen={fullScreen}
@@ -69,7 +74,7 @@ class QueryEditCmp extends React.PureComponent<
         <DialogActions>
           <Button onClick={() => this.handleClose(false)}>cancel</Button>
           <Button onClick={() => this.handleClose(true)} color="primary">
-            save
+            {saveLabel}
           </Button>
         </DialogActions>
       </Dialog>
@@ -79,6 +84,7 @@ class QueryEditCmp extends React.PureComponent<
 
 const selector = ({ ui }: ICoreState): IQueryEditFromState => ({
   query: ui.edit.query,
+  isNew: ui.edit.isNew,
 });
 
 export const QueryEdit = withMobileDialog<{}>()(

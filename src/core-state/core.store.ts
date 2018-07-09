@@ -44,6 +44,7 @@ const initialSuite: ReadonlyArray<IQuery> = [
 const initialUIStateObj: UIState = {
   edit: {
     query: false,
+    isNew: false,
   },
   editTab: 0,
 };
