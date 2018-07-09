@@ -6,7 +6,7 @@ import * as ReactDOM from 'react-dom';
 import { StDemoViewer } from './st-demo-viewer';
 import { NewQueryButton } from './new-query';
 import QueriesManager from './queries-manager';
-import { QueryEdit } from './query-edit';
+import { StQueryEdit } from './st-query-edit';
 import { StAppbar } from './st-appbar';
 import { StEdittabs } from './st-edittabs';
 
@@ -41,7 +41,7 @@ const app = (
       </div>
     </div>
     <NewQueryButton />
-    <QueryEdit />
+    <StQueryEdit />
   </MuiThemeProvider>
 );
 

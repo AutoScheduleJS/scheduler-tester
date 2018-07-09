@@ -1,4 +1,4 @@
-import { IQuery } from '@autoschedule/queries-fn';
+import { IQuery } from '../../../queries-fn/es';
 import {
   Button,
   Dialog,
@@ -87,6 +87,6 @@ const selector = ({ ui }: ICoreState): IQueryEditFromState => ({
   isNew: ui.edit.isNew,
 });
 
-export const QueryEdit = withMobileDialog<{}>()(
+export const StQueryEdit = withMobileDialog<{}>()(
   connect(selector, coreState$)(withStyles(styles)(QueryEditCmp))
 );

@@ -1,5 +1,5 @@
 import { IQuery } from '@autoschedule/queries-fn';
-import { createStyles, Grid, withStyles } from '@material-ui/core';
+import { createStyles, withStyles } from '@material-ui/core';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
 import * as React from 'react';
