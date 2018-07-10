@@ -1,6 +1,6 @@
-import { coreStateL, ICoreState, userstatesType } from './core.state';
-import { actionType } from './core.store';
-import { IUserstateCollection } from './userstate-collection.interface';
+import { coreStateL, ICoreState, userstatesType } from '@scheduler-tester/core-state/core.state';
+import { actionType } from '@scheduler-tester/core-state/core.store';
+import { IUserstateCollection } from '@scheduler-tester/core-state/userstate-collection.interface';
 
 /* tslint:disable:no-empty max-classes-per-file */
 

@@ -1,4 +1,4 @@
-import { IQuery } from '@autoschedule/queries-fn';
+import { IQuery } from '../../../queries-fn/es';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { editTabUiReducer$ } from '@scheduler-tester/core-state/edit-tab.ui.reducer';
 import { editUiReducer$ } from '@scheduler-tester/core-state/edit.ui.reducer';
@@ -10,8 +10,8 @@ import { UIState } from '@scheduler-tester/core-state/ui.state';
 import { userstateReducer$ } from '@scheduler-tester/core-state/userstates.reducer';
 import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
-import { configReducer } from './config.reducer';
-import { actionType } from './core.store';
+import { configReducer } from '@scheduler-tester/core-state/config.reducer';
+import { actionType } from '@scheduler-tester/core-state/core.store';
 
 export class AddQueryAction {
   constructor() {}

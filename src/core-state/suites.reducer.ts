@@ -1,6 +1,6 @@
-import * as Q from '@autoschedule/queries-fn';
-import { coreStateL, ICoreState } from './core.state';
-import { actionType } from './core.store';
+import * as Q from '../../../queries-fn/es';
+import { coreStateL, ICoreState } from '@scheduler-tester/core-state/core.state';
+import { actionType } from '@scheduler-tester/core-state/core.store';
 
 /* tslint:disable:no-empty max-classes-per-file */
 

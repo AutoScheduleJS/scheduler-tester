@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IMaterial } from '@autoschedule/queries-scheduler';
+import { IMaterial } from '../../../queries-scheduler/es';
 import { IItemProps } from './timeline';
 
 export class MaterialViewer extends React.PureComponent<IItemProps<IMaterial>> {

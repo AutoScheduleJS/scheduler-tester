@@ -1,14 +1,14 @@
-import { IQuery, QueryKind } from '@autoschedule/queries-fn';
+import { IQuery, QueryKind } from '../../../queries-fn/es';
 import { globalUiReducer$ } from '@scheduler-tester/core-state/global.ui.reducer';
 import { UIState } from '@scheduler-tester/core-state/ui.state';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { configActionType } from './config.reducer';
-import { ICoreState, StepOption } from './core.state';
-import { onTestbenchQueriesActionType } from './on-testbench-queries.reducer';
-import { onTestbenchUserstateActionType } from './on-testbench-userstate.reducer';
-import { stepOptionActionType } from './step-option.reducer';
-import { suiteActionType } from './suites.reducer';
-import { userstateActionType } from './userstates.reducer';
+import { configActionType } from '@scheduler-tester/core-state/config.reducer';
+import { ICoreState, StepOption } from '@scheduler-tester/core-state/core.state';
+import { onTestbenchQueriesActionType } from '@scheduler-tester/core-state/on-testbench-queries.reducer';
+import { onTestbenchUserstateActionType } from '@scheduler-tester/core-state/on-testbench-userstate.reducer';
+import { stepOptionActionType } from '@scheduler-tester/core-state/step-option.reducer';
+import { suiteActionType } from '@scheduler-tester/core-state/suites.reducer';
+import { userstateActionType } from '@scheduler-tester/core-state/userstates.reducer';
 
 export type actionType =
   | configActionType

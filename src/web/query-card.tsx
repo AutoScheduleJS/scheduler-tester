@@ -1,4 +1,4 @@
-import { IQuery, QueryKind } from '@autoschedule/queries-fn';
+import { IQuery, QueryKind } from '../../../queries-fn/es';
 import {
   Card,
   CardActions,

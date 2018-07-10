@@ -1,4 +1,4 @@
-import { IQuery } from '@autoschedule/queries-fn';
+import { IQuery } from '../../../queries-fn/es';
 import { createStyles, withStyles } from '@material-ui/core';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';

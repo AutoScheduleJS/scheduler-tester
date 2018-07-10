@@ -1,5 +1,5 @@
 import { coreStateL, ICoreState } from '@scheduler-tester/core-state/core.state';
-import { actionType } from './core.store';
+import { actionType } from '@scheduler-tester/core-state/core.store';
 
 export class OnTestbenchQueriesUpdateAction {
   constructor(public newSuiteIndex: number) {}

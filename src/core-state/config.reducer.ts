@@ -1,6 +1,6 @@
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { actionType } from '@scheduler-tester/core-state/core.store';
-import { IConfig } from './config.interface';
+import { IConfig } from '@scheduler-tester/core-state/config.interface';
 
 export class ConfigUpdateAction {
   constructor(public newConfig: IConfig) {}

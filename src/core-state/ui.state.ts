@@ -1,4 +1,4 @@
-import { EditUI } from './edit.ui.reducer';
+import { EditUI } from '@scheduler-tester/core-state/edit.ui.reducer';
 
 export interface UIState {
   edit: EditUI;

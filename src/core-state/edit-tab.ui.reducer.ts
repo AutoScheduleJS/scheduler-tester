@@ -1,5 +1,5 @@
 import { ICoreState, coreStateL } from '@scheduler-tester/core-state/core.state';
-import { actionType } from './core.store';
+import { actionType } from '@scheduler-tester/core-state/core.store';
 
 export class UpdateEditTab {
   constructor(public index: number) {}

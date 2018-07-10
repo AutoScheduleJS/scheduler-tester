@@ -1,6 +1,6 @@
-import { IQuery } from '@autoschedule/queries-fn';
+import { IQuery } from '../../../queries-fn/es';
 import { ICoreState, coreStateL } from '@scheduler-tester/core-state/core.state';
-import { actionType } from './core.store';
+import { actionType } from '@scheduler-tester/core-state/core.store';
 
 export class EditQueryAction {
   constructor(public query: IQuery) {}

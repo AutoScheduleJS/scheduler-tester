@@ -1,5 +1,5 @@
-import { ICoreState, StepOption } from './core.state';
-import { actionType } from './core.store';
+import { ICoreState, StepOption } from '@scheduler-tester/core-state/core.state';
+import { actionType } from '@scheduler-tester/core-state/core.store';
 
 export class StepOptionUpdateAction {
   constructor(public value: StepOption) {}
