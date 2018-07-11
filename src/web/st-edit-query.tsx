@@ -5,7 +5,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  ExpansionPanel,
   TextField,
   withStyles,
 } from '@material-ui/core';
@@ -22,21 +21,9 @@ import { StEditPosition } from './st-edit-position';
 import { connect } from './util/connect';
 import withMobileDialog from './util/withMobileDialog';
 
-const styles = theme =>
+const styles = _ =>
   createStyles({
-    expansion: {
-      root: {
-        heading: {
-          fontSize: theme.typography.pxToRem(15),
-          flexBasis: '33.33%',
-          flexShrink: 0,
-        },
-        secondaryHeading: {
-          fontSize: theme.typography.pxToRem(15),
-          color: theme.palette.text.secondary,
-        },
-      },
-    },
+    root: {},
   });
 
 interface IQueryEditFromState {
@@ -51,6 +38,10 @@ class QueryEditCmp extends React.PureComponent<
 > {
   state = {
     ...this.props.query,
+    position: {
+      ...this.props.query.position,
+      uiId: Date.now(),
+    },
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -59,12 +50,25 @@ class QueryEditCmp extends React.PureComponent<
     }
     return {
       ...props.query,
+      position: {
+        ...props.query.position,
+        uiId: Date.now(),
+      },
     };
   }
 
-  handleChange = name => event => {
+  handleChange = name => newVal => {
     this.setState({
-      [name]: event.target.value,
+      [name]: newVal,
+    });
+  };
+
+  handleChangeId = name => newVal => {
+    this.setState({
+      [name]: {
+        ...newVal,
+        uiId: Date.now(),
+      },
     });
   };
 
@@ -79,7 +83,7 @@ class QueryEditCmp extends React.PureComponent<
   };
 
   render() {
-    const { classes, fullScreen, query } = this.props;
+    const { fullScreen, query } = this.props;
     const saveLabel = this.props.isNew ? 'create' : 'update';
     return (
       <Dialog
@@ -92,10 +96,15 @@ class QueryEditCmp extends React.PureComponent<
           Edit {query.name}#{query.id}
         </DialogTitle>
         <DialogContent>
-          <TextField label="name" value={this.state.name} onChange={this.handleChange('name')} />
-          <ExpansionPanel classes={classes.expansion}>
-            <StEditPosition position={query.position} />
-          </ExpansionPanel>
+          <TextField
+            label="name"
+            value={this.state.name}
+            onChange={e => this.handleChange('name')(e.target.value)}
+          />
+          <StEditPosition
+            position={this.state.position}
+            onChanged={this.handleChangeId('position')}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose(false)}>cancel</Button>
