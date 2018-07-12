@@ -45,7 +45,7 @@ class QueryEditCmp extends React.PureComponent<
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (state.id === props.query.id) {
+    if (state.id === props.query.id || !props.query) {
       return null;
     }
     return {

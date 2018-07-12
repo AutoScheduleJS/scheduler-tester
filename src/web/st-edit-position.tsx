@@ -127,7 +127,6 @@ class EditPositionCmp extends React.PureComponent<IEditPositionProps & { classes
       },
     };
     const errors = computeErrors(position);
-    console.log('pos', position, 'err', errors);
     if (hasErrors(errors)) {
       return this.setState({
         position,

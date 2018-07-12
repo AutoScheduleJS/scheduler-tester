@@ -1,5 +1,6 @@
-import { IQuery } from '../../../queries-fn/es';
+import { configReducer } from '@scheduler-tester/core-state/config.reducer';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
+import { actionType } from '@scheduler-tester/core-state/core.store';
 import { editTabUiReducer$ } from '@scheduler-tester/core-state/edit-tab.ui.reducer';
 import { editUiReducer$ } from '@scheduler-tester/core-state/edit.ui.reducer';
 import { onTestbenchQueriesReducer$ } from '@scheduler-tester/core-state/on-testbench-queries.reducer';
@@ -10,8 +11,7 @@ import { UIState } from '@scheduler-tester/core-state/ui.state';
 import { userstateReducer$ } from '@scheduler-tester/core-state/userstates.reducer';
 import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
-import { configReducer } from '@scheduler-tester/core-state/config.reducer';
-import { actionType } from '@scheduler-tester/core-state/core.store';
+import { IQuery, sanitize } from '../../../queries-fn/es';
 
 export class AddQueryAction {
   constructor() {}
@@ -71,10 +71,11 @@ const globalReducer = (state: ICoreState, action: actionType): ICoreState | fals
 };
 
 const handleUpdateQuery = (state: ICoreState, action: UpdateQueryAction): ICoreState => {
+  const internalQuery = sanitize(action.newQuery);
   const suiteState: ICoreState = {
     ...state,
     suites: findAndUpdateSuite(state, s => {
-      return s.map(query => (query === action.oldQuery ? action.newQuery : query));
+      return s.map(query => (query === action.oldQuery ? internalQuery : query));
     }),
   };
   const ui: UIState = {
@@ -89,9 +90,10 @@ const handleUpdateQuery = (state: ICoreState, action: UpdateQueryAction): ICoreS
 
 const deleteFromArr = <T>(fn: (a: T) => boolean, arr: ReadonlyArray<T>): Array<T> => {
   const i = arr.findIndex(fn);
-  const res = [...arr].splice(i, 1);
+  const res= [...arr];
+  res.splice(i, 1);
   return res;
-}
+};
 
 const handleDeleteQuery = (state: ICoreState, action: DeleteQueryAction): ICoreState => {
   const suiteState: ICoreState = {
