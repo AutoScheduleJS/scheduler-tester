@@ -25,6 +25,8 @@
   "license": "MIT",
   "dependencies": {
     "@material-ui/core": "^1.4.0",
+    "emotion": "^9.2.6",
+    "emotion-theming": "^9.2.6",
     "intervals-fn": "^3.0.3",
     "lens.ts": "^0.5.1"
   },
@@ -41,7 +43,6 @@
     "babel-preset-react": "^6.24.1",
     "concurrently": "^3.5.1",
     "del-cli": "^1.1.0",
-    "emotion": "^9.2.4",
     "nyc": "^11.6.0",
     "parcel-bundler": "^1.9.2",
     "parcel-plugin-typescript": "^1.0.0",

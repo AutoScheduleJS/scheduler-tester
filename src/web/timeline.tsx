@@ -1,5 +1,4 @@
 import { IConfig } from '@scheduler-tester/core-state/config.interface';
-import { css } from 'emotion';
 import { intersect, isOverlapping, merge } from 'intervals-fn';
 import * as React from 'react';
 
@@ -32,10 +31,10 @@ const cmp = <T extends ITimeItem>({
   );
   return (
     <div
-      className={css`
+    /*className={css`
         position: relative;
         height: ${(getMax() + 0) * 18 + 'px'};
-      `}
+      `}*/
     >
       {timeItemCmps}
     </div>
@@ -72,7 +71,7 @@ const computePositionWithConf = (
   const progress = 100 * sinceStart / totalAmount;
   const width = 100 * itemAmount / totalAmount;
   const top = checkOverlaps(width, progress) * 10;
-  return css`
+  return /*css*/ `
     left: ${progress + '%'};
     top: ${top + 'px'};
     width: ${width + '%'};
@@ -105,4 +104,4 @@ const checkOverlapsGen = () => {
   };
 };
 
-export default cmp;
+export const TimeLine = cmp;

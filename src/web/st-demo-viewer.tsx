@@ -15,7 +15,7 @@ import { map, switchMap, zip } from 'rxjs/operators';
 import { MaterialViewer } from './material-viewer';
 import PotentialViewer from './potential-viewer';
 import PressureViewer from './pressure-viewer';
-import TimeLine from './timeline';
+import { TimeLine } from './timeline';
 import { connect } from './util/connect';
 
 interface ICmpProps {
