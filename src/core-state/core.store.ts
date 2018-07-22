@@ -1,4 +1,4 @@
-import { IQuery, QueryKind } from '../../../queries-fn/es';
+import { IQuery, QueryKind } from '@autoschedule/queries-fn';
 import { globalUiReducer$ } from '@scheduler-tester/core-state/global.ui.reducer';
 import { UIState } from '@scheduler-tester/core-state/ui.state';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';

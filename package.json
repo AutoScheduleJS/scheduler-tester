@@ -24,11 +24,13 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
+    "@material-ui/core": "^1.4.0",
+    "intervals-fn": "^3.0.3",
     "lens.ts": "^0.5.1"
   },
   "devDependencies": {
     "@autoschedule/queries-fn": "^6.2.1",
-    "@autoschedule/queries-scheduler": "^3.2.2",
+    "@autoschedule/queries-scheduler": "^3.2.3",
     "@autoschedule/userstate-manager": "^3.1.1",
     "@types/react": "^16.3.18",
     "@types/react-dom": "^16.0.6",

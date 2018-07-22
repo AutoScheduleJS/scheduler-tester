@@ -1,4 +1,4 @@
-import * as Q from '../../../queries-fn/es';
+import * as Q from '@autoschedule/queries-fn';
 import { coreStateL, ICoreState } from '@scheduler-tester/core-state/core.state';
 import { actionType } from '@scheduler-tester/core-state/core.store';
 

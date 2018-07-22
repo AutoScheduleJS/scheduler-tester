@@ -16,7 +16,7 @@ import {
   UpdateQueryAction,
 } from '@scheduler-tester/core-state/global.ui.reducer';
 import * as React from 'react';
-import { IQuery } from '../../../queries-fn/es';
+import { IQuery } from '@autoschedule/queries-fn';
 import { StEditPosition } from './st-edit-position';
 import { connect } from './util/connect';
 import withMobileDialog from './util/withMobileDialog';

@@ -88,7 +88,7 @@ const checkOverlapsGen = () => {
   return {
     check: (width: number, progress: number): number => {
       const toCheck = { start: progress, end: progress + width, layer: 0 };
-      const intersection = intersect(toCheck, elems);
+      const intersection = intersect([toCheck], elems);
       const result = intersection.length ? intersection[0].layer + 1 : 0;
       elems = merge(
         toMerge =>

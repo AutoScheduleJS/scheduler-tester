@@ -1,5 +1,5 @@
-import { IQuery } from '../../../queries-fn/es';
-import { lens } from 'lens.ts';
+import { IQuery } from '@autoschedule/queries-fn';
+import { lens } from 'lens.ts';
 import { IConfig } from '@scheduler-tester/core-state/config.interface';
 import { IUserstateCollection } from '@scheduler-tester/core-state/userstate-collection.interface';
 import { UIState } from '@scheduler-tester/core-state/ui.state';
@@ -19,7 +19,7 @@ export interface ICoreState {
   readonly stepOption: StepOption;
   readonly onTestbenchUserstate: number;
   readonly onTestbenchQueries: number;
-  readonly ui: UIState
+  readonly ui: UIState;
 }
 
 export const coreStateL = lens<ICoreState>();

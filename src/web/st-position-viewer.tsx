@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { ITimeBoundary } from '../../../queries-fn/es';
+import { ITimeBoundary } from '@autoschedule/queries-fn';
 
 interface IPositionViewer {
   start: ITimeBoundary;

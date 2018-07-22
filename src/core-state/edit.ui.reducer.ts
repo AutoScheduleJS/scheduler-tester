@@ -1,4 +1,4 @@
-import { IQuery } from '../../../queries-fn/es';
+import { IQuery } from '@autoschedule/queries-fn';
 import { ICoreState, coreStateL } from '@scheduler-tester/core-state/core.state';
 import { actionType } from '@scheduler-tester/core-state/core.store';
 

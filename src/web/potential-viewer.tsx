@@ -1,4 +1,4 @@
-import { IPotentiality } from '../../../queries-scheduler/es';
+import { IPotentiality } from '@autoschedule/queries-scheduler';
 import * as React from 'react';
 import { IItemProps } from './timeline';
 

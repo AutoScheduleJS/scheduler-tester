@@ -9,7 +9,8 @@
     "rules": {
       "no-console":false,
       "no-implicit-dependencies": false,
-      "quotemark": [ true, "single", "jsx-double" ]
+      "quotemark": [ true, "single", "jsx-double" ],
+      
     },
     "rulesDirectory": []
 }

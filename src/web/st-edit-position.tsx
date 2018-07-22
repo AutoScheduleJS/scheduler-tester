@@ -9,7 +9,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import * as React from 'react';
-import { IQueryPosition, ITimeBoundary } from '../../../queries-fn/es';
+import { IQueryPosition, ITimeBoundary } from '@autoschedule/queries-fn';
 import { StPositionViewer } from './st-position-viewer';
 
 const styles = theme =>

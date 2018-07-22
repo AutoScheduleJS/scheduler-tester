@@ -11,7 +11,7 @@ import { UIState } from '@scheduler-tester/core-state/ui.state';
 import { userstateReducer$ } from '@scheduler-tester/core-state/userstates.reducer';
 import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
-import { IQuery, sanitize } from '../../../queries-fn/es';
+import { IQuery, sanitize } from '@autoschedule/queries-fn';
 
 export class AddQueryAction {
   constructor() {}
@@ -90,7 +90,7 @@ const handleUpdateQuery = (state: ICoreState, action: UpdateQueryAction): ICoreS
 
 const deleteFromArr = <T>(fn: (a: T) => boolean, arr: ReadonlyArray<T>): Array<T> => {
   const i = arr.findIndex(fn);
-  const res= [...arr];
+  const res = [...arr];
   res.splice(i, 1);
   return res;
 };

@@ -4,8 +4,8 @@ import {
   IPotentiality,
   placeToRange,
   queriesToPipelineDebug$,
-} from '../../../queries-scheduler/es';
-import { queryToStatePotentials } from '../../../userstate-manager/es';
+} from '@autoschedule/queries-scheduler';
+import { queryToStatePotentials } from '@autoschedule/userstate-manager';
 import { IConfig } from '@scheduler-tester/core-state/config.interface';
 import { ICoreState, StepOption } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
