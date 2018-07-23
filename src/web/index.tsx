@@ -7,14 +7,23 @@ import { ThemeProvider } from 'emotion-theming';
 
 const theme = createMuiTheme({
   palette: {
-    type: 'dark',
+    type: 'dark'
   },
 });
+
+const emotionTheme = {
+  palette: {
+    primary: {
+      main: theme.palette.primary.main,
+      on: 'white'
+    }
+  }
+}
 
 const app = (
   <MuiThemeProvider theme={theme}>
     <CssBaseline />
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={emotionTheme}>
       <Root />
     </ThemeProvider>
   </MuiThemeProvider>

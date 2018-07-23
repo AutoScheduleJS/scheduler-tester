@@ -17,6 +17,7 @@ interface AppBarContentTheme {
   appBar: {
     totalHeight: string;
     backgroundColor: string;
+    color: string;
   };
 }
 
@@ -24,6 +25,7 @@ const defaultTheme = (theme: any): AppBarContentTheme => ({
   appBar: {
     totalHeight: '56px',
     backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.on,
     ...theme.appBar,
   },
 });
@@ -37,6 +39,7 @@ const AppBarContentRootStyles = (theme: AppBarContentTheme) => {
   return css`
     height: ${appBar.totalHeight};
     background-color: ${appBar.backgroundColor};
+    color: ${appBar.color};
   `;
 };
 
