@@ -16,12 +16,14 @@ interface AppBarContentProps extends CustomableProps {
 interface AppBarContentTheme {
   appBar: {
     totalHeight: string;
+    backgroundColor: string;
   };
 }
 
 const defaultTheme = (theme: any): AppBarContentTheme => ({
   appBar: {
     totalHeight: '56px',
+    backgroundColor: theme.palette.primary.main,
     ...theme.appBar,
   },
 });
@@ -30,9 +32,13 @@ const defaultClasses = {
   root: {},
 };
 
-const AppBarContentRootStyles = (theme: AppBarContentTheme) => css`
-  height: ${theme.appBar.totalHeight};
-`;
+const AppBarContentRootStyles = (theme: AppBarContentTheme) => {
+  const appBar = theme.appBar;
+  return css`
+    height: ${appBar.totalHeight};
+    background-color: ${appBar.backgroundColor};
+  `;
+};
 
 class AppBarContentImpl extends React.PureComponent<AppBarContentProps> {
   render() {
