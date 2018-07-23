@@ -1,14 +1,12 @@
-import { Toolbar, Typography } from '@material-ui/core';
-import { AppBar } from './app-bar/app-bar';
 import * as React from 'react';
+import { AppBarContent } from './app-bar-content/app-bar-content';
+import { AppBar } from './app-bar/app-bar';
 
 export class StAppbar extends React.PureComponent<{}> {
   render() {
     return (
       <AppBar>
-        <Toolbar>
-          <Typography variant="title">Scheduler Lab</Typography>
-        </Toolbar>
+        <AppBarContent title="Scheduler Lab" />
       </AppBar>
     );
   }
