@@ -73,7 +73,5 @@ class AppBarContentImpl extends React.PureComponent<AppBarContentProps> {
  *
  * all default specs are in theme and can be customised by user
  *
- * TODO: shadow of 4dp -> use HoC or css classe ? how user can customize when HoC ?
- *
  */
 export const AppBarContent = withTheme(AppBarContentImpl);
