@@ -18,6 +18,7 @@ interface AppBarContentTheme {
     totalHeight: string;
     backgroundColor: string;
     color: string;
+    padding: string;
   };
 }
 
@@ -26,6 +27,7 @@ const defaultTheme = (theme: any): AppBarContentTheme => ({
     totalHeight: '56px',
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.on,
+    padding: '16px',
     ...theme.appBar,
   },
 });
@@ -40,6 +42,7 @@ const AppBarContentRootStyles = (theme: AppBarContentTheme) => {
     height: ${appBar.totalHeight};
     background-color: ${appBar.backgroundColor};
     color: ${appBar.color};
+    padding: ${appBar.padding};
   `;
 };
 
@@ -69,6 +72,8 @@ class AppBarContentImpl extends React.PureComponent<AppBarContentProps> {
  * action button <- specify if it can / have to / can't overflow
  *
  * all default specs are in theme and can be customised by user
+ *
+ * TODO: shadow of 4dp -> use HoC or css classe ? how user can customize when HoC ?
  *
  */
 export const AppBarContent = withTheme(AppBarContentImpl);
