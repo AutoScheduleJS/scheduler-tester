@@ -1,7 +1,7 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { Typography, Scale } from '../typography/typography';
+import { Typography } from '../typography/typography';
 
 interface CustomableProps {
   classes?: {
@@ -57,7 +57,7 @@ class AppBarContentImpl extends React.PureComponent<AppBarContentProps> {
           ${AppBarContentRootStyles(theme)} ${classes.root};
         `}
       >
-        <Typography scale={Scale.H1}>{title}</Typography>
+        <Typography scale={'H6'}>{title}</Typography>
       </div>
     );
   }

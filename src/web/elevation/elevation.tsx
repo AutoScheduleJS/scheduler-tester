@@ -73,14 +73,17 @@ const ambiantZValue: ReadonlyArray<string> = [
   '0px 9px 46px 8px',
 ];
 
+/**
+ * Caution: prettier will add an indesirable space between baselineColor & opacity
+ */
 const ElevationRootStyles = (theme: ElevationTheme, elevation: number) => {
   const eleIndex = [0, 1, 2, 3, 4, 6, 8, 12, 16, 24]
     .map((val, i) => ({ elevation: val, distance: Math.abs(val - elevation), index: i }))
     .reduce((acc, cur) => (acc.distance < cur.distance ? acc : cur)).index;
   return css`
-    box-shadow: ${umbraZValue[eleIndex]} ${theme.shadows.baselineColor} ${umbraOpacity},
-      ${penumbraZValue[eleIndex]} ${theme.shadows.baselineColor} ${penumbraOpacity},
-      ${ambiantZValue[eleIndex]} ${theme.shadows.baselineColor} ${ambientOpacity};
+    box-shadow: ${umbraZValue[eleIndex]} ${theme.shadows.baselineColor}${umbraOpacity},
+      ${penumbraZValue[eleIndex]} ${theme.shadows.baselineColor}${penumbraOpacity},
+      ${ambiantZValue[eleIndex]} ${theme.shadows.baselineColor}${ambientOpacity};
   `;
 };
 
