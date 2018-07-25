@@ -35,6 +35,9 @@ const AppBarRootStyles = (theme: AppBarTheme) => css`
   height: ${theme.appBar.totalHeight};
 `;
 
+/**
+ * AppBar container. Not responsible for hiding/reveal upon scroll (should be another component -> when tabs & app-bar are unified, this behavior should be)
+ */
 class AppBarImpl extends React.PureComponent<AppBarProps> {
   render() {
     const { children, theme: incomingTheme, classes = defaultClasses } = this.props;
