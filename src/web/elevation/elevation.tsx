@@ -22,7 +22,7 @@ interface ElevationTheme {
 const defaultTheme = (theme: any): ElevationTheme => ({
   shadows: {
     baselineColor: '#000000',
-    ...theme.appBar,
+    ...theme.shadows,
   },
 });
 
@@ -78,11 +78,10 @@ const ElevationRootStyles = (theme: ElevationTheme, elevation: number) => {
     .map((val, i) => ({ elevation: val, distance: Math.abs(val - elevation), index: i }))
     .reduce((acc, cur) => (acc.distance < cur.distance ? acc : cur)).index;
   return css`
-    box-shadow:
-      ${umbraZValue[eleIndex]} ${theme.shadows.baselineColor}${umbraOpacity},
-      ${penumbraZValue[eleIndex]} ${theme.shadows.baselineColor}${penumbraOpacity},
-      ${ambiantZValue[eleIndex]} ${theme.shadows.baselineColor}${ambientOpacity};
-`;
+    box-shadow: ${umbraZValue[eleIndex]} ${theme.shadows.baselineColor} ${umbraOpacity},
+      ${penumbraZValue[eleIndex]} ${theme.shadows.baselineColor} ${penumbraOpacity},
+      ${ambiantZValue[eleIndex]} ${theme.shadows.baselineColor} ${ambientOpacity};
+  `;
 };
 
 class ElevationImpl extends React.PureComponent<ElevationProps> {
