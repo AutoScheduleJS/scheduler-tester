@@ -134,7 +134,7 @@ const handleNewQuery = (state: ICoreState): ICoreState => {
     }),
   };
   const ui: UIState = {
-    editTab: 0,
+    editTab: 'qm',
     edit: {
       query: newQuery,
       isNew: true,

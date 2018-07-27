@@ -1,64 +1,137 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
+import { Typography } from '../typography/typography';
 
 interface CustomableProps {
   classes?: {
     root: string;
+    tabs: string;
+    tab: string;
+    label: string;
   };
   theme?: any;
 }
 
-enum TabsFixedPlacement {
+export enum TabsFixedPlacement {
   FullWidth,
   Centered,
   LeftAligned,
-  RightAligned
-};
+  RightAligned,
+}
 
-interface TabsFixedProps extends CustomableProps {
+export interface TabsFixedProps extends CustomableProps {
   placement: TabsFixedPlacement;
-  activeIndex: number;
+  activeTab: string;
+  onChange: (id: string, event: Event) => void;
+  tabs: Array<{ icon?: React.Component; label?: string; id: string }>;
 }
 
 interface TabsFixedTheme {
   tabs: {
-    elevation: number;
+    padding: string;
     totalHeight: string;
+    backgroundColor: string;
+    color: string;
   };
 }
 
 const defaultTheme = (theme: any): TabsFixedTheme => ({
   tabs: {
-    totalHeight: '56px',
-    elevation: 4,
+    totalHeight: '48px',
+    padding: '16px',
+    backgroundColor: theme.palette.primary.variant,
+    color: theme.palette.primary.on,
     ...theme.tabs,
   },
 });
 
 const defaultClasses = {
-  root: {},
+  root: '',
+  tabs: '',
+  tab: '',
+  label: ''
 };
 
-const TabsFixedRootStyles = (theme: TabsFixedTheme) => css`
+const tabFromTheme = (theme: TabsFixedTheme, isActive: boolean) => css`
   height: ${theme.tabs.totalHeight};
+  padding: 0 ${theme.tabs.padding};
+  background-color: ${theme.tabs.backgroundColor};
+  color: ${theme.tabs.color};
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-transform: uppercase;
+  border-bottom: ${isActive ? `2px solid ${theme.tabs.color}` : 'none'};
 `;
+
+const placementToJustify = (placement: TabsFixedPlacement) => {
+  switch (placement) {
+    case TabsFixedPlacement.Centered:
+      return 'justify-content: center';
+    case TabsFixedPlacement.FullWidth:
+      return '';
+    case TabsFixedPlacement.LeftAligned:
+      return 'justify-content: flex-start';
+    case TabsFixedPlacement.RightAligned:
+      return 'justify-content: flex-end';
+  }
+};
+
+const placementToCss = (placement: TabsFixedPlacement) => {
+  return css`
+    display: flex;
+    ${placementToJustify(placement)};
+  `;
+};
 
 class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
   componentWillReceiveProps(nextProp: TabsFixedProps) {
-    if (this.props.activeIndex !== nextProp.activeIndex) {
+    if (this.props.activeTab !== nextProp.activeTab) {
       console.log('activeIndex changed!');
     }
   }
   render() {
-    const { children, theme: incomingTheme, classes = defaultClasses } = this.props;
+    const {
+      activeTab,
+      children,
+      tabs,
+      placement,
+      theme: incomingTheme,
+      classes = defaultClasses,
+    } = this.props;
     const theme = defaultTheme(incomingTheme);
     return (
-      <div className={css`${TabsFixedRootStyles(theme)} ${classes.root}`}>
+      <div
+        className={css`
+          ${classes.root};
+        `}
+      >
+        <div
+          className={css`
+            ${placementToCss(placement)} ${classes.tabs};
+          `}
+        >
+          {tabs.map(tab => (
+            <div
+              className={css`
+                ${tabFromTheme(theme, tab.id === activeTab)} ${classes.tab};
+              `}
+            >
+              <Typography scale="Button" classes={{ root: classes.label }}>
+                {tab.label}
+              </Typography>
+            </div>
+          ))}
+        </div>
         {children}
       </div>
     );
   }
 }
+
+/**
+ * With or without animation: activeIndex; onChange; content -> children
+ */
 
 export const TabsFixed = withTheme(TabsFixedImpl);

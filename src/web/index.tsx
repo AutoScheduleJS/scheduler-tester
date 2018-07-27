@@ -15,6 +15,7 @@ const emotionTheme = {
   palette: {
     primary: {
       main: theme.palette.primary.main,
+      variant: '#283593',
       on: 'white'
     }
   }

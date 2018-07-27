@@ -1,19 +1,23 @@
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { actionTrigger$, coreState$ } from '@scheduler-tester/core-state/core.store';
-import * as React from 'react';
 import { UpdateEditTab } from '@scheduler-tester/core-state/edit-tab.ui.reducer';
-import { ITabManagerFromState, ITabManagerProps, TabsManager } from './tabs-manager/tabs-manager';
+import * as React from 'react';
+import { TabsFixed, TabsFixedPlacement, TabsFixedProps } from './tabs-fixed/tabs-fixed';
 import { connect } from './util/connect';
 
-const selector = ({ ui }: ICoreState): ITabManagerFromState => ({
-  activeIndex: ui.editTab,
+const selector = ({ ui }: ICoreState) => ({
+  activeTab: ui.editTab,
 });
 
-const EditTabsManagerInner = connect(selector, coreState$)<ITabManagerProps, ITabManagerFromState>(
-  TabsManager
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+type TabsWithoutIndex = Omit<TabsFixedProps, 'activeTab'>;
+
+const EditTabsManagerInner = connect(selector, coreState$)<TabsWithoutIndex, { activeTab: string }>(
+  TabsFixed
 );
 
-const handleNewTab = tabIndex => actionTrigger$.next(new UpdateEditTab(tabIndex));
+const handleNewTab = (tabIndex: string) => actionTrigger$.next(new UpdateEditTab(tabIndex));
 
 interface StEdittabsProps {
   className?: string;
@@ -21,8 +25,15 @@ interface StEdittabsProps {
 
 export class StEdittabs extends React.PureComponent<StEdittabsProps> {
   render() {
-    const labels = ['Queries manager', 'User-state manager'];
+    const tabs = [{ label: 'Queries manager', id: 'qm' }, { label: 'User-state manager', id: 'usm' }];
     const props = this.props;
-    return <EditTabsManagerInner onTabChange={handleNewTab} {...{ labels }} {...props} />;
+    return (
+      <EditTabsManagerInner
+        placement={TabsFixedPlacement.Centered}
+        onChange={handleNewTab}
+        {...{ tabs }}
+        {...props}
+      />
+    );
   }
 }

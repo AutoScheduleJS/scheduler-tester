@@ -2,7 +2,7 @@ import { ICoreState, coreStateL } from '@scheduler-tester/core-state/core.state'
 import { actionType } from '@scheduler-tester/core-state/core.store';
 
 export class UpdateEditTab {
-  constructor(public index: number) {}
+  constructor(public id: string) {}
 }
 
 export type editTabUiActionType = UpdateEditTab;
@@ -15,5 +15,5 @@ export const editTabUiReducer$ = (state: ICoreState, action: actionType): ICoreS
 };
 
 const handleUpdate = (state: ICoreState, action: UpdateEditTab): ICoreState => {
-  return coreStateL.ui.editTab.set(action.index)(state);
+  return coreStateL.ui.editTab.set(action.id)(state);
 };

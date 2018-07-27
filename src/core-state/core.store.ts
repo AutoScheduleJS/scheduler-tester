@@ -46,7 +46,7 @@ const initialUIStateObj: UIState = {
     query: false,
     isNew: false,
   },
-  editTab: 0,
+  editTab: 'qm',
 };
 
 const initialStateObj: ICoreState = {
