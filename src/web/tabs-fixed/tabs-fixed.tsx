@@ -1,7 +1,7 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { Typography } from '../typography/typography';
+import { Button, ButtonEmphaze } from '../button/button';
 
 interface CustomableProps {
   classes?: {
@@ -29,7 +29,6 @@ export interface TabsFixedProps extends CustomableProps {
 
 interface TabsFixedTheme {
   tabs: {
-    padding: string;
     totalHeight: string;
     backgroundColor: string;
     color: string;
@@ -39,7 +38,6 @@ interface TabsFixedTheme {
 const defaultTheme = (theme: any): TabsFixedTheme => ({
   tabs: {
     totalHeight: '48px',
-    padding: '16px',
     backgroundColor: theme.palette.primary.variant,
     color: theme.palette.primary.on,
     ...theme.tabs,
@@ -50,12 +48,11 @@ const defaultClasses = {
   root: '',
   tabs: '',
   tab: '',
-  label: ''
+  label: '',
 };
 
 const tabFromTheme = (theme: TabsFixedTheme, isActive: boolean) => css`
   height: ${theme.tabs.totalHeight};
-  padding: 0 ${theme.tabs.padding};
   background-color: ${theme.tabs.backgroundColor};
   color: ${theme.tabs.color};
   display: flex;
@@ -118,9 +115,7 @@ class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
                 ${tabFromTheme(theme, tab.id === activeTab)} ${classes.tab};
               `}
             >
-              <Typography scale="Button" classes={{ root: classes.label }}>
-                {tab.label}
-              </Typography>
+              <Button emphaze={ButtonEmphaze.Low} label={tab.label} icon={tab.icon} />
             </div>
           ))}
         </div>

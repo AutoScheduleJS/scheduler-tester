@@ -7,7 +7,7 @@ import { ThemeProvider } from 'emotion-theming';
 
 const theme = createMuiTheme({
   palette: {
-    type: 'dark'
+    type: 'dark',
   },
 });
 
@@ -16,10 +16,14 @@ const emotionTheme = {
     primary: {
       main: theme.palette.primary.main,
       variant: '#283593',
-      on: 'white'
-    }
-  }
-}
+      on: 'white',
+    },
+    surface: {
+      main: 'white',
+      on: '#00000011',
+    },
+  },
+};
 
 const app = (
   <MuiThemeProvider theme={theme}>
