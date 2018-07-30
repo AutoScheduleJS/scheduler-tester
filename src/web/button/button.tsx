@@ -4,11 +4,13 @@ import * as React from 'react';
 import { Elevation } from '../elevation/elevation';
 import { Typography } from '../typography/typography';
 
+export interface ButtonClasses {
+  root?: string;
+  label?:string;
+}
+
 interface CustomableProps {
-  classes?: {
-    root: string;
-    label: string;
-  };
+  classes?: ButtonClasses;
   theme?: any;
 }
 
@@ -58,7 +60,7 @@ const defaultTheme = (theme: any): ButtonTheme => ({
   },
 });
 
-const defaultClasses = {
+const defaultClasses: ButtonClasses = {
   root: '',
   label: '',
 };
@@ -91,6 +93,10 @@ const ButtonRootStyles = (theme: ButtonTheme, emphaze: number) => {
   }
 };
 
+const buttonTabCss = css`
+  text-align: center;
+`;
+
 class ButtonImpl extends React.PureComponent<ButtonProps> {
   render() {
     const { label, emphaze, theme: incomingTheme, classes = defaultClasses } = this.props;
@@ -105,7 +111,7 @@ class ButtonImpl extends React.PureComponent<ButtonProps> {
           `,
         }}
       >
-        <Typography scale="Button" classes={{ root: classes.label }}>
+        <Typography scale="Button" classes={{ root: css`${buttonTabCss} ${classes.label}` }}>
           {label}
         </Typography>
       </Elevation>

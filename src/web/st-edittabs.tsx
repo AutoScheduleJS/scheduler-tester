@@ -4,6 +4,7 @@ import { UpdateEditTab } from '@scheduler-tester/core-state/edit-tab.ui.reducer'
 import * as React from 'react';
 import { TabsFixed, TabsFixedPlacement, TabsFixedProps } from './tabs-fixed/tabs-fixed';
 import { connect } from './util/connect';
+import { ThemeProvider } from 'emotion-theming';
 
 const selector = ({ ui }: ICoreState) => ({
   activeTab: ui.editTab,
@@ -23,17 +24,27 @@ interface StEdittabsProps {
   className?: string;
 }
 
+const adjustedTheme = ancestorTheme => ({
+  ...ancestorTheme,
+  tabs: { ...ancestorTheme.tabs, backgroundColor: '' },
+});
+
 export class StEdittabs extends React.PureComponent<StEdittabsProps> {
   render() {
-    const tabs = [{ label: 'Queries manager', id: 'qm' }, { label: 'User-state manager', id: 'usm' }];
+    const tabs = [
+      { label: 'Queries manager', id: 'qm' },
+      { label: 'User-state manager', id: 'usm' },
+    ];
     const props = this.props;
     return (
-      <EditTabsManagerInner
-        placement={TabsFixedPlacement.Centered}
-        onChange={handleNewTab}
-        {...{ tabs }}
-        {...props}
-      />
+      <ThemeProvider theme={adjustedTheme}>
+        <EditTabsManagerInner
+          placement={TabsFixedPlacement.Centered}
+          onChange={handleNewTab}
+          {...{ tabs }}
+          {...props}
+        />
+      </ThemeProvider>
     );
   }
 }

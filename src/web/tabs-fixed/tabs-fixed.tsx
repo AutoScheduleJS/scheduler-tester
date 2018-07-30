@@ -1,15 +1,17 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { Button, ButtonEmphaze } from '../button/button';
+import { Button, ButtonClasses, ButtonEmphaze } from '../button/button';
+
+interface TabsFixedClasses {
+  root?: string;
+  tabs?: string;
+  tab?: string;
+  button?: ButtonClasses;
+}
 
 interface CustomableProps {
-  classes?: {
-    root: string;
-    tabs: string;
-    tab: string;
-    label: string;
-  };
+  classes?: TabsFixedClasses;
   theme?: any;
 }
 
@@ -38,17 +40,17 @@ interface TabsFixedTheme {
 const defaultTheme = (theme: any): TabsFixedTheme => ({
   tabs: {
     totalHeight: '48px',
-    backgroundColor: theme.palette.primary.variant,
-    color: theme.palette.primary.on,
+    backgroundColor: theme.palette.surface.main,
+    color: theme.palette.primary.main,
     ...theme.tabs,
   },
 });
 
-const defaultClasses = {
+const defaultClasses: TabsFixedClasses = {
   root: '',
   tabs: '',
   tab: '',
-  label: '',
+  button: {},
 };
 
 const tabFromTheme = (theme: TabsFixedTheme, isActive: boolean) => css`
@@ -58,8 +60,8 @@ const tabFromTheme = (theme: TabsFixedTheme, isActive: boolean) => css`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  text-transform: uppercase;
   border-bottom: ${isActive ? `2px solid ${theme.tabs.color}` : 'none'};
+  grid-row: 1;
 `;
 
 const placementToJustify = (placement: TabsFixedPlacement) => {
@@ -75,11 +77,20 @@ const placementToJustify = (placement: TabsFixedPlacement) => {
   }
 };
 
-const placementToCss = (placement: TabsFixedPlacement) => {
-  return css`
-    display: flex;
-    ${placementToJustify(placement)};
-  `;
+const containerCss = (placement: TabsFixedPlacement) => css`
+  display: flex;
+  ${placementToJustify(placement)};
+`;
+
+const tabsCss = css`
+  display: inline-grid;
+  grid-auto-columns: 1fr;
+`;
+
+const tabButtonClasse: ButtonClasses = {
+  root: css`
+    padding: 0 16px;
+  `,
 };
 
 class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
@@ -104,20 +115,27 @@ class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
           ${classes.root};
         `}
       >
-        <div
-          className={css`
-            ${placementToCss(placement)} ${classes.tabs};
-          `}
-        >
-          {tabs.map(tab => (
-            <div
-              className={css`
-                ${tabFromTheme(theme, tab.id === activeTab)} ${classes.tab};
-              `}
-            >
-              <Button emphaze={ButtonEmphaze.Low} label={tab.label} icon={tab.icon} />
-            </div>
-          ))}
+        <div className={containerCss(placement)}>
+          <div
+            className={css`
+              ${tabsCss} ${classes.tabs};
+            `}
+          >
+            {tabs.map(tab => (
+              <div
+                className={css`
+                  ${tabFromTheme(theme, tab.id === activeTab)} ${classes.tab};
+                `}
+              >
+                <Button
+                  emphaze={ButtonEmphaze.Low}
+                  label={tab.label}
+                  icon={tab.icon}
+                  classes={{ ...tabButtonClasse, ...classes.button }}
+                />
+              </div>
+            ))}
+          </div>
         </div>
         {children}
       </div>
