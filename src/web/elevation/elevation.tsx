@@ -1,6 +1,8 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
+import { pipe } from 'rxjs';
+import { getDisplayName } from '../util/hoc.util';
 
 interface CustomableProps {
   classes?: {
@@ -77,13 +79,14 @@ const ambiantZValue: ReadonlyArray<string> = [
  * Caution: prettier will add an indesirable space between baselineColor & opacity
  */
 const ElevationRootStyles = (theme: ElevationTheme, elevation: number) => {
+  const color = theme.shadows.baselineColor;
   const eleIndex = [0, 1, 2, 3, 4, 6, 8, 12, 16, 24]
     .map((val, i) => ({ elevation: val, distance: Math.abs(val - elevation), index: i }))
     .reduce((acc, cur) => (acc.distance < cur.distance ? acc : cur)).index;
   return css`
-    box-shadow: ${umbraZValue[eleIndex]} ${theme.shadows.baselineColor}${umbraOpacity},
-      ${penumbraZValue[eleIndex]} ${theme.shadows.baselineColor}${penumbraOpacity},
-      ${ambiantZValue[eleIndex]} ${theme.shadows.baselineColor}${ambientOpacity};
+    box-shadow: ${umbraZValue[eleIndex]} ${color} ${umbraOpacity},
+      ${penumbraZValue[eleIndex]} ${color} ${penumbraOpacity},
+      ${ambiantZValue[eleIndex]} ${color} ${ambientOpacity};
   `;
 };
 
@@ -104,3 +107,26 @@ class ElevationImpl extends React.PureComponent<ElevationProps> {
 }
 
 export const Elevation = withTheme(ElevationImpl);
+
+const withElevationImp = <T extends any>(prop: ElevationProps) => (Cmp: React.ComponentType<T>) => {
+  class ElevationImpl extends React.PureComponent<T> {
+    render() {
+      const theme = defaultTheme(prop.theme);
+      const classes = prop.classes || defaultClasses;
+      const props: any = this.props;
+      return (
+        <div
+          className={css`
+            ${ElevationRootStyles(theme, prop.elevation)} ${classes.root};
+          `}
+        >
+          <Cmp {...{ ...props, theme }} />
+        </div>
+      );
+    }
+  }
+  (ElevationImpl as any).displayName = getDisplayName(Cmp);
+  return ElevationImpl;
+};
+
+export const withElevation = (prop: ElevationProps) => pipe(withElevationImp(prop), withTheme);
