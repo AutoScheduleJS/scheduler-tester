@@ -1,7 +1,8 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { Button, ButtonClasses, ButtonEmphaze } from '../button/button';
+import { ButtonClasses, ButtonEmphaze } from '../button/button';
+import { StButton } from '../st-button';
 
 interface TabsFixedClasses {
   root?: string;
@@ -54,6 +55,7 @@ const defaultClasses: TabsFixedClasses = {
 };
 
 const tabFromTheme = (theme: TabsFixedTheme, isActive: boolean) => css`
+  box-sizing: content-box;
   height: ${theme.tabs.totalHeight};
   background-color: ${theme.tabs.backgroundColor};
   color: ${theme.tabs.color};
@@ -127,10 +129,13 @@ class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
                   ${tabFromTheme(theme, tab.id === activeTab)} ${classes.tab};
                 `}
               >
-                <Button
+                <StButton
                   emphaze={ButtonEmphaze.Low}
                   label={tab.label}
                   icon={tab.icon}
+                  onClick={e => {
+                    console.log('e :', e);
+                  }}
                   classes={{ ...tabButtonClasse, ...classes.button }}
                 />
               </div>

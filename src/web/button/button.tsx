@@ -6,10 +6,11 @@ import { Typography } from '../typography/typography';
 
 export interface ButtonClasses {
   root?: string;
-  label?:string;
+  label?: string;
 }
 
 interface CustomableProps {
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   classes?: ButtonClasses;
   theme?: any;
 }
@@ -73,6 +74,7 @@ const ButtonRootStyles = (theme: ButtonTheme, emphaze: number) => {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    user-select: none;
     ${theme.button.shape};
   `;
   switch (emphaze) {
@@ -99,22 +101,37 @@ const buttonTabCss = css`
 
 class ButtonImpl extends React.PureComponent<ButtonProps> {
   render() {
-    const { label, emphaze, theme: incomingTheme, classes = defaultClasses } = this.props;
+    const {
+      label,
+      emphaze,
+      onClick = () => {},
+      theme: incomingTheme,
+      classes = defaultClasses,
+    } = this.props;
     const theme = defaultTheme(incomingTheme);
     const elevation = emphaze === ButtonEmphaze.High ? theme.button.elevation : 0;
     return (
-      <Elevation
-        elevation={elevation}
-        classes={{
-          root: css`
-            ${ButtonRootStyles(theme, emphaze)} ${classes.root};
-          `,
-        }}
-      >
-        <Typography scale="Button" classes={{ root: css`${buttonTabCss} ${classes.label}` }}>
-          {label}
-        </Typography>
-      </Elevation>
+      <div onClick={onClick}>
+        <Elevation
+          elevation={elevation}
+          classes={{
+            root: css`
+              ${ButtonRootStyles(theme, emphaze)} ${classes.root};
+            `,
+          }}
+        >
+          <Typography
+            scale="Button"
+            classes={{
+              root: css`
+                ${buttonTabCss} ${classes.label};
+              `,
+            }}
+          >
+            {label}
+          </Typography>
+        </Elevation>
+      </div>
     );
   }
 }
