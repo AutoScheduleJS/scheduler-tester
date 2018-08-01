@@ -1,8 +1,7 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { pipe } from 'rxjs';
-import { getDisplayName } from '../util/hoc.util';
+import { nodeWrapper } from '../node-wrapper/node-wrapper';
 
 interface CustomableProps {
   classes?: {
@@ -84,9 +83,9 @@ const ElevationRootStyles = (theme: ElevationTheme, elevation: number) => {
     .map((val, i) => ({ elevation: val, distance: Math.abs(val - elevation), index: i }))
     .reduce((acc, cur) => (acc.distance < cur.distance ? acc : cur)).index;
   return css`
-    box-shadow: ${umbraZValue[eleIndex]} ${color} ${umbraOpacity},
-      ${penumbraZValue[eleIndex]} ${color} ${penumbraOpacity},
-      ${ambiantZValue[eleIndex]} ${color} ${ambientOpacity};
+    box-shadow: ${umbraZValue[eleIndex]} ${color}${umbraOpacity},
+      ${penumbraZValue[eleIndex]} ${color}${penumbraOpacity},
+      ${ambiantZValue[eleIndex]} ${color}${ambientOpacity};
   `;
 };
 
@@ -94,39 +93,12 @@ class ElevationImpl extends React.PureComponent<ElevationProps> {
   render() {
     const { children, elevation, theme: incomingTheme, classes = defaultClasses } = this.props;
     const theme = defaultTheme(incomingTheme);
-    return (
-      <div
-        className={css`
-          ${ElevationRootStyles(theme, elevation)} ${classes.root};
-        `}
-      >
-        {children}
-      </div>
-    );
+    return nodeWrapper({
+      className: css`
+        ${ElevationRootStyles(theme, elevation)} ${classes.root};
+      `,
+    })(children);
   }
 }
 
 export const Elevation = withTheme(ElevationImpl);
-
-const withElevationImp = <T extends any>(prop: ElevationProps) => (Cmp: React.ComponentType<T>) => {
-  class ElevationImpl extends React.PureComponent<T> {
-    render() {
-      const theme = defaultTheme(prop.theme);
-      const classes = prop.classes || defaultClasses;
-      const props: any = this.props;
-      return (
-        <div
-          className={css`
-            ${ElevationRootStyles(theme, prop.elevation)} ${classes.root};
-          `}
-        >
-          <Cmp {...{ ...props, theme }} />
-        </div>
-      );
-    }
-  }
-  (ElevationImpl as any).displayName = getDisplayName(Cmp);
-  return ElevationImpl;
-};
-
-export const withElevation = (prop: ElevationProps) => pipe(withElevationImp(prop), withTheme);

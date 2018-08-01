@@ -1,7 +1,8 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { Elevation, withElevation } from '../elevation/elevation';
+import { Elevation } from '../elevation/elevation';
+import { nodeWrapper } from '../node-wrapper/node-wrapper';
 
 interface CustomableProps {
   classes?: {
@@ -43,15 +44,15 @@ class AppBarImpl extends React.PureComponent<AppBarProps> {
     const { children, theme: incomingTheme, classes = defaultClasses } = this.props;
     const theme = defaultTheme(incomingTheme);
     return (
-      <div
-        className={css`
-          ${AppBarRootStyles(theme)} ${classes.root};
-        `}
-      >
-        {children}
-      </div>
+      <Elevation elevation={4}>
+        {nodeWrapper({
+          className: css`
+            ${AppBarRootStyles(theme)} ${classes.root};
+          `,
+        })(children)}
+      </Elevation>
     );
   }
 }
 
-export const AppBar = withTheme(withElevation({ elevation: 2 })(AppBarImpl));
+export const AppBar = withTheme(AppBarImpl);
