@@ -21,7 +21,7 @@ export enum ButtonEmphaze {
   High,
 }
 
-interface ButtonProps extends CustomableProps {
+export interface ButtonProps extends CustomableProps {
   emphaze: ButtonEmphaze;
   label?: string;
   icon?: React.Component;
@@ -111,15 +111,13 @@ class ButtonImpl extends React.PureComponent<ButtonProps> {
     const theme = defaultTheme(incomingTheme);
     const elevation = emphaze === ButtonEmphaze.High ? theme.button.elevation : 0;
     return (
-      <div onClick={onClick}>
-        <Elevation
-          elevation={elevation}
-          classes={{
-            root: css`
-              ${ButtonRootStyles(theme, emphaze)} ${classes.root};
-            `,
-          }}
-        >
+      <div
+        onClick={onClick}
+        className={css`
+          ${ButtonRootStyles(theme, emphaze)} ${classes.root};
+        `}
+      >
+        <Elevation elevation={elevation}>
           <Typography
             scale="Button"
             classes={{

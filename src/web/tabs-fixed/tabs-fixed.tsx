@@ -7,8 +7,7 @@ import { StButton } from '../st-button';
 interface TabsFixedClasses {
   root?: string;
   tabs?: string;
-  tab?: string;
-  button?: ButtonClasses;
+  tab?: ButtonClasses;
 }
 
 interface CustomableProps {
@@ -50,28 +49,15 @@ const defaultTheme = (theme: any): TabsFixedTheme => ({
 const defaultClasses: TabsFixedClasses = {
   root: '',
   tabs: '',
-  tab: '',
-  button: {},
+  tab: {},
 };
-
-const tabFromTheme = (theme: TabsFixedTheme, isActive: boolean) => css`
-  box-sizing: content-box;
-  height: ${theme.tabs.totalHeight};
-  background-color: ${theme.tabs.backgroundColor};
-  color: ${theme.tabs.color};
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  border-bottom: ${isActive ? `2px solid ${theme.tabs.color}` : 'none'};
-  grid-row: 1;
-`;
 
 const placementToJustify = (placement: TabsFixedPlacement) => {
   switch (placement) {
     case TabsFixedPlacement.Centered:
       return 'justify-content: center';
     case TabsFixedPlacement.FullWidth:
-      return '';
+      return 'justify-content: stretch';
     case TabsFixedPlacement.LeftAligned:
       return 'justify-content: flex-start';
     case TabsFixedPlacement.RightAligned:
@@ -87,13 +73,21 @@ const containerCss = (placement: TabsFixedPlacement) => css`
 const tabsCss = css`
   display: inline-grid;
   grid-auto-columns: 1fr;
+  grid-auto-flow: column;
 `;
 
-const tabButtonClasse: ButtonClasses = {
+const tabButtonClasse = (theme: TabsFixedTheme, isActive: boolean): ButtonClasses => ({
   root: css`
+    box-sizing: content-box;
+    height: ${theme.tabs.totalHeight};
+    background-color: ${theme.tabs.backgroundColor};
+    color: ${theme.tabs.color};
+    border-bottom: ${isActive ? `2px solid ${theme.tabs.color}` : 'none'};
+    border-radius: 0;
     padding: 0 16px;
+    grid-row: 1;
   `,
-};
+});
 
 class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
   componentWillReceiveProps(nextProp: TabsFixedProps) {
@@ -124,21 +118,15 @@ class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
             `}
           >
             {tabs.map(tab => (
-              <div
-                className={css`
-                  ${tabFromTheme(theme, tab.id === activeTab)} ${classes.tab};
-                `}
-              >
-                <StButton
-                  emphaze={ButtonEmphaze.Low}
-                  label={tab.label}
-                  icon={tab.icon}
-                  onClick={e => {
-                    console.log('e :', e);
-                  }}
-                  classes={{ ...tabButtonClasse, ...classes.button }}
-                />
-              </div>
+              <StButton
+                emphaze={ButtonEmphaze.Low}
+                label={tab.label}
+                icon={tab.icon}
+                onClick={e => {
+                  console.log('e :', e);
+                }}
+                classes={{ ...tabButtonClasse(theme, tab.id === activeTab), button: classes.tab }}
+              />
             ))}
           </div>
         </div>

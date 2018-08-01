@@ -114,15 +114,4 @@ class EffectRippleImpl extends React.PureComponent<EffectRippleProps> {
   }
 }
 
-const EffectRippleCmp = withTheme(EffectRippleImpl);
-
-export const withEffectRipple = <T extends any>(
-  Comp: React.ComponentType<T>,
-  rippleProps: EffectRippleProps
-) => (props: T) => {
-  return (
-    <EffectRippleCmp {...rippleProps}>
-      <Comp {...props} />
-    </EffectRippleCmp>
-  );
-};
+export const EffectRipple = withTheme(EffectRippleImpl);
