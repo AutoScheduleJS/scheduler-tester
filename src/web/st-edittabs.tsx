@@ -1,10 +1,11 @@
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { actionTrigger$, coreState$ } from '@scheduler-tester/core-state/core.store';
 import { UpdateEditTab } from '@scheduler-tester/core-state/edit-tab.ui.reducer';
+import { ThemeProvider } from 'emotion-theming';
 import * as React from 'react';
 import { TabsFixed, TabsFixedPlacement, TabsFixedProps } from './tabs-fixed/tabs-fixed';
 import { connect } from './util/connect';
-import { ThemeProvider } from 'emotion-theming';
+import { css } from 'emotion';
 
 const selector = ({ ui }: ICoreState) => ({
   activeTab: ui.editTab,
@@ -18,7 +19,7 @@ const EditTabsManagerInner = connect(selector, coreState$)<TabsWithoutIndex, { a
   TabsFixed
 );
 
-const handleNewTab = (tabIndex: string) => actionTrigger$.next(new UpdateEditTab(tabIndex));
+const handleNewTab = (tabId: string) => actionTrigger$.next(new UpdateEditTab(tabId));
 
 interface StEdittabsProps {
   className?: string;
@@ -41,7 +42,8 @@ export class StEdittabs extends React.PureComponent<StEdittabsProps> {
         <EditTabsManagerInner
           placement={TabsFixedPlacement.Centered}
           onChange={handleNewTab}
-          {...{ tabs }}
+          tabs={tabs}
+          classes={{ root: css`height: 285px` }}
           {...props}
         />
       </ThemeProvider>

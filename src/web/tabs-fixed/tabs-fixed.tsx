@@ -1,6 +1,7 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
+import { animated, Transition } from 'react-spring';
 import { ButtonClasses, ButtonEmphaze } from '../button/button';
 import { StButton } from '../st-button';
 
@@ -22,11 +23,17 @@ export enum TabsFixedPlacement {
   RightAligned,
 }
 
+export interface TabInfo {
+  icon?: React.Component;
+  label?: string;
+  id: string;
+}
+
 export interface TabsFixedProps extends CustomableProps {
   placement: TabsFixedPlacement;
   activeTab: string;
-  onChange: (id: string, event: Event) => void;
-  tabs: Array<{ icon?: React.Component; label?: string; id: string }>;
+  onChange: (id: string, event: React.MouseEvent<HTMLDivElement>) => void;
+  tabs: TabInfo[];
 }
 
 interface TabsFixedTheme {
@@ -76,39 +83,85 @@ const tabsCss = css`
   grid-auto-flow: column;
 `;
 
-const tabButtonClasse = (theme: TabsFixedTheme, isActive: boolean): ButtonClasses => ({
+const tabButtonClasse = (
+  theme: TabsFixedTheme,
+  isActive: boolean,
+  buttonClasses: ButtonClasses = {}
+) => ({
   root: css`
     box-sizing: content-box;
-    height: ${theme.tabs.totalHeight};
     background-color: ${theme.tabs.backgroundColor};
     color: ${theme.tabs.color};
     border-bottom: ${isActive ? `2px solid ${theme.tabs.color}` : 'none'};
     border-radius: 0;
-    padding: 0 16px;
     grid-row: 1;
   `,
+  button: {
+    root: css`
+      padding: 0 16px;
+      height: ${theme.tabs.totalHeight};
+    `,
+    ...buttonClasses,
+  },
 });
 
+interface TabsFixedState {
+  activeI: number;
+  activeTab: string;
+  backward?: boolean;
+}
+
+const baseContentStyle = {
+  width: '100%',
+  position: 'absolute',
+};
+
+const rootClass = css`
+  position: relative;
+  overflow: hidden;
+`;
+
 class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
-  componentWillReceiveProps(nextProp: TabsFixedProps) {
-    if (this.props.activeTab !== nextProp.activeTab) {
-      console.log('activeIndex changed!');
+  state: TabsFixedState = {
+    activeI: 0,
+    activeTab: '',
+  };
+  static getDerivedStateFromProps(props: TabsFixedProps, state: TabsFixedState) {
+    if (state.activeTab === props.activeTab) {
+      return null;
     }
+    const activeI = props.tabs.findIndex(tab => tab.id === props.activeTab);
+    const previousI = props.tabs.findIndex(tab => tab.id === state.activeTab);
+    return {
+      activeI: activeI,
+      activeTab: props.activeTab,
+      backward: previousI === -1 ? undefined : previousI > activeI,
+    } as TabsFixedState;
   }
   render() {
     const {
       activeTab,
       children,
+      onChange,
       tabs,
       placement,
       theme: incomingTheme,
       classes = defaultClasses,
     } = this.props;
+    if (!tabs.length) {
+      return null;
+    }
+    const { activeI, backward } = this.state;
+    const enter = { transform: 'translate3d(0%,0,0)' };
+    const from = {
+      transform: `translate3d(${backward === undefined ? 0 : backward ? -100 : 100}%,0,0)`,
+    };
+    const leave = { transform: `translate3d(${backward ? 100 : -100}%,0,0)` };
     const theme = defaultTheme(incomingTheme);
     return (
       <div
         className={css`
-          ${classes.root};
+          ${rootClass} ${classes.root};
         `}
       >
         <div className={containerCss(placement)}>
@@ -122,22 +175,22 @@ class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
                 emphaze={ButtonEmphaze.Low}
                 label={tab.label}
                 icon={tab.icon}
-                onClick={e => {
-                  console.log('e :', e);
-                }}
-                classes={{ ...tabButtonClasse(theme, tab.id === activeTab), button: classes.tab }}
+                onClick={e => onChange(tab.id, e)}
+                classes={tabButtonClasse(theme, tab.id === activeTab, classes.tab)}
               />
             ))}
           </div>
         </div>
-        {children}
+        <Transition native from={from} enter={enter} leave={leave} keys={[activeI]}>
+          {(styles: any) => (
+            <animated.div style={{ ...baseContentStyle, ...styles }}>
+              {React.Children.toArray(children)[activeI]}
+            </animated.div>
+          )}
+        </Transition>
       </div>
     );
   }
 }
-
-/**
- * With or without animation: activeIndex; onChange; content -> children
- */
 
 export const TabsFixed = withTheme(TabsFixedImpl);
