@@ -96,8 +96,8 @@ const tabButtonClasse = (
     border-radius: 0;
     grid-row: 1;
   `,
-  button: {
-    root: css`
+  innerBtn: {
+    button: css`
       padding: 0 16px;
       height: ${theme.tabs.totalHeight};
     `,

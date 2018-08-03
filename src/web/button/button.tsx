@@ -6,11 +6,11 @@ import { Typography } from '../typography/typography';
 
 export interface ButtonClasses {
   root?: string;
+  button?: string;
   label?: string;
 }
 
 interface CustomableProps {
-  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   classes?: ButtonClasses;
   theme?: any;
 }
@@ -22,6 +22,7 @@ export enum ButtonEmphaze {
 }
 
 export interface ButtonProps extends CustomableProps {
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   emphaze: ButtonEmphaze;
   label?: string;
   icon?: React.Component;
@@ -64,6 +65,7 @@ const defaultTheme = (theme: any): ButtonTheme => ({
 const defaultClasses: ButtonClasses = {
   root: '',
   label: '',
+  button: '',
 };
 
 /**
@@ -111,13 +113,15 @@ class ButtonImpl extends React.PureComponent<ButtonProps> {
     const theme = defaultTheme(incomingTheme);
     const elevation = emphaze === ButtonEmphaze.High ? theme.button.elevation : 0;
     return (
-      <div
-        onClick={onClick}
-        className={css`
-          ${ButtonRootStyles(theme, emphaze)} ${classes.root};
-        `}
-      >
-        <Elevation elevation={elevation}>
+      <div onClick={onClick} className={classes.root}>
+        <Elevation
+          elevation={elevation}
+          classes={{
+            root: css`
+              ${ButtonRootStyles(theme, emphaze)} ${classes.button};
+            `,
+          }}
+        >
           <Typography
             scale="Button"
             classes={{
