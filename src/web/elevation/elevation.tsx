@@ -3,7 +3,7 @@ import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { nodeWrapper } from '../node-wrapper/node-wrapper';
 
-interface CustomableProps {
+interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
   classes?: {
     root: string;
   };
@@ -100,5 +100,26 @@ class ElevationImpl extends React.PureComponent<ElevationProps> {
     })(children);
   }
 }
+
+export const ElevationHOC = <T extends { className: string }>(
+  elevation: number,
+  customTheme?: ElevationTheme
+) => (Cmp: React.ComponentType<T>) =>
+  class Elevation extends React.PureComponent<T> {
+    public render() {
+      const theme = defaultTheme(customTheme);
+      const { className } = this.props;
+      const props: any = Object.assign({}, this.props);
+      delete props.className; // workaround for TS issue 'spread object of generic type'
+      return (
+        <Cmp
+          {...props}
+          className={css`
+            ${ElevationRootStyles(theme, elevation)} ${className};
+          `}
+        />
+      );
+    }
+  };
 
 export const Elevation = withTheme(ElevationImpl);
