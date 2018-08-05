@@ -28,7 +28,9 @@
     "emotion": "^9.2.6",
     "emotion-theming": "^9.2.6",
     "intervals-fn": "^3.0.3",
-    "lens.ts": "^0.5.1"
+    "lens.ts": "^0.5.1",
+    "prop-types": "^15.6.2",
+    "react-spring": "^5.5.4"
   },
   "devDependencies": {
     "@autoschedule/queries-fn": "^6.2.1",
@@ -47,8 +49,8 @@
     "parcel-bundler": "^1.9.2",
     "parcel-plugin-typescript": "^1.0.0",
     "prettier": "^1.11.1",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
     "rxjs": "^6.2.1",
     "rxjs-tslint": "^0.1.5",
     "tslint": "^5.10.0",
