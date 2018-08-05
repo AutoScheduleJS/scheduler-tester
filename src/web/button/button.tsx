@@ -46,11 +46,11 @@ const defaultTheme = (theme: any): ButtonTheme => ({
       padding: 0 16px;
       height: 36px;
       min-width: 64px;
-      color: ${theme.palette.primary.main};
+      color: ${theme.palette.secondary.main};
     `,
     highShape: css`
-      color: ${theme.palette.primary.on};
-      background-color: ${theme.palette.primary.main};
+      color: ${theme.palette.secondary.on};
+      background-color: ${theme.palette.secondary.main};
     `,
     mediumShape: css`
       border: 1px solid ${theme.palette.surface.on};

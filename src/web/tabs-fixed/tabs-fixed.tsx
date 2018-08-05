@@ -48,7 +48,7 @@ const defaultTheme = (theme: any): TabsFixedTheme => ({
   tabs: {
     totalHeight: '48px',
     backgroundColor: theme.palette.surface.main,
-    color: theme.palette.primary.main,
+    color: theme.palette.secondary.main,
     ...theme.tabs,
   },
 });

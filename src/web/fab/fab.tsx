@@ -76,9 +76,6 @@ const defaultTheme = (theme: any): FabTheme => ({
       `,
     },
     ...theme.fab,
-  },
-  effectRipple: {
-    color: 'black',
   }
 });
 

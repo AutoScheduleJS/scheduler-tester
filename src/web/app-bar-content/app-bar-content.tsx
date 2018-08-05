@@ -26,7 +26,7 @@ interface AppBarContentTheme {
 const defaultTheme = (theme: any): AppBarContentTheme => ({
   appBar: {
     totalHeight: '56px',
-    backgroundColor: theme.palette.primary.variant,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.on,
     padding: '16px',
     ...theme.appBar,
