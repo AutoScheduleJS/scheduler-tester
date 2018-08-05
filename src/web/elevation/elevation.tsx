@@ -103,7 +103,7 @@ class ElevationImpl extends React.PureComponent<ElevationProps> {
 
 export const ElevationHOC = <T extends { className: string }>(
   elevation: number,
-  customTheme?: ElevationTheme
+  customTheme?: any
 ) => (Cmp: React.ComponentType<T>) =>
   class Elevation extends React.PureComponent<T> {
     public render() {

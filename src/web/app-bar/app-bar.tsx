@@ -1,8 +1,8 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { Elevation } from '../elevation/elevation';
-import { nodeWrapper } from '../node-wrapper/node-wrapper';
+import { ElevationHOC } from '../elevation/elevation';
+import { DivComponent } from '../node-wrapper/node-wrapper';
 
 interface CustomableProps {
   classes?: {
@@ -43,14 +43,15 @@ class AppBarImpl extends React.PureComponent<AppBarProps> {
   render() {
     const { children, theme: incomingTheme, classes = defaultClasses } = this.props;
     const theme = defaultTheme(incomingTheme);
+    const Host = ElevationHOC<any>(4, theme)(DivComponent);
     return (
-      <Elevation elevation={4}>
-        {nodeWrapper({
-          className: css`
-            ${AppBarRootStyles(theme)} ${classes.root};
-          `,
-        })(children)}
-      </Elevation>
+      <Host
+        className={css`
+          ${AppBarRootStyles(theme)} ${classes.root};
+        `}
+      >
+        {children}
+      </Host>
     );
   }
 }
