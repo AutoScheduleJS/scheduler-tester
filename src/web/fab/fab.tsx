@@ -1,13 +1,14 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { Elevation } from '../elevation/elevation';
+import { EffectRippleHOC } from '../effect-ripple/effect-ripple';
+import { ElevationHOC } from '../elevation/elevation';
+import { DivComponent } from '../node-wrapper/node-wrapper';
 import { Typography } from '../typography/typography';
-import { EffectRipple } from '../effect-ripple/effect-ripple';
+import { pipe } from '../util/hoc.util';
 
 export interface FabClasses {
   root?: string;
-  button?: string;
   label?: string;
 }
 
@@ -42,9 +43,11 @@ interface FabTheme {
       pressed: number;
     };
   };
+  [key: string]: any;
 }
 
 const defaultTheme = (theme: any): FabTheme => ({
+  ...theme,
   fab: {
     elevation: {
       resting: 6,
@@ -74,12 +77,14 @@ const defaultTheme = (theme: any): FabTheme => ({
     },
     ...theme.fab,
   },
+  effectRipple: {
+    color: 'black',
+  }
 });
 
 const defaultClasses: FabClasses = {
   root: '',
   label: '',
-  button: '',
 };
 
 const FabRootStyles = (theme: FabTheme, size: number, icon: boolean) => {
@@ -122,32 +127,28 @@ class FabImpl extends React.PureComponent<FabProps> {
       classes = defaultClasses,
     } = this.props;
     const theme = defaultTheme(incomingTheme);
+    const Host = pipe(ElevationHOC(6, theme), EffectRippleHOC(theme))(DivComponent);
     return (
-      <div onClick={onClick} className={classes.root}>
-        <Elevation elevation={6}>
-          <EffectRipple
+      <Host
+        className={css`
+          ${FabRootStyles(theme, size, !!icon)} ${classes.root};
+        `}
+        onClick={onClick}
+      >
+        {icon}
+        {label && (
+          <Typography
+            scale="Button"
             classes={{
               root: css`
-                ${FabRootStyles(theme, size, !!icon)} ${classes.button};
+                ${buttonTabCss} ${classes.label};
               `,
             }}
           >
-            {icon}
-            {label && (
-              <Typography
-                scale="Button"
-                classes={{
-                  root: css`
-                    ${buttonTabCss} ${classes.label};
-                  `,
-                }}
-              >
-                {label}
-              </Typography>
-            )}
-          </EffectRipple>
-        </Elevation>
-      </div>
+            {label}
+          </Typography>
+        )}
+      </Host>
     );
   }
 }
