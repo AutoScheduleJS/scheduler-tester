@@ -133,3 +133,10 @@ export const EffectRippleHOC = <T extends { className: string }>(customTheme?: a
       return <Cmp {...props} className={className} onMouseDown={e => ripple(e, theme)} />;
     }
   };
+
+  export const EffectRippleProps = (customTheme?: any) => {
+    const theme = defaultTheme(customTheme);
+    return {
+      onMouseDown: e => ripple(e, theme)
+    }
+  }

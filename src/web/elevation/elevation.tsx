@@ -2,7 +2,7 @@ import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { nodeWrapper } from '../node-wrapper/node-wrapper';
-import { merge } from '../util/hoc.util';
+import { merge, prepareProps } from '../util/hoc.util';
 
 interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
   classes?: {
@@ -87,9 +87,10 @@ const ElevationRootStyles = (theme: ElevationTheme, elevation: number) => {
     .map((val, i) => ({ elevation: val, distance: Math.abs(val - elevation), index: i }))
     .reduce((acc, cur) => (acc.distance < cur.distance ? acc : cur)).index;
   return css`
-    box-shadow: ${umbraZValue[eleIndex]} ${color}${umbraOpacity},
-      ${penumbraZValue[eleIndex]} ${color}${penumbraOpacity},
-      ${ambiantZValue[eleIndex]} ${color}${ambientOpacity};
+    transition: box-shadow 100ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: ${umbraZValue[eleIndex]} ${color} ${umbraOpacity},
+      ${penumbraZValue[eleIndex]} ${color} ${penumbraOpacity},
+      ${ambiantZValue[eleIndex]} ${color} ${ambientOpacity};
   `;
 };
 
@@ -112,9 +113,7 @@ export const ElevationHOC = <T extends { className: string }>(
   class Elevation extends React.PureComponent<T> {
     public render() {
       const theme = defaultTheme(customTheme);
-      const { className } = this.props;
-      const props: any = Object.assign({}, this.props);
-      delete props.className; // workaround for TS issue 'spread object of generic type'
+      const { className, props } = prepareProps(this.props);
       return (
         <Cmp
           {...props}
@@ -125,5 +124,77 @@ export const ElevationHOC = <T extends { className: string }>(
       );
     }
   };
+
+export const ElevationProps = (elevation: number, customTheme?: any) => {
+  const theme = defaultTheme(customTheme);
+  return {
+    className: ElevationRootStyles(theme, elevation),
+  };
+};
+
+export const ElevationPressHOC = <T extends { className: string }>(
+  inactive: number,
+  active: number,
+  customTheme?: any
+) => (Cmp: React.ComponentType<T>) =>
+  class ElevationPress extends React.PureComponent<T> {
+    state = {
+      elevation: inactive,
+    };
+    private handleMouseDown() {
+      this.setState({
+        elevation: active,
+      });
+      addEventListener('mouseup', this.handleMouseUp.bind(this));
+    }
+    private handleMouseUp() {
+      this.setState({
+        elevation: inactive,
+      });
+      removeEventListener('mouseup', this.handleMouseUp);
+    }
+
+    public render() {
+      const theme = defaultTheme(customTheme);
+      const { className, props } = prepareProps(this.props);
+      const { elevation } = this.state;
+      return (
+        <Cmp
+          {...props}
+          className={css`
+            ${ElevationRootStyles(theme, elevation)} ${className};
+          `}
+          onMouseDown={this.handleMouseDown.bind(this)}
+        />
+      );
+    }
+  };
+
+export const ElevationPropsPress = (
+  inactive: number,
+  active: number,
+  state: { elevation: number },
+  setState: (v: any) => void,
+  customTheme?: any
+) => {
+  const theme = defaultTheme(customTheme);
+  let elevation = state.elevation;
+  const handleMouseDown = () => {
+    setState({
+      elevation: active,
+    });
+    addEventListener('mouseup', handleMouseUp);
+  };
+  const handleMouseUp = () => {
+    setState({
+      elevation: inactive,
+    });
+    removeEventListener('mouseup', handleMouseUp);
+  };
+  return {
+    className: ElevationRootStyles(theme, elevation),
+    onMouseDown: handleMouseDown,
+  };
+};
 
 export const Elevation = withTheme(ElevationImpl);

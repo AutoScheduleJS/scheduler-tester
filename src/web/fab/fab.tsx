@@ -2,10 +2,10 @@ import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { EffectRippleHOC } from '../effect-ripple/effect-ripple';
-import { ElevationHOC } from '../elevation/elevation';
+import { ElevationPressHOC } from '../elevation/elevation';
 import { DivComponent } from '../node-wrapper/node-wrapper';
 import { Typography } from '../typography/typography';
-import { pipe, merge } from '../util/hoc.util';
+import { merge, pipe } from '../util/hoc.util';
 
 export interface FabClasses {
   root?: string;
@@ -126,7 +126,7 @@ class FabImpl extends React.PureComponent<FabProps> {
       classes = defaultClasses,
     } = this.props;
     const theme = defaultTheme(incomingTheme);
-    const Host = pipe(ElevationHOC(6, theme), EffectRippleHOC(theme))(DivComponent);
+    const Host = pipe(ElevationPressHOC(6, 12, theme), EffectRippleHOC(theme))(DivComponent);
     return (
       <Host
         className={css`
