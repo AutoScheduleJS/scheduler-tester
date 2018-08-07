@@ -1,6 +1,7 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
+import { merge } from '../util/hoc.util';
 
 interface CustomableProps {
   classes?: {
@@ -47,7 +48,7 @@ const defaultTheme = (theme: any): { typography: TypographyTheme } => {
     weight: 400,
     case: TypographyCase.Sentence,
   };
-  return {
+  return merge({
     typography: {
       H1: { ...base, weight: 300, size: '6rem', LetterSpacing: '-0.09375rem' },
       H2: { ...base, weight: 300, size: '3.75rem', LetterSpacing: '-0.03125rem' },
@@ -73,9 +74,8 @@ const defaultTheme = (theme: any): { typography: TypographyTheme } => {
         size: '0.625rem',
         LetterSpacing: '0.09375rem',
       },
-      ...theme.typography,
     },
-  };
+  }, theme);
 };
 
 const defaultClasses = {

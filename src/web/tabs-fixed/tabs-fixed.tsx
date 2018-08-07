@@ -4,6 +4,7 @@ import * as React from 'react';
 import { animated, Transition } from 'react-spring';
 import { ButtonClasses, ButtonEmphaze } from '../button/button';
 import { StButton } from '../st-button';
+import { merge } from '../util/hoc.util';
 
 interface TabsFixedClasses {
   root?: string;
@@ -44,14 +45,13 @@ interface TabsFixedTheme {
   };
 }
 
-const defaultTheme = (theme: any): TabsFixedTheme => ({
+const defaultTheme = (theme: any): TabsFixedTheme => merge({
   tabs: {
     totalHeight: '48px',
     backgroundColor: theme.palette.surface.main,
     color: theme.palette.secondary.main,
-    ...theme.tabs,
   },
-});
+}, theme);
 
 const defaultClasses: TabsFixedClasses = {
   root: '',

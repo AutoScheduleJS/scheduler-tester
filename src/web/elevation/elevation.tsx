@@ -2,6 +2,7 @@ import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { nodeWrapper } from '../node-wrapper/node-wrapper';
+import { merge } from '../util/hoc.util';
 
 interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
   classes?: {
@@ -20,12 +21,15 @@ interface ElevationTheme {
   };
 }
 
-const defaultTheme = (theme: any): ElevationTheme => ({
-  shadows: {
-    baselineColor: '#000000',
-    ...theme.shadows,
-  },
-});
+const defaultTheme = (theme: any): ElevationTheme =>
+  merge(
+    {
+      shadows: {
+        baselineColor: '#000000',
+      },
+    },
+    theme
+  );
 
 const defaultClasses = {
   root: {},

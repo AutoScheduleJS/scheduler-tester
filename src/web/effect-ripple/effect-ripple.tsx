@@ -1,6 +1,7 @@
 import { css, cx } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
+import { merge } from '../util/hoc.util';
 
 interface CustomableProps {
   classes?: {
@@ -19,16 +20,19 @@ interface EffectRippleTheme {
   };
 }
 
-const defaultTheme = (theme: any): EffectRippleTheme => ({
-  effectRiple: {
-    color: theme.palette.primary.on,
-    duration: 600,
-    shape: css`
-      border-radius: 50%;
-    `,
-    ...theme.effectRipple,
-  },
-});
+const defaultTheme = (theme: any): EffectRippleTheme =>
+  merge(
+    {
+      effectRiple: {
+        color: theme.palette.primary.on,
+        duration: 600,
+        shape: css`
+          border-radius: 50%;
+        `,
+      },
+    },
+    theme
+  );
 
 const defaultClasses = {
   root: '',
@@ -48,21 +52,21 @@ const ripple = (e, theme: EffectRippleTheme) => {
 
   const baseCSS = cx(
     css`
-        position: absolute;
-        width: ${btnWidth * 2}px;
-        height: ${btnWidth * 2}px;
-        transition: transform ${duration}ms, opacity ${duration}ms;
-        transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        background-color: ${rippleColor};
-        opacity: 0.12;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: 100%;
-        left: ${rippleX - btnWidth}px;
-        top: ${rippleY - btnWidth}px;
-        transform: scale(0);
-        pointer-events: none;
-      `,
+      position: absolute;
+      width: ${btnWidth * 2}px;
+      height: ${btnWidth * 2}px;
+      transition: transform ${duration}ms, opacity ${duration}ms;
+      transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      background-color: ${rippleColor};
+      opacity: 0.12;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 100%;
+      left: ${rippleX - btnWidth}px;
+      top: ${rippleY - btnWidth}px;
+      transform: scale(0);
+      pointer-events: none;
+    `,
     theme.effectRiple.shape
   );
 
@@ -82,26 +86,26 @@ const ripple = (e, theme: EffectRippleTheme) => {
   // start animation
   setTimeout(() => {
     rippleElem.className = css`
-        ${baseCSS} ${css`
-          transform: scale(1);
-        `};
-      `;
+      ${baseCSS} ${css`
+        transform: scale(1);
+      `};
+    `;
   }, 0);
 
   const onMouseUp = () => {
     rippleElem.className = css`
-        ${baseCSS} ${css`
-          transform: scale(1);
-          opacity: 0;
-        `};
-      `;
+      ${baseCSS} ${css`
+        transform: scale(1);
+        opacity: 0;
+      `};
+    `;
     setTimeout(() => {
       rippleElem.remove();
       removeEventListener('mouseup', onMouseUp);
     }, theme.effectRiple.duration);
   };
   addEventListener('mouseup', onMouseUp);
-}
+};
 
 class EffectRippleImpl extends React.PureComponent<EffectRippleProps> {
   render() {
@@ -117,15 +121,15 @@ class EffectRippleImpl extends React.PureComponent<EffectRippleProps> {
 
 export const EffectRipple = withTheme(EffectRippleImpl);
 
-export const EffectRippleHOC = <T extends { className: string }>(
-  customTheme?: any
-) => (Cmp: React.ComponentType<T>) =>
-    class Elevation extends React.PureComponent<T> {
-      public render() {
-        const theme = defaultTheme(customTheme);
-        const { className } = this.props;
-        const props: any = Object.assign({}, this.props);
-        delete props.className; // workaround for TS issue 'spread object of generic type'
-        return <Cmp {...props} className={className} onMouseDown={e => ripple(e, theme)} />;
-      }
-    };
+export const EffectRippleHOC = <T extends { className: string }>(customTheme?: any) => (
+  Cmp: React.ComponentType<T>
+) =>
+  class Elevation extends React.PureComponent<T> {
+    public render() {
+      const theme = defaultTheme(customTheme);
+      const { className } = this.props;
+      const props: any = Object.assign({}, this.props);
+      delete props.className; // workaround for TS issue 'spread object of generic type'
+      return <Cmp {...props} className={className} onMouseDown={e => ripple(e, theme)} />;
+    }
+  };

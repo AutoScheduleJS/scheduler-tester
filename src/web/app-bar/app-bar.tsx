@@ -3,6 +3,7 @@ import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { ElevationHOC } from '../elevation/elevation';
 import { DivComponent } from '../node-wrapper/node-wrapper';
+import { merge } from '../util/hoc.util';
 
 interface CustomableProps {
   classes?: {
@@ -20,13 +21,16 @@ interface AppBarTheme {
   };
 }
 
-const defaultTheme = (theme: any): AppBarTheme => ({
-  appBar: {
-    totalHeight: '56px',
-    elevation: 4,
-    ...theme.appBar,
-  },
-});
+const defaultTheme = (theme: any): AppBarTheme =>
+  merge(
+    {
+      appBar: {
+        totalHeight: '56px',
+        elevation: 4,
+      },
+    },
+    theme
+  );
 
 const defaultClasses = {
   root: {},

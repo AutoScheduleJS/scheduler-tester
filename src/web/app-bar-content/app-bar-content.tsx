@@ -2,6 +2,7 @@ import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Typography } from '../typography/typography';
+import { merge } from '../util/hoc.util';
 
 interface CustomableProps {
   classes?: {
@@ -23,15 +24,18 @@ interface AppBarContentTheme {
   };
 }
 
-const defaultTheme = (theme: any): AppBarContentTheme => ({
-  appBar: {
-    totalHeight: '56px',
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.on,
-    padding: '16px',
-    ...theme.appBar,
-  },
-});
+const defaultTheme = (theme: any): AppBarContentTheme =>
+  merge(
+    {
+      appBar: {
+        totalHeight: '56px',
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.on,
+        padding: '16px',
+      },
+    },
+    theme
+  );
 
 const defaultClasses = {
   root: {},

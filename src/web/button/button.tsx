@@ -3,6 +3,7 @@ import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Elevation } from '../elevation/elevation';
 import { Typography } from '../typography/typography';
+import { merge } from '../util/hoc.util';
 
 export interface ButtonClasses {
   root?: string;
@@ -38,29 +39,32 @@ interface ButtonTheme {
   };
 }
 
-const defaultTheme = (theme: any): ButtonTheme => ({
-  button: {
-    elevation: 2,
-    shape: css`
-      border-radius: 4px;
-      padding: 0 16px;
-      height: 36px;
-      min-width: 64px;
-      color: ${theme.palette.secondary.main};
-    `,
-    highShape: css`
-      color: ${theme.palette.secondary.on};
-      background-color: ${theme.palette.secondary.main};
-    `,
-    mediumShape: css`
-      border: 1px solid ${theme.palette.surface.on};
-    `,
-    lowShape: css`
-      padding: 0 8px;
-    `,
-    ...theme.button,
-  },
-});
+const defaultTheme = (theme: any): ButtonTheme =>
+  merge(
+    {
+      button: {
+        elevation: 2,
+        shape: css`
+          border-radius: 4px;
+          padding: 0 16px;
+          height: 36px;
+          min-width: 64px;
+          color: ${theme.palette.secondary.main};
+        `,
+        highShape: css`
+          color: ${theme.palette.secondary.on};
+          background-color: ${theme.palette.secondary.main};
+        `,
+        mediumShape: css`
+          border: 1px solid ${theme.palette.surface.on};
+        `,
+        lowShape: css`
+          padding: 0 8px;
+        `,
+      },
+    },
+    theme
+  );
 
 const defaultClasses: ButtonClasses = {
   root: '',

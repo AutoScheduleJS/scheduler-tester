@@ -5,7 +5,7 @@ import { EffectRippleHOC } from '../effect-ripple/effect-ripple';
 import { ElevationHOC } from '../elevation/elevation';
 import { DivComponent } from '../node-wrapper/node-wrapper';
 import { Typography } from '../typography/typography';
-import { pipe } from '../util/hoc.util';
+import { pipe, merge } from '../util/hoc.util';
 
 export interface FabClasses {
   root?: string;
@@ -46,38 +46,40 @@ interface FabTheme {
   [key: string]: any;
 }
 
-const defaultTheme = (theme: any): FabTheme => ({
-  ...theme,
-  fab: {
-    elevation: {
-      resting: 6,
-      pressed: 12,
+const defaultTheme = (theme: any): FabTheme =>
+  merge(
+    {
+      fab: {
+        elevation: {
+          resting: 6,
+          pressed: 12,
+        },
+        shape: {
+          extendedShape: css`
+            border-radius: 24px;
+            height: 48px;
+            background-color: ${theme.palette.primary.main};
+            color: ${theme.palette.primary.on};
+          `,
+          defaultShape: css`
+            border-radius: 28px;
+            height: 56px;
+            padding: 0 16px;
+            background-color: ${theme.palette.primary.main};
+            color: ${theme.palette.primary.on};
+          `,
+          miniShape: css`
+            padding: 0 8px;
+            border-radius: 20px;
+            height: 40px;
+            background-color: ${theme.palette.primary.main};
+            color: ${theme.palette.primary.on};
+          `,
+        },
+      },
     },
-    shape: {
-      extendedShape: css`
-        border-radius: 24px;
-        height: 48px;
-        background-color: ${theme.palette.primary.main};
-        color: ${theme.palette.primary.on};
-      `,
-      defaultShape: css`
-        border-radius: 28px;
-        height: 56px;
-        padding: 0 16px;
-        background-color: ${theme.palette.primary.main};
-        color: ${theme.palette.primary.on};
-      `,
-      miniShape: css`
-        padding: 0 8px;
-        border-radius: 20px;
-        height: 40px;
-        background-color: ${theme.palette.primary.main};
-        color: ${theme.palette.primary.on};
-      `,
-    },
-    ...theme.fab,
-  }
-});
+    theme
+  );
 
 const defaultClasses: FabClasses = {
   root: '',
