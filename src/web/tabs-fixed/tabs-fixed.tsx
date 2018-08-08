@@ -46,14 +46,18 @@ interface TabsFixedTheme {
   };
 }
 
-const defaultTheme = (theme: any): TabsFixedTheme => merge({
-  tabs: {
-    totalHeight: '48px',
-    backgroundColor: theme.palette.surface.main,
-    colorActive: theme.palette.secondary.main,
-    colorInactive: theme.palette.surface.on,
-  },
-}, theme);
+const defaultTheme = (theme: any): TabsFixedTheme =>
+  merge(
+    {
+      tabs: {
+        totalHeight: '48px',
+        backgroundColor: theme.palette.surface.main,
+        colorActive: theme.palette.secondary.main,
+        colorInactive: theme.palette.surface.on,
+      },
+    },
+    theme
+  );
 
 const defaultClasses: TabsFixedClasses = {
   root: '',
@@ -85,26 +89,25 @@ const tabsCss = css`
   grid-auto-flow: column;
 `;
 
+const classButton = (theme: TabsFixedTheme, isActive: boolean) => css`
+  box-sizing: content-box;
+  background-color: ${theme.tabs.backgroundColor};
+  border-bottom: ${isActive ? `2px solid ${theme.tabs.colorActive}` : 'none'};
+  border-radius: 0;
+  grid-row: 1;
+`;
+
 const tabButtonClasse = (
   theme: TabsFixedTheme,
   isActive: boolean,
   buttonClasses: ButtonClasses = {}
-) => ({
-  root: css`
-    box-sizing: content-box;
-    background-color: ${theme.tabs.backgroundColor};
-    border-bottom: ${isActive ? `2px solid ${theme.tabs.colorActive}` : 'none'};
-    border-radius: 0;
-    grid-row: 1;
+): ButtonClasses => ({
+  button: css`
+    padding: 0 16px;
+    color: ${isActive ? theme.tabs.colorActive : theme.tabs.colorInactive};
+    height: ${theme.tabs.totalHeight};
   `,
-  innerBtn: {
-    button: css`
-      padding: 0 16px;
-      color: ${isActive ? theme.tabs.colorActive : theme.tabs.colorInactive};
-      height: ${theme.tabs.totalHeight};
-    `,
-    ...buttonClasses,
-  },
+  ...buttonClasses,
 });
 
 interface TabsFixedState {
@@ -178,6 +181,7 @@ class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
                 label={tab.label}
                 icon={tab.icon}
                 onClick={e => onChange(tab.id, e)}
+                className={classButton(theme, tab.id === activeTab)}
                 classes={tabButtonClasse(theme, tab.id === activeTab, classes.tab)}
               />
             ))}

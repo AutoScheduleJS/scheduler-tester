@@ -176,7 +176,7 @@ export const ElevationPropsPress = (
   },
   inactive: number,
   active: number,
-  customTheme?: any
+  customTheme: any
 ) => {
   const theme = defaultTheme(customTheme);
   const { state, setState } = stateHandler;

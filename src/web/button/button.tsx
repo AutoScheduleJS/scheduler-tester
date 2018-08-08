@@ -6,12 +6,11 @@ import { Typography } from '../typography/typography';
 import { merge } from '../util/hoc.util';
 
 export interface ButtonClasses {
-  root?: string;
   button?: string;
   label?: string;
 }
 
-interface CustomableProps {
+interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
   classes?: ButtonClasses;
   theme?: any;
 }
@@ -67,7 +66,6 @@ const defaultTheme = (theme: any): ButtonTheme =>
   );
 
 const defaultClasses: ButtonClasses = {
-  root: '',
   label: '',
   button: '',
 };
@@ -110,14 +108,14 @@ class ButtonImpl extends React.PureComponent<ButtonProps> {
     const {
       label,
       emphaze,
-      onClick = () => {},
       theme: incomingTheme,
       classes = defaultClasses,
+      ...hostProps
     } = this.props;
     const theme = defaultTheme(incomingTheme);
     const elevation = emphaze === ButtonEmphaze.High ? theme.button.elevation : 0;
     return (
-      <div onClick={onClick} className={classes.root}>
+      <div {...hostProps}>
         <Elevation
           elevation={elevation}
           classes={{

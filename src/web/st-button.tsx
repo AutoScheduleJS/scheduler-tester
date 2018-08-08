@@ -1,22 +1,16 @@
 import * as React from 'react';
-import { Button, ButtonClasses, ButtonProps } from './button/button';
-import { EffectRipple } from './effect-ripple/effect-ripple';
+import { Button, ButtonProps } from './button/button';
+import { EffectRippleProps } from './effect-ripple/effect-ripple';
+import { mergeProps } from './util/hoc.util';
+import { withTheme } from 'emotion-theming';
 
-export interface StButtonProps extends ButtonProps {
-  classes?: {
-    root?: string;
-    innerBtn?: ButtonClasses;
-  }
-}
+export interface StButtonProps extends ButtonProps {}
 
-export class StButton extends React.PureComponent<StButtonProps> {
+class StButtonImp extends React.PureComponent<StButtonProps> {
   render() {
-    const { classes = {}, ...btnProps } = this.props;
-    const props = { ...btnProps, classes: classes.innerBtn };
-    return (
-      <EffectRipple classes={{ root: classes.root }}>
-        <Button {...props} />
-      </EffectRipple>
-    );
+    const props = mergeProps(this.props, EffectRippleProps(this.props.theme));
+    return <Button {...props} />;
   }
 }
+
+export const StButton = withTheme(StButtonImp);
