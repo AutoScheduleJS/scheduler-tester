@@ -14,6 +14,10 @@ export const isObject = (obj: any) => {
   return typeof obj === 'object' && obj !== null;
 };
 
+export const isFunction = (fn: any) => {
+  return typeof fn === 'function';
+}
+
 /**
  * oldObj: { a: { b: 1 }}
  * newObj: { a: { c: 2 }}
@@ -21,6 +25,9 @@ export const isObject = (obj: any) => {
  */
 export const merge = (oldObj, newObj) => {
   if (!isObject(oldObj) || !isObject(newObj)) {
+    if (isFunction(oldObj) && isFunction(newObj)) {
+      return (...arg) => { oldObj(...arg); newObj(...arg); }
+    }
     return newObj;
   }
   const result = { ...newObj, ...oldObj };
@@ -44,13 +51,10 @@ export const prepareProps = (oProps: any) => {
  * merge function with root function
  * merge objects with merge
  */
-export const mergeProps = (propsA, propsB) => {
-
-  return {
-    ...propsA,
-    ...propsB,
-  className: css`${propsA.className} ${propsB.className}`
-  }
+export const mergeProps = (...props) => {
+  const result = props.reduce(merge);
+  result.className = css`${props.map(prop => prop.className).join(' ')}`;
+  return result;
 }
 
 /**
