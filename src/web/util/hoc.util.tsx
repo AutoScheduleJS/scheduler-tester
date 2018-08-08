@@ -1,4 +1,4 @@
-import { css } from "emotion";
+import { cx } from 'emotion';
 
 export const getDisplayName = (name: string, ...cmps: Array<React.ComponentType<any>>) =>
   cmps.reduce((acc, cul) => acc + ' + ' + cul.displayName || cul.name || 'Component', name);
@@ -16,7 +16,7 @@ export const isObject = (obj: any) => {
 
 export const isFunction = (fn: any) => {
   return typeof fn === 'function';
-}
+};
 
 /**
  * oldObj: { a: { b: 1 }}
@@ -26,7 +26,10 @@ export const isFunction = (fn: any) => {
 export const merge = (oldObj, newObj) => {
   if (!isObject(oldObj) || !isObject(newObj)) {
     if (isFunction(oldObj) && isFunction(newObj)) {
-      return (...arg) => { oldObj(...arg); newObj(...arg); }
+      return (...arg) => {
+        oldObj(...arg);
+        newObj(...arg);
+      };
     }
     return newObj;
   }
@@ -53,10 +56,6 @@ export const prepareProps = (oProps: any) => {
  */
 export const mergeProps = (...props) => {
   const result = props.reduce(merge);
-  result.className = css`${props.map(prop => prop.className).join(' ')}`;
+  result.className = cx(...props.map(prop => prop.className));
   return result;
-}
-
-/**
- * HOC: instead of taking a Cmp as argument, return a props object to spread, so user can use it in a flexier way
- */
+};
