@@ -23,7 +23,7 @@ const emotionTheme = {
     },
     surface: {
       main: '#424242',
-      on: '#00000011',
+      on: 'white',
     },
   },
 };

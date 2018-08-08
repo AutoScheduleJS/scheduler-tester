@@ -41,7 +41,8 @@ interface TabsFixedTheme {
   tabs: {
     totalHeight: string;
     backgroundColor: string;
-    color: string;
+    colorActive: string;
+    colorInactive: string;
   };
 }
 
@@ -49,7 +50,8 @@ const defaultTheme = (theme: any): TabsFixedTheme => merge({
   tabs: {
     totalHeight: '48px',
     backgroundColor: theme.palette.surface.main,
-    color: theme.palette.secondary.main,
+    colorActive: theme.palette.secondary.main,
+    colorInactive: theme.palette.surface.on,
   },
 }, theme);
 
@@ -91,14 +93,14 @@ const tabButtonClasse = (
   root: css`
     box-sizing: content-box;
     background-color: ${theme.tabs.backgroundColor};
-    color: ${theme.tabs.color};
-    border-bottom: ${isActive ? `2px solid ${theme.tabs.color}` : 'none'};
+    border-bottom: ${isActive ? `2px solid ${theme.tabs.colorActive}` : 'none'};
     border-radius: 0;
     grid-row: 1;
   `,
   innerBtn: {
     button: css`
       padding: 0 16px;
+      color: ${isActive ? theme.tabs.colorActive : theme.tabs.colorInactive};
       height: ${theme.tabs.totalHeight};
     `,
     ...buttonClasses,
