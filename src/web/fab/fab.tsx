@@ -4,7 +4,7 @@ import * as React from 'react';
 import { EffectRippleProps } from '../effect-ripple/effect-ripple';
 import { ElevationPropsPress } from '../elevation/elevation';
 import { Typography } from '../typography/typography';
-import { merge, mergeProps } from '../util/hoc.util';
+import { merge, mergeProps, stateHandler } from '../util/hoc.util';
 
 export interface FabClasses {
   root?: string;
@@ -130,14 +130,9 @@ class FabImpl extends React.PureComponent<FabProps> {
       classes = defaultClasses,
     } = this.props;
     const theme = defaultTheme(incomingTheme);
+    const { resting, pressed } = theme.fab.elevation;
     const props = mergeProps(
-      ElevationPropsPress(
-        6,
-        12,
-        this.state.elevationState,
-        v => this.setState({ elevationState: v }),
-        theme
-      ),
+      ElevationPropsPress(stateHandler(this, 'elevationState'), resting, pressed, theme),
       EffectRippleProps(theme),
       {
         className: css`

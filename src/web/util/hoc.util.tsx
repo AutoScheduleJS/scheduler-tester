@@ -59,3 +59,10 @@ export const mergeProps = (...props) => {
   result.className = cx(...props.map(prop => prop.className));
   return result;
 };
+
+export const stateHandler = <T extends { state: any, setState: (v: any) => any }>(context: T, name: keyof T['state']) => {
+  return {
+    state: context.state[name],
+    setState: v => context.setState({ [name]: v })
+  }
+}

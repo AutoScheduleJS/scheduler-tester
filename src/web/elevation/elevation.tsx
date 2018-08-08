@@ -170,13 +170,16 @@ export const ElevationPressHOC = <T extends { className: string }>(
   };
 
 export const ElevationPropsPress = (
+  stateHandler: {
+    state: { elevation: number },
+    setState: (v: any) => void,
+  },
   inactive: number,
   active: number,
-  state: { elevation: number },
-  setState: (v: any) => void,
   customTheme?: any
 ) => {
   const theme = defaultTheme(customTheme);
+  const { state, setState } = stateHandler;
   let elevation = state.elevation;
   const handleMouseDown = () => {
     setState({
