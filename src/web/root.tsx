@@ -30,9 +30,7 @@ class RootImpl extends React.PureComponent<{ classes: any }> {
             <QueriesManager />
             <span>Toto</span>
           </StEdittabs>
-          <div className={classes.child}>
-            <StDemoViewer />
-          </div>
+          <StDemoViewer className={classes.child} />
         </div>
         <NewQueryButton />
         <StEditQuery />

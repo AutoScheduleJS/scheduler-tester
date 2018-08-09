@@ -88,7 +88,9 @@ const ElevationRootStyles = (theme: ElevationTheme, elevation: number) => {
   const ambiantColor = color + ambientOpacity;
   return css`
     transition: box-shadow 100ms cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: ${umbraZValue[eleIndex]} ${umbraColor}, ${penumbraZValue[eleIndex]} ${penumbraColor},
+    box-shadow:
+      ${umbraZValue[eleIndex]} ${umbraColor},
+      ${penumbraZValue[eleIndex]} ${penumbraColor},
       ${ambiantZValue[eleIndex]} ${ambiantColor};
   `;
 };

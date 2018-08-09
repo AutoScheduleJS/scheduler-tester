@@ -1,6 +1,13 @@
-import { IConfig } from '@scheduler-tester/core-state/config.interface';
-import { intersect, isOverlapping, merge } from 'intervals-fn';
+import { css } from 'emotion';
+import { withTheme } from 'emotion-theming';
+import { intersect, isOverlapping } from 'intervals-fn';
 import * as React from 'react';
+import { merge } from './util/hoc.util';
+
+interface IRange {
+  start: number;
+  end: number;
+}
 
 export type timeItems<T extends ITimeItem> = Array<T | T[]>;
 export interface ITimeItem {
@@ -12,34 +19,51 @@ export interface IItemProps<T extends ITimeItem> {
   item: T;
 }
 
+interface TimelineProps extends React.HTMLAttributes<HTMLDivElement> {
+  theme?: any;
+}
+
 interface ICmpProps<T extends ITimeItem> {
-  config: IConfig;
+  range: IRange;
   items: timeItems<T>;
   ItemCmp: React.ComponentType<IItemProps<T>>;
 }
-const cmp = <T extends ITimeItem>({
-  config,
-  items,
-  ItemCmp,
-}: ICmpProps<T>): React.ReactElement<any> => {
-  const { check, getMax } = checkOverlapsGen();
-  const timeItemCmps = itemsArrayToCmp<T>(
-    computePositionWithConf(config, check),
-    60,
-    items,
-    ItemCmp
+
+interface TimelineTheme {
+  timeline: {};
+}
+
+const defaultTheme = (theme: any): TimelineTheme =>
+  merge(
+    {
+      thimeline: {},
+    },
+    theme
   );
-  return (
-    <div
-    /*className={css`
-        position: relative;
-        height: ${(getMax() + 0) * 18 + 'px'};
-      `}*/
-    >
-      {timeItemCmps}
-    </div>
-  );
-};
+
+class TimelineImpl<T extends ITimeItem> extends React.PureComponent<ICmpProps<T> & TimelineProps> {
+  render() {
+    const { range, items, ItemCmp, theme: incomingTheme } = this.props;
+    const { check, getMax } = checkOverlapsGen();
+    const theme = defaultTheme(incomingTheme);
+    const timeItemCmps = itemsArrayToCmp<T>(
+      computePositionWithConf(range, check),
+      60,
+      items,
+      ItemCmp
+    );
+    return (
+      <div
+        className={css`
+          position: relative;
+          height: ${(getMax() + 1) * 18 + 'px'};
+        `}
+      >
+        {timeItemCmps}
+      </div>
+    );
+  }
+}
 
 const itemsArrayToCmp = <T extends ITimeItem>(
   computePosition: (item: ITimeItem, colorIndex: number) => string,
@@ -62,16 +86,16 @@ const itemsArrayToCmp = <T extends ITimeItem>(
 };
 
 const computePositionWithConf = (
-  conf: IConfig,
+  conf: IRange,
   checkOverlaps: (width: number, progress: number) => number
 ) => (item: ITimeItem, colorIndex: number): string => {
-  const totalAmount = conf.endDate - conf.startDate;
+  const totalAmount = conf.end - conf.start;
   const itemAmount = item.end - item.start;
-  const sinceStart = item.start - conf.startDate;
+  const sinceStart = item.start - conf.start;
   const progress = 100 * sinceStart / totalAmount;
   const width = 100 * itemAmount / totalAmount;
   const top = checkOverlaps(width, progress) * 10;
-  return /*css*/ `
+  return css`
     left: ${progress + '%'};
     top: ${top + 'px'};
     width: ${width + '%'};
@@ -104,4 +128,4 @@ const checkOverlapsGen = () => {
   };
 };
 
-export const TimeLine = cmp;
+export const TimeLine = withTheme(TimelineImpl);

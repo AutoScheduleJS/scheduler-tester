@@ -2,21 +2,20 @@ import {
   combineSchedulerObservables,
   IMaterial,
   IPotentiality,
-  placeToRange,
   queriesToPipelineDebug$,
 } from '@autoschedule/queries-scheduler';
 import { queryToStatePotentials } from '@autoschedule/userstate-manager';
 import { IConfig } from '@scheduler-tester/core-state/config.interface';
 import { ICoreState, StepOption } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
+import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { forkJoin, of, Subject } from 'rxjs';
 import { map, switchMap, zip } from 'rxjs/operators';
 import { MaterialViewer } from './material-viewer';
-import PotentialViewer from './potential-viewer';
-import PressureViewer from './pressure-viewer';
 import { TimeLine } from './timeline';
 import { connect } from './util/connect';
+import { merge } from './util/hoc.util';
 
 interface ICmpProps {
   config: IConfig;
@@ -26,49 +25,53 @@ interface ICmpProps {
   press: any[];
 }
 
-class DemoViewerImpl extends React.PureComponent<ICmpProps & { className?: string }> {
+interface DemoViewerProps extends React.HTMLAttributes<HTMLDivElement> {
+  theme?: any;
+}
+
+interface DemoViewerTheme {
+  demoViewer: {};
+}
+
+const defaultTheme = (theme: any): DemoViewerTheme => merge({}, theme);
+
+/**
+ * display time rule, horizontal scroll
+ *
+ * high card with: time duration & identification (color, name, split Id)
+ * responsive:
+ * - rule density
+ * - card: ID instead of name, no time duration
+ */
+class DemoViewerImpl extends React.PureComponent<ICmpProps & DemoViewerProps> {
+  state = {
+    subDivision: 2,
+  };
   render() {
-    const { className, config, errors, pots, mats, press } = this.props;
+    const { config, errors, mats, theme: incomingTheme, ...hostProps } = this.props;
+    const theme = defaultTheme(incomingTheme);
+    if (!config) {
+      return null;
+    }
+    const ranges = [
+      { start: config.startDate, end: config.endDate / 2 },
+      { start: config.endDate / 2, end: config.endDate },
+    ];
     return (
-      <div className={className}>
+      <div {...hostProps}>
         <div>{displayData(errors)}</div>
-        Potentials:<TimeLine
-          {...{
-            ItemCmp: PotentialViewer,
-            config,
-            items: potsToPotsItem(pots || []),
-          }}
-        />
-        Materials:<TimeLine
-          {...{
-            ItemCmp: MaterialViewer,
-            config,
-            items: mats || [],
-          }}
-        />
-        Pressure:<TimeLine
-          {...{
-            ItemCmp: PressureViewer,
-            config,
-            items: press || [],
-          }}
-        />
-        <button onClick={() => nextState$.next()}>NEXT</button>
+        {ranges.map(range => (
+          <TimeLine range={range} ItemCmp={MaterialViewer} items={mats || []} />
+        ))}
       </div>
     );
   }
 }
 
-const potsToPotsItem = (pots: IPotentiality[]) => {
-  return pots.map(pot => pot.places.map(place => ({ ...placeToRange(place), ...pot })));
-};
-
-const selector = ([config, errors, pots, mats, press]: [any, any, any, any, any]) => ({
+const selector = ([config, errors, _, mats, __]: [any, any, any, any, any]) => ({
   config,
   errors,
   mats,
-  pots,
-  press,
 });
 
 const displayData = (data: any) => {
@@ -107,6 +110,7 @@ const stateToQueries = (state: ICoreState): ReadonlyArray<any> => [
   ...(state.suites[state.onTestbenchQueries] || []).map(o => ({ ...o })),
 ];
 
-export const StDemoViewer = connect(selector, stateToScheduler(coreState$))<{}, ICmpProps>(
-  DemoViewerImpl
-);
+export const StDemoViewer = connect(selector, stateToScheduler(coreState$))<
+  DemoViewerProps,
+  ICmpProps
+>(withTheme(DemoViewerImpl));

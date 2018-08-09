@@ -22,7 +22,6 @@ export enum ButtonEmphaze {
 }
 
 export interface ButtonProps extends CustomableProps {
-  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   emphaze: ButtonEmphaze;
   label?: string;
   icon?: React.Component;
