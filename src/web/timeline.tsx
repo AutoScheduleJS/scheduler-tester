@@ -128,4 +128,4 @@ const checkOverlapsGen = () => {
   };
 };
 
-export const TimeLine = withTheme(TimelineImpl);
+export const TimeLine = withTheme<ICmpProps<any> & TimelineProps>(TimelineImpl);

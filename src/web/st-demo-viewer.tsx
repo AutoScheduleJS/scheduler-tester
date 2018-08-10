@@ -12,7 +12,7 @@ import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { forkJoin, of, Subject } from 'rxjs';
 import { map, switchMap, zip } from 'rxjs/operators';
-import { MaterialViewer } from './material-viewer';
+import { StMaterialViewer } from './st-material-viewer';
 import { TimeLine } from './timeline';
 import { connect } from './util/connect';
 import { merge } from './util/hoc.util';
@@ -61,7 +61,7 @@ class DemoViewerImpl extends React.PureComponent<ICmpProps & DemoViewerProps> {
       <div {...hostProps}>
         <div>{displayData(errors)}</div>
         {ranges.map(range => (
-          <TimeLine range={range} ItemCmp={MaterialViewer} items={mats || []} />
+          <TimeLine range={range} ItemCmp={StMaterialViewer} items={mats || []} />
         ))}
       </div>
     );
