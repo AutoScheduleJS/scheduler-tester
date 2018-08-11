@@ -2,7 +2,7 @@ import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import { intersect, isOverlapping } from 'intervals-fn';
 import * as React from 'react';
-import { merge } from './util/hoc.util';
+import { merge, mergeProps } from './util/hoc.util';
 
 interface IRange {
   start: number;
@@ -30,20 +30,33 @@ interface ICmpProps<T extends ITimeItem> {
 }
 
 interface TimelineTheme {
-  timeline: {};
+  timeline: {
+    height: string;
+  };
 }
 
 const defaultTheme = (theme: any): TimelineTheme =>
   merge(
     {
-      thimeline: {},
-    },
+      timeline: {
+        height: '48px'
+      },
+    } as TimelineTheme,
     theme
   );
 
+const themeToHostStyles = (theme: TimelineTheme) => {
+  console.log(theme);
+  const t = theme.timeline;
+  return css`
+    height: ${t.height};
+    position: relative;
+  `;
+}
+
 class TimelineImpl<T extends ITimeItem> extends React.PureComponent<ICmpProps<T> & TimelineProps> {
   render() {
-    const { range, items, ItemCmp, theme: incomingTheme } = this.props;
+    const { range, items, ItemCmp, theme: incomingTheme, ...defaultHostProps } = this.props;
     const { check, getMax } = checkOverlapsGen();
     const theme = defaultTheme(incomingTheme);
     const timeItemCmps = itemsArrayToCmp<T>(
@@ -52,13 +65,11 @@ class TimelineImpl<T extends ITimeItem> extends React.PureComponent<ICmpProps<T>
       items,
       ItemCmp
     );
+    const hostProps = mergeProps(defaultHostProps, {
+      className: themeToHostStyles(theme)
+    });
     return (
-      <div
-        className={css`
-          position: relative;
-          height: ${(getMax() + 1) * 18 + 'px'};
-        `}
-      >
+      <div {...hostProps}>
         {timeItemCmps}
       </div>
     );

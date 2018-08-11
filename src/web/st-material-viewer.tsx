@@ -19,7 +19,7 @@ const defaultTheme = (theme: any): StMaterialViewerTheme =>
   merge(
     {
       materialViewer: {
-        height: '72px',
+        height: '72px'
       },
     } as StMaterialViewerTheme,
     theme

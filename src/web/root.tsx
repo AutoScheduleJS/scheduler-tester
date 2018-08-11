@@ -11,7 +11,8 @@ const styles = createStyles({
   parent: {
     display: 'flex',
     flexDirection: 'column',
-    height: '90 %',
+    justifyContent: 'space-between',
+    height: 'calc(100% - 56px)',
   },
   child: {
     flexBasis: 0,

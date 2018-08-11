@@ -8,6 +8,7 @@ import { queryToStatePotentials } from '@autoschedule/userstate-manager';
 import { IConfig } from '@scheduler-tester/core-state/config.interface';
 import { ICoreState, StepOption } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
+import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { forkJoin, of, Subject } from 'rxjs';
@@ -15,7 +16,7 @@ import { map, switchMap, zip } from 'rxjs/operators';
 import { StMaterialViewer } from './st-material-viewer';
 import { TimeLine } from './timeline';
 import { connect } from './util/connect';
-import { merge } from './util/hoc.util';
+import { merge, mergeProps } from './util/hoc.util';
 
 interface ICmpProps {
   config: IConfig;
@@ -30,10 +31,35 @@ interface DemoViewerProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 interface DemoViewerTheme {
-  demoViewer: {};
+  demoViewer: {
+    backgroundColor: string;
+    shape: string;
+  };
 }
 
-const defaultTheme = (theme: any): DemoViewerTheme => merge({}, theme);
+const defaultTheme = (theme: any): DemoViewerTheme =>
+  merge(
+    {
+      demoViewer: {
+        backgroundColor: theme.palette.surface.main,
+      },
+    } as DemoViewerTheme,
+    theme
+  );
+
+const themeToHostStyles = (theme: DemoViewerTheme) => {
+  const dv = theme.demoViewer;
+  return css`
+    background-color: ${dv.backgroundColor};
+    height: 100%;
+    border-radius: 25px 25px 0 0;
+    padding: 24;
+  `;
+};
+
+const timelinesContainerStyles = css`
+  /* display: flex; */
+`;
 
 /**
  * display time rule, horizontal scroll
@@ -48,7 +74,7 @@ class DemoViewerImpl extends React.PureComponent<ICmpProps & DemoViewerProps> {
     subDivision: 2,
   };
   render() {
-    const { config, errors, mats, theme: incomingTheme, ...hostProps } = this.props;
+    const { config, errors, mats, theme: incomingTheme, ...defaultHostProps } = this.props;
     const theme = defaultTheme(incomingTheme);
     if (!config) {
       return null;
@@ -57,12 +83,17 @@ class DemoViewerImpl extends React.PureComponent<ICmpProps & DemoViewerProps> {
       { start: config.startDate, end: config.endDate / 2 },
       { start: config.endDate / 2, end: config.endDate },
     ];
+    const hostProps = mergeProps(defaultHostProps, {
+      className: themeToHostStyles(theme),
+    });
     return (
       <div {...hostProps}>
-        <div>{displayData(errors)}</div>
+        {/* <div>{displayData(errors)}</div> */}
+        <div className={timelinesContainerStyles}>
         {ranges.map(range => (
           <TimeLine range={range} ItemCmp={StMaterialViewer} items={mats || []} />
-        ))}
+          ))}
+        </div>
       </div>
     );
   }

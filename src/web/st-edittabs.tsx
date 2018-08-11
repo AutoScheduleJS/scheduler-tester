@@ -43,7 +43,7 @@ export class StEdittabs extends React.PureComponent<StEdittabsProps> {
           placement={TabsFixedPlacement.Centered}
           onChange={handleNewTab}
           tabs={tabs}
-          classes={{ root: css`height: 285px` }}
+          classes={{ root: css`height: 70%` }}
           {...props}
         />
       </ThemeProvider>
