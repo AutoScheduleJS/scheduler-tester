@@ -14,11 +14,15 @@ const theme = createMuiTheme({
 const emotionTheme = {
   palette: {
     primary: {
-      main: theme.palette.primary.main,
+      main: '#3F51B5',
+      lightVariant: '#757DE8',
+      darkVariant: '#002984',
       on: 'white',
     },
     secondary: {
       main: '#81D4FA',
+      lightVariant: '#B6FFFF',
+      darkVariant: '#4BA3C7',
       on: 'black',
     },
     surface: {

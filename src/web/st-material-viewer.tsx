@@ -4,6 +4,7 @@ import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { IItemProps } from './timeline';
 import { merge, mergeProps } from './util/hoc.util';
+import { ElevationProps } from './elevation/elevation';
 
 interface StMaterialViewerProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
@@ -12,6 +13,7 @@ interface StMaterialViewerProps extends React.HTMLAttributes<HTMLDivElement> {
 interface StMaterialViewerTheme {
   materialViewer: {
     height: string;
+    backgroundColor: string;
   };
 }
 
@@ -19,15 +21,22 @@ const defaultTheme = (theme: any): StMaterialViewerTheme =>
   merge(
     {
       materialViewer: {
-        height: '72px'
+        height: '72px',
+        backgroundColor: theme.palette.primary.lightVariant,
       },
     } as StMaterialViewerTheme,
     theme
   );
 
-const themeToHostStyles = (theme: StMaterialViewerTheme) => css`
-  height: ${theme.materialViewer.height};
-`;
+const themeToHostStyles = (theme: StMaterialViewerTheme) => {
+  const mv = theme.materialViewer;
+  return css`
+    height: ${mv.height};
+    background-color: ${mv.backgroundColor};
+    padding: 16px;
+    border-radius: 4px;
+  `;
+};
 
 class StMaterialViewerImpl extends React.PureComponent<
   IItemProps<IMaterial> & StMaterialViewerProps
@@ -35,7 +44,7 @@ class StMaterialViewerImpl extends React.PureComponent<
   render() {
     const { item, theme: incomingTheme, ...defaultHostProps } = this.props;
     const theme = defaultTheme(incomingTheme);
-    const hostProps = mergeProps(defaultHostProps, {
+    const hostProps = mergeProps(defaultHostProps, ElevationProps(1, theme), {
       className: themeToHostStyles(theme),
     });
     return (

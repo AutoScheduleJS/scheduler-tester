@@ -105,11 +105,6 @@ const selector = ([config, errors, _, mats, __]: [any, any, any, any, any]) => (
   mats,
 });
 
-const displayData = (data: any) => {
-  const val = data || {};
-  return JSON.stringify(val);
-};
-
 const nextState$ = new Subject<never>();
 
 /* tslint:disable:no-object-literal-type-assertion */
