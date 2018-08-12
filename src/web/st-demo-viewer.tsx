@@ -1,3 +1,4 @@
+import { IQuery } from '@autoschedule/queries-fn';
 import {
   combineSchedulerObservables,
   IMaterial,
@@ -5,7 +6,6 @@ import {
   queriesToPipelineDebug$,
 } from '@autoschedule/queries-scheduler';
 import { queryToStatePotentials } from '@autoschedule/userstate-manager';
-import { IConfig } from '@scheduler-tester/core-state/config.interface';
 import { ICoreState, StepOption } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
 import { css } from 'emotion';
@@ -19,7 +19,7 @@ import { connect } from './util/connect';
 import { merge, mergeProps } from './util/hoc.util';
 
 interface ICmpProps {
-  config: IConfig;
+  state: ICoreState;
   errors: any;
   pots: IPotentiality[];
   mats: IMaterial[];
@@ -74,11 +74,12 @@ class DemoViewerImpl extends React.PureComponent<ICmpProps & DemoViewerProps> {
     subDivision: 2,
   };
   render() {
-    const { config, errors, mats, theme: incomingTheme, ...defaultHostProps } = this.props;
+    const { state, errors, mats, theme: incomingTheme, ...defaultHostProps } = this.props;
     const theme = defaultTheme(incomingTheme);
-    if (!config) {
+    if (!state) {
       return null;
     }
+    const config = state.config;
     const ranges = [
       { start: config.startDate, end: config.endDate / 2 },
       { start: config.endDate / 2, end: config.endDate },
@@ -90,8 +91,12 @@ class DemoViewerImpl extends React.PureComponent<ICmpProps & DemoViewerProps> {
       <div {...hostProps}>
         {/* <div>{displayData(errors)}</div> */}
         <div className={timelinesContainerStyles}>
-        {ranges.map(range => (
-          <TimeLine range={range} ItemCmp={StMaterialViewer} items={mats || []} />
+          {ranges.map(range => (
+            <TimeLine
+              range={range}
+              ItemCmp={StMaterialViewer}
+              items={mats.map(getMaterial(state)) || []}
+            />
           ))}
         </div>
       </div>
@@ -99,8 +104,19 @@ class DemoViewerImpl extends React.PureComponent<ICmpProps & DemoViewerProps> {
   }
 }
 
-const selector = ([config, errors, _, mats, __]: [any, any, any, any, any]) => ({
-  config,
+export interface IMaterialUI extends IMaterial {
+  name: string;
+}
+
+const getMaterial = (state: ICoreState) => (mat: IMaterial): IMaterialUI => {
+  const query = state.suites[state.onTestbenchQueries].find(
+    query => query.id === mat.queryId
+  ) as IQuery;
+  return { ...mat, name: query.name };
+};
+
+const selector = ([state, errors, _, mats, __]: [ICoreState, any, any, any, any]) => ({
+  state,
   errors,
   mats,
 });
@@ -123,10 +139,10 @@ const stateToScheduler = state$ =>
                 zip(combineSchedulerObservables(err$, pots, mats, press), (_, schedule) => schedule)
               )
             : forkJoin(err$, pots, mats, press);
-        return result$.pipe(map(res => [state.config, ...res]));
+        return result$.pipe(map(res => [state, ...res]));
       } catch (e) {
         console.error(e);
-        return of([state.config, e, [], [], []]);
+        return of([state, e, [], [], []]);
       }
     })
   );

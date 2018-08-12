@@ -1,10 +1,11 @@
-import { IMaterial } from '@autoschedule/queries-scheduler';
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
+import { ElevationProps } from './elevation/elevation';
+import { IMaterialUI } from './st-demo-viewer';
 import { IItemProps } from './timeline';
 import { merge, mergeProps } from './util/hoc.util';
-import { ElevationProps } from './elevation/elevation';
+import { Typography, TypographyProps } from './typography/typography';
 
 interface StMaterialViewerProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
@@ -39,7 +40,7 @@ const themeToHostStyles = (theme: StMaterialViewerTheme) => {
 };
 
 class StMaterialViewerImpl extends React.PureComponent<
-  IItemProps<IMaterial> & StMaterialViewerProps
+  IItemProps<IMaterialUI> & StMaterialViewerProps
 > {
   render() {
     const { item, theme: incomingTheme, ...defaultHostProps } = this.props;
@@ -47,11 +48,21 @@ class StMaterialViewerImpl extends React.PureComponent<
     const hostProps = mergeProps(defaultHostProps, ElevationProps(1, theme), {
       className: themeToHostStyles(theme),
     });
-    return (
-      <div {...hostProps}>
-        {item.queryId}-{item.materialId}|{item.end - item.start}
-      </div>
-    );
+    const nameProps = mergeProps(TypographyProps('Subtitle1', 0, theme), {
+      className: css`
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      `,
+    });
+    return <React.Fragment>
+        <div {...hostProps}>
+          <div {...nameProps}>{item.name}</div>
+          <Typography scale={'Overline'} baselineTop={20}>
+            #{item.queryId}
+          </Typography>
+        </div>
+      </React.Fragment>;
   }
 }
 
