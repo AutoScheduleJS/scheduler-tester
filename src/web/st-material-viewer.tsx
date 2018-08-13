@@ -48,21 +48,23 @@ class StMaterialViewerImpl extends React.PureComponent<
     const hostProps = mergeProps(defaultHostProps, ElevationProps(1, theme), {
       className: themeToHostStyles(theme),
     });
-    const nameProps = mergeProps(TypographyProps('Subtitle1', 0, 0, theme), {
+    const nameProps = mergeProps(TypographyProps('Subtitle1', 0, undefined, theme), {
       className: css`
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
       `,
     });
-    return <React.Fragment>
+    return (
+      <React.Fragment>
         <div {...hostProps}>
           <div {...nameProps}>{item.name}</div>
           <Typography scale={'Overline'} baselineTop={20}>
             #{item.queryId}
           </Typography>
         </div>
-      </React.Fragment>;
+      </React.Fragment>
+    );
   }
 }
 

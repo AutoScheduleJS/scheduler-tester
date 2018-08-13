@@ -95,9 +95,16 @@ const typeScale = (
   theme: { typography: TypographyTheme },
   scale: keyof TypographyTheme,
   baselineTop = 0,
-  baselineBottom = 0
+  baselineBottom?: number
 ): string => {
   const attr = theme.typography[scale];
+  const bottomPos =
+    baselineBottom === undefined
+      ? ''
+      : `
+    position: absolute;
+    bottom: ${baselineBottom}px;
+  `;
 
   return css`
     font-family: ${attr.typeface};
@@ -105,15 +112,16 @@ const typeScale = (
     text-transform: ${attr.case === TypographyCase.Sentence ? 'initial' : 'uppercase'};
     letter-spacing: ${attr.LetterSpacing};
     font-size: ${attr.size};
-    margin-bottom: ${-1 * baselineBottom};
+    margin-bottom: ${-1 * (baselineBottom || 0)};
     &::before {
       ${baselineStrut(baselineTop)};
       vertical-align: 0;
     }
     &::after {
       ${baselineStrut(baselineBottom)};
-      vertical-align: ${-1 * baselineBottom};
+      vertical-align: ${-1 * (baselineBottom || 0)};
     }
+    ${bottomPos}
   `;
 };
 

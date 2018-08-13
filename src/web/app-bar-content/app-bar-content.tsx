@@ -39,6 +39,7 @@ const defaultClasses = {};
 const AppBarContentRootStyles = (theme: AppBarContentTheme) => {
   const appBar = theme.appBar;
   return css`
+    position: relative;
     height: ${appBar.totalHeight};
     background-color: ${appBar.backgroundColor};
     color: ${appBar.color};

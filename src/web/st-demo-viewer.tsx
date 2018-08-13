@@ -89,7 +89,6 @@ class DemoViewerImpl extends React.PureComponent<ICmpProps & DemoViewerProps> {
     });
     return (
       <div {...hostProps}>
-        {/* <div>{displayData(errors)}</div> */}
         <div className={timelinesContainerStyles}>
           {ranges.map(range => (
             <TimeLine
