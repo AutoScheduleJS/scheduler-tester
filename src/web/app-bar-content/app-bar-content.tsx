@@ -2,12 +2,11 @@ import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Typography } from '../typography/typography';
-import { merge } from '../util/hoc.util';
+import { merge, mergeProps } from '../util/hoc.util';
+import { PaddingProps } from '../responsive/responsive';
 
-interface CustomableProps {
-  classes?: {
-    root: string;
-  };
+interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
+  classes?: {};
   theme?: any;
 }
 
@@ -20,7 +19,6 @@ interface AppBarContentTheme {
     totalHeight: string;
     backgroundColor: string;
     color: string;
-    padding: string;
   };
 }
 
@@ -31,15 +29,12 @@ const defaultTheme = (theme: any): AppBarContentTheme =>
         totalHeight: '56px',
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.primary.on,
-        padding: '16px',
       },
-    },
+    } as AppBarContentTheme,
     theme
   );
 
-const defaultClasses = {
-  root: {},
-};
+const defaultClasses = {};
 
 const AppBarContentRootStyles = (theme: AppBarContentTheme) => {
   const appBar = theme.appBar;
@@ -47,21 +42,24 @@ const AppBarContentRootStyles = (theme: AppBarContentTheme) => {
     height: ${appBar.totalHeight};
     background-color: ${appBar.backgroundColor};
     color: ${appBar.color};
-    padding: ${appBar.padding};
   `;
 };
 
 class AppBarContentImpl extends React.PureComponent<AppBarContentProps> {
   render() {
-    const { theme: incomingTheme, classes = defaultClasses, title = '' } = this.props;
+    const {
+      theme: incomingTheme,
+      classes = defaultClasses,
+      title = '',
+      ...defaultHostProps
+    } = this.props;
     const theme = defaultTheme(incomingTheme);
+    const hostProps = mergeProps(defaultHostProps, PaddingProps(theme), {
+      className: AppBarContentRootStyles(theme),
+    });
     return (
-      <div
-        className={css`
-          ${AppBarContentRootStyles(theme)} ${classes.root};
-        `}
-      >
-        <Typography scale={'H6'}>{title}</Typography>
+      <div {...hostProps}>
+        <Typography scale={'H6'} baselineBottom={20} >{title}</Typography>
       </div>
     );
   }

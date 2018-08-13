@@ -12,6 +12,7 @@ interface CustomableProps {
 interface TypographyProps extends CustomableProps {
   scale: keyof TypographyTheme;
   baselineTop?: number;
+  baselineBottom?: number;
 }
 
 enum TypographyCase {
@@ -86,25 +87,34 @@ const defaultClasses = {
   root: {},
 };
 
+const baselineStrut = distance => `
+  display: inline-block; width: 0; content: ''; height: ${distance}px
+`;
+
 const typeScale = (
   theme: { typography: TypographyTheme },
   scale: keyof TypographyTheme,
-  baselineTop = 0
+  baselineTop = 0,
+  baselineBottom = 0
 ): string => {
   const attr = theme.typography[scale];
+
   return css`
     font-family: ${attr.typeface};
     font-weight: ${attr.weight};
     text-transform: ${attr.case === TypographyCase.Sentence ? 'initial' : 'uppercase'};
     letter-spacing: ${attr.LetterSpacing};
     font-size: ${attr.size};
+    margin-bottom: ${-1 * baselineBottom};
     &::before {
-      display: inline-block;
-      width: 0;
-      content: '';
-      height: ${baselineTop};
+      ${baselineStrut(baselineTop)};
       vertical-align: 0;
-    }`;
+    }
+    &::after {
+      ${baselineStrut(baselineBottom)};
+      vertical-align: ${-1 * baselineBottom};
+    }
+  `;
 };
 
 class TypographyImpl extends React.PureComponent<TypographyProps> {
@@ -113,6 +123,7 @@ class TypographyImpl extends React.PureComponent<TypographyProps> {
       children,
       scale,
       baselineTop,
+      baselineBottom,
       theme: incomingTheme,
       classes = defaultClasses,
     } = this.props;
@@ -120,7 +131,7 @@ class TypographyImpl extends React.PureComponent<TypographyProps> {
     return (
       <div
         className={css`
-          ${typeScale(theme, scale, baselineTop)} ${classes.root};
+          ${typeScale(theme, scale, baselineTop, baselineBottom)} ${classes.root};
         `}
       >
         {children}
@@ -131,7 +142,12 @@ class TypographyImpl extends React.PureComponent<TypographyProps> {
 
 export const Typography = withTheme(TypographyImpl);
 
-export const TypographyProps = (scale: keyof TypographyTheme, baselineTop?: number, customTheme?: any) => {
+export const TypographyProps = (
+  scale: keyof TypographyTheme,
+  baselineTop?: number,
+  baselineBottom?: number,
+  customTheme?: any
+) => {
   const theme = defaultTheme(customTheme);
-  return { className: typeScale(theme, scale, baselineTop) };
+  return { className: typeScale(theme, scale, baselineTop, baselineBottom) };
 };
