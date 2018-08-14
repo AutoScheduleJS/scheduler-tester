@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IItemProps } from './timeline';
+import { IItemProps } from './st-timeline';
 
 interface IPressureItem {
   start: number;

@@ -1,6 +1,6 @@
 import { IPotentiality } from '@autoschedule/queries-scheduler';
 import * as React from 'react';
-import { IItemProps } from './timeline';
+import { IItemProps } from './st-timeline';
 
 interface IPotentialItem extends IPotentiality {
   start: number;

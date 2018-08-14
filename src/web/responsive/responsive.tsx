@@ -41,9 +41,10 @@ const defaultTheme = (theme: any): PaddingTheme =>
   merge(
     {
       padding: {
+        xsmall1: 16,
         small2: 24,
       },
-    },
+    } as PaddingTheme,
     theme
   );
 
@@ -53,7 +54,6 @@ const paddingRootStyles = (theme: PaddingTheme) => {
     (acc, [key, val]) => acc + `@media (min-width: ${breakpoints[key]}px) { padding: 0 ${val}px };`,
     ''
   );
-  console.log(paddingStyles);
   return css`
     ${paddingStyles};
   `;

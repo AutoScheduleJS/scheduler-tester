@@ -14,9 +14,10 @@ import * as React from 'react';
 import { forkJoin, of, Subject } from 'rxjs';
 import { map, switchMap, zip } from 'rxjs/operators';
 import { StMaterialViewer } from './st-material-viewer';
-import { TimeLine } from './timeline';
+import { StTimeLine } from './st-timeline';
 import { connect } from './util/connect';
 import { merge, mergeProps } from './util/hoc.util';
+import { PaddingProps } from './responsive/responsive';
 
 interface ICmpProps {
   state: ICoreState;
@@ -53,7 +54,6 @@ const themeToHostStyles = (theme: DemoViewerTheme) => {
     background-color: ${dv.backgroundColor};
     height: 100%;
     border-radius: 25px 25px 0 0;
-    padding: 24;
   `;
 };
 
@@ -84,14 +84,16 @@ class DemoViewerImpl extends React.PureComponent<ICmpProps & DemoViewerProps> {
       { start: config.startDate, end: config.endDate / 2 },
       { start: config.endDate / 2, end: config.endDate },
     ];
-    const hostProps = mergeProps(defaultHostProps, {
-      className: themeToHostStyles(theme),
-    });
+    const hostProps = mergeProps(
+      PaddingProps(theme),
+      { className: themeToHostStyles(theme) },
+      defaultHostProps
+    );
     return (
       <div {...hostProps}>
         <div className={timelinesContainerStyles}>
           {ranges.map(range => (
-            <TimeLine
+            <StTimeLine
               range={range}
               ItemCmp={StMaterialViewer}
               items={mats.map(getMaterial(state)) || []}

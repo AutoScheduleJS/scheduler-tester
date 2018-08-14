@@ -103,4 +103,4 @@ const computePositionWithRange = (range: IRange) => (item: ITimeItem): string =>
   `;
 };
 
-export const TimeLine = withTheme<ICmpProps<any> & TimelineProps>(TimelineImpl);
+export const StTimeLine = withTheme<ICmpProps<any> & TimelineProps>(TimelineImpl);

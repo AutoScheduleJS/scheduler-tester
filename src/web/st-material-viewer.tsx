@@ -3,7 +3,7 @@ import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { ElevationProps } from './elevation/elevation';
 import { IMaterialUI } from './st-demo-viewer';
-import { IItemProps } from './timeline';
+import { IItemProps } from './st-timeline';
 import { merge, mergeProps } from './util/hoc.util';
 import { Typography, TypographyProps } from './typography/typography';
 
