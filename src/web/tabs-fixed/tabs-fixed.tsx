@@ -4,15 +4,14 @@ import * as React from 'react';
 import { animated, Transition } from 'react-spring';
 import { ButtonClasses, ButtonEmphaze } from '../button/button';
 import { StButton } from '../st-button';
-import { merge } from '../util/hoc.util';
+import { merge, mergeProps } from '../util/hoc.util';
 
 interface TabsFixedClasses {
-  root?: string;
   tabs?: string;
   tab?: ButtonClasses;
 }
 
-interface CustomableProps {
+interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
   classes?: TabsFixedClasses;
   theme?: any;
 }
@@ -33,8 +32,8 @@ export interface TabInfo {
 export interface TabsFixedProps extends CustomableProps {
   placement: TabsFixedPlacement;
   activeTab: string;
-  onChange: (id: string, event: React.MouseEvent<HTMLDivElement>) => void;
   tabs: TabInfo[];
+  onTabChange: (id: string, event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 interface TabsFixedTheme {
@@ -60,7 +59,6 @@ const defaultTheme = (theme: any): TabsFixedTheme =>
   );
 
 const defaultClasses: TabsFixedClasses = {
-  root: '',
   tabs: '',
   tab: {},
 };
@@ -147,11 +145,12 @@ class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
     const {
       activeTab,
       children,
-      onChange,
+      onTabChange,
       tabs,
       placement,
       theme: incomingTheme,
       classes = defaultClasses,
+      ...defaultHostProps
     } = this.props;
     if (!tabs.length) {
       return null;
@@ -163,12 +162,14 @@ class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
     };
     const leave = { transform: `translate3d(${backward ? 100 : -100}%,0,0)` };
     const theme = defaultTheme(incomingTheme);
+    const hostProps = mergeProps(
+      {
+        className: rootClass,
+      },
+      defaultHostProps
+    );
     return (
-      <div
-        className={css`
-          ${rootClass} ${classes.root};
-        `}
-      >
+      <div {...hostProps}>
         <div className={containerCss(placement)}>
           <div
             className={css`
@@ -180,7 +181,7 @@ class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
                 emphaze={ButtonEmphaze.Low}
                 label={tab.label}
                 icon={tab.icon}
-                onClick={e => onChange(tab.id, e)}
+                onClick={e => onTabChange(tab.id, e)}
                 className={classButton(theme, tab.id === activeTab)}
                 classes={tabButtonClasse(theme, tab.id === activeTab, classes.tab)}
               />

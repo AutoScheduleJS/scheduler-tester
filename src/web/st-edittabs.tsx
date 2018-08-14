@@ -6,6 +6,7 @@ import * as React from 'react';
 import { TabsFixed, TabsFixedPlacement, TabsFixedProps } from './tabs-fixed/tabs-fixed';
 import { connect } from './util/connect';
 import { css } from 'emotion';
+import { mergeProps } from './util/hoc.util';
 
 const selector = ({ ui }: ICoreState) => ({
   activeTab: ui.editTab,
@@ -15,7 +16,7 @@ type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 type TabsWithoutIndex = Omit<TabsFixedProps, 'activeTab'>;
 
-const EditTabsManagerInner = connect(selector, coreState$)<TabsWithoutIndex, { activeTab: string }>(
+const TabsFixedInner = connect(selector, coreState$)<TabsWithoutIndex, { activeTab: string }>(
   TabsFixed
 );
 
@@ -30,21 +31,24 @@ const adjustedTheme = ancestorTheme => ({
   tabs: { ...ancestorTheme.tabs, backgroundColor: '' },
 });
 
+const tabsFixedInnerStyle = css`
+  flex-grow: 2;
+`;
+
 export class StEdittabs extends React.PureComponent<StEdittabsProps> {
   render() {
     const tabs = [
       { label: 'Queries manager', id: 'qm' },
       { label: 'User-state manager', id: 'usm' },
     ];
-    const props = this.props;
+    const tabsFixedProps = mergeProps(this.props, { className: tabsFixedInnerStyle });
     return (
       <ThemeProvider theme={adjustedTheme}>
-        <EditTabsManagerInner
+        <TabsFixedInner
           placement={TabsFixedPlacement.Centered}
-          onChange={handleNewTab}
+          onTabChange={handleNewTab}
           tabs={tabs}
-          classes={{ root: css`height: 70%` }}
-          {...props}
+          {...tabsFixedProps}
         />
       </ThemeProvider>
     );
