@@ -6,6 +6,7 @@ import { StAppbar } from './st-appbar';
 import { StDemoViewer } from './st-demo-viewer';
 import { StEditQuery } from './st-edit-query';
 import { StEdittabs } from './st-edittabs';
+import { QueryMatcher } from './util/query-matcher';
 
 const styles = createStyles({
   parent: {
@@ -23,7 +24,8 @@ const styles = createStyles({
 class RootImpl extends React.PureComponent<{ classes: any }> {
   render() {
     const { classes } = this.props;
-    return <React.Fragment>
+    return (
+      <React.Fragment>
         <StAppbar />
         <div className={classes.parent}>
           <StEdittabs className={classes.child}>
@@ -34,7 +36,8 @@ class RootImpl extends React.PureComponent<{ classes: any }> {
         </div>
         <NewQueryButton />
         <StEditQuery />
-      </React.Fragment>;
+      </React.Fragment>
+    );
   }
 }
 
