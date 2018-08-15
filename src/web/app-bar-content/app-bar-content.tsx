@@ -3,7 +3,7 @@ import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Typography } from '../typography/typography';
 import { merge, mergeProps } from '../util/hoc.util';
-import { PaddingProps } from '../responsive/responsive';
+import { PaddingProps } from '../responsive/padding';
 
 interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
   classes?: {};

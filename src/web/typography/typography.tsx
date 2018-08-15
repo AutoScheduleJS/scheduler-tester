@@ -1,12 +1,9 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { merge } from '../util/hoc.util';
+import { merge, mergeProps } from '../util/hoc.util';
 
-interface CustomableProps {
-  classes?: {
-    root: string;
-  };
+interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
 }
 interface TypographyProps extends CustomableProps {
@@ -83,10 +80,6 @@ const defaultTheme = (theme: any): { typography: TypographyTheme } => {
   );
 };
 
-const defaultClasses = {
-  root: {},
-};
-
 const baselineStrut = distance => `
   display: inline-block; width: 0; content: ''; height: ${distance}px
 `;
@@ -121,7 +114,7 @@ const typeScale = (
       ${baselineStrut(baselineBottom)};
       vertical-align: ${-1 * (baselineBottom || 0)};
     }
-    ${bottomPos}
+    ${bottomPos};
   `;
 };
 
@@ -133,18 +126,14 @@ class TypographyImpl extends React.PureComponent<TypographyProps> {
       baselineTop,
       baselineBottom,
       theme: incomingTheme,
-      classes = defaultClasses,
+      ...defaultHostProps
     } = this.props;
     const theme = defaultTheme(incomingTheme);
-    return (
-      <div
-        className={css`
-          ${typeScale(theme, scale, baselineTop, baselineBottom)} ${classes.root};
-        `}
-      >
-        {children}
-      </div>
+    const hostProps = mergeProps(
+      { className: typeScale(theme, scale, baselineTop, baselineBottom) },
+      defaultHostProps
     );
+    return <div {...hostProps}>{children}</div>;
   }
 }
 

@@ -2,23 +2,27 @@ import * as React from 'react';
 
 interface QueryMatcherProps {
   mediaQuery: string;
+  defaultMatch?: boolean;
   children: (v: boolean) => React.ReactNode;
 }
 
 export class QueryMatcher extends React.Component<QueryMatcherProps> {
-  state: { matches: false };
+  state: { matches: boolean };
 
   private mql: MediaQueryList;
 
   constructor(props: QueryMatcherProps) {
     super(props);
-    this.state = {
-      matches: false,
-    };
     if (!window.matchMedia) {
+      this.state = {
+        matches: !!props.defaultMatch,
+      };
       return;
     }
     this.mql = window.matchMedia(props.mediaQuery);
+    this.state = {
+      matches: this.mql.matches,
+    };
     this.handleMatchChange = this.handleMatchChange.bind(this);
     this.mql.addListener(this.handleMatchChange);
   }

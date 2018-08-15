@@ -17,7 +17,7 @@ import { StMaterialViewer } from './st-material-viewer';
 import { StTimeLine } from './st-timeline';
 import { connect } from './util/connect';
 import { merge, mergeProps } from './util/hoc.util';
-import { PaddingProps } from './responsive/responsive';
+import { PaddingProps } from './responsive/padding';
 
 interface ICmpProps {
   state: ICoreState;

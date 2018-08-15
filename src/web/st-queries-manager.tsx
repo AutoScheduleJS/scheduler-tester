@@ -7,7 +7,7 @@ import { connect } from './util/connect';
 import { withTheme } from 'emotion-theming';
 import { mergeProps } from './util/hoc.util';
 import { css } from 'emotion';
-import { PaddingProps } from './responsive/responsive';
+import { PaddingProps } from './responsive/padding';
 
 interface IQueriesManagerFromState {
   queries: ReadonlyArray<IQuery>;
