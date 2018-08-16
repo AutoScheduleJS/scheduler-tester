@@ -125,11 +125,9 @@ class ButtonImpl extends React.PureComponent<ButtonProps> {
         >
           <Typography
             scale="Button"
-            classes={{
-              root: css`
-                ${buttonTabCss} ${classes.label};
-              `,
-            }}
+            className={css`
+              ${buttonTabCss} ${classes.label};
+            `}
           >
             {label}
           </Typography>

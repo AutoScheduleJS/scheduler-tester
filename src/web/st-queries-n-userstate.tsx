@@ -10,6 +10,7 @@ const themeToTitleStyles = (theme: any) => {
   return {
     className: css`
       color: ${theme.palette.surface.on};
+      margin-top: 16px;
     `,
   };
 };
