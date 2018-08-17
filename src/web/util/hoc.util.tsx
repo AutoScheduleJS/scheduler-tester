@@ -19,9 +19,9 @@ export const isFunction = (fn: any) => {
 };
 
 /**
- * oldObj: { a: { b: 1 }}
- * newObj: { a: { c: 2 }}
- * result: { a: { b: 1, c: 2 }}
+ * oldObj: { a: { b: 1, e: 8 }}
+ * newObj: { a: { c: 2, e: undefined }}
+ * result: { a: { b: 1, c: 2, e: 8 }}
  */
 export const merge = (oldObj, newObj) => {
   if (!isObject(oldObj) || !isObject(newObj)) {
@@ -31,7 +31,7 @@ export const merge = (oldObj, newObj) => {
         newObj(...arg);
       };
     }
-    return newObj;
+    return newObj === undefined ? oldObj : newObj;
   }
   const result = { ...newObj, ...oldObj };
   Object.keys(oldObj).forEach(key => {
@@ -41,6 +41,10 @@ export const merge = (oldObj, newObj) => {
   });
   return result;
 };
+
+export const mergeAll = (...objs) => {
+  return objs.reduce((acc, cur) => merge(acc, cur));
+}
 
 export const prepareProps = (oProps: any) => {
   const { className } = oProps;

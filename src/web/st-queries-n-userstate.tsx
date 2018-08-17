@@ -24,7 +24,7 @@ class StQueriesNUserstateImpl extends React.PureComponent<{ theme?: any }> {
     console.log('titleProps', titleProps);
     return (
       <React.Fragment>
-        <Typography {...titleProps} scale={'H6'}>
+        <Typography {...titleProps} scale={'Subtitle1'}>
           Queries
         </Typography>
         <StQueriesManager />
