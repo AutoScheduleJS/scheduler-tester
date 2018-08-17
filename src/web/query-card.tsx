@@ -39,19 +39,17 @@ class QueryCard extends React.PureComponent<IqueryCardProps> {
   render() {
     const { classes, query } = this.props;
     return (
-      <div>
-        <Card className={classes.card}>
-          <CardHeader title={query.name} subheader={`#${query.id}`} />
-          <CardContent>
-            <QueryDisplayKind {...{ query }} />
-          </CardContent>
-          <CardActions>
-            <IconButton onClick={this.openEditDialog.bind(this)} aria-label="edit">
-              <Icon>edit</Icon>
-            </IconButton>
-          </CardActions>
-        </Card>
-      </div>
+      <Card className={classes.card}>
+        <CardHeader title={query.name} subheader={`#${query.id}`} />
+        <CardContent>
+          <QueryDisplayKind {...{ query }} />
+        </CardContent>
+        <CardActions>
+          <IconButton onClick={this.openEditDialog.bind(this)} aria-label="edit">
+            <Icon>edit</Icon>
+          </IconButton>
+        </CardActions>
+      </Card>
     );
   }
 }

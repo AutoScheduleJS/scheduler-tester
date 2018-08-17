@@ -1,13 +1,14 @@
 import { IQuery } from '@autoschedule/queries-fn';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
-import * as React from 'react';
-import QueryCard from './query-card';
-import { connect } from './util/connect';
-import { withTheme } from 'emotion-theming';
-import { mergeProps } from './util/hoc.util';
 import { css } from 'emotion';
+import { withTheme } from 'emotion-theming';
+import * as React from 'react';
+import { LayoutMasonry } from './layout-masonry/layout-masonry';
+import QueryCard from './query-card';
 import { PaddingProps } from './responsive/padding';
+import { connect } from './util/connect';
+import { mergeProps } from './util/hoc.util';
 
 interface IQueriesManagerFromState {
   queries: ReadonlyArray<IQuery>;
@@ -17,12 +18,10 @@ interface IQueriesManagerProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
 }
 
-const themeToHostStyle = (theme: any) => {
-  return css`
-    display: flex;
-    flex-wrap: wrap;
+const hostStyles = {
+  className: css`
     margin-top: 24px;
-  `;
+  `,
 };
 
 class StQueriesManagerImpl extends React.PureComponent<
@@ -33,19 +32,11 @@ class StQueriesManagerImpl extends React.PureComponent<
     if (!queries) {
       return false;
     }
-    const hostProps = mergeProps(
-      PaddingProps(theme),
-      { className: themeToHostStyle(theme) },
-      defaultHostProps
-    );
+    const hostProps = mergeProps(PaddingProps(theme), hostStyles, defaultHostProps);
     return (
-      <div {...hostProps}>
-        {queries.map(query => (
-          <div>
-            <QueryCard key={query.id} {...{ query }} />
-          </div>
-        ))}
-      </div>
+      <LayoutMasonry itemWidth={'190px'} {...hostProps}>
+        {queries.map(query => <QueryCard key={query.id} {...{ query }} />)}
+      </LayoutMasonry>
     );
   }
 }
