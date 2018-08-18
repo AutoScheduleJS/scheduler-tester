@@ -1,17 +1,11 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { Elevation } from '../elevation/elevation';
-import { Typography } from '../typography/typography';
-import { merge } from '../util/hoc.util';
-
-export interface ButtonClasses {
-  button?: string;
-  label?: string;
-}
+import { ElevationProps } from '../elevation/elevation';
+import { TypographyProps } from '../typography/typography';
+import { merge, mergeProps } from '../util/hoc.util';
 
 interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
-  classes?: ButtonClasses;
   theme?: any;
 }
 
@@ -64,11 +58,6 @@ const defaultTheme = (theme: any): ButtonTheme =>
     theme
   );
 
-const defaultClasses: ButtonClasses = {
-  label: '',
-  button: '',
-};
-
 /**
  * Caution: prettier will add an indesirable space between baselineColor & opacity
  */
@@ -78,6 +67,7 @@ const ButtonRootStyles = (theme: ButtonTheme, emphaze: number) => {
     flex-direction: column;
     justify-content: center;
     user-select: none;
+    text-align: center;
     ${theme.button.shape};
   `;
   switch (emphaze) {
@@ -98,42 +88,18 @@ const ButtonRootStyles = (theme: ButtonTheme, emphaze: number) => {
   }
 };
 
-const buttonTabCss = css`
-  text-align: center;
-`;
-
 class ButtonImpl extends React.PureComponent<ButtonProps> {
   render() {
-    const {
-      label,
-      emphaze,
-      theme: incomingTheme,
-      classes = defaultClasses,
-      ...hostProps
-    } = this.props;
+    const { label, emphaze, theme: incomingTheme, ...defaultHostProps } = this.props;
     const theme = defaultTheme(incomingTheme);
     const elevation = emphaze === ButtonEmphaze.High ? theme.button.elevation : 0;
-    return (
-      <div {...hostProps}>
-        <Elevation
-          elevation={elevation}
-          classes={{
-            root: css`
-              ${ButtonRootStyles(theme, emphaze)} ${classes.button};
-            `,
-          }}
-        >
-          <Typography
-            scale="Button"
-            className={css`
-              ${buttonTabCss} ${classes.label};
-            `}
-          >
-            {label}
-          </Typography>
-        </Elevation>
-      </div>
+    const hostProps = mergeProps(
+      ElevationProps(elevation, theme),
+      { className: ButtonRootStyles(theme, emphaze) },
+      TypographyProps('Button'),
+      defaultHostProps
     );
+    return <div {...hostProps}>{label}</div>;
   }
 }
 

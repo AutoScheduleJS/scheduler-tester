@@ -38,12 +38,14 @@ const defaultClasses = {};
 
 const AppBarContentRootStyles = (theme: AppBarContentTheme) => {
   const appBar = theme.appBar;
-  return css`
-    position: relative;
-    height: ${appBar.totalHeight};
-    background-color: ${appBar.backgroundColor};
-    color: ${appBar.color};
-  `;
+  return {
+    className: css`
+      position: relative;
+      height: ${appBar.totalHeight};
+      background-color: ${appBar.backgroundColor};
+      color: ${appBar.color};
+    `,
+  };
 };
 
 class AppBarContentImpl extends React.PureComponent<AppBarContentProps> {
@@ -55,12 +57,16 @@ class AppBarContentImpl extends React.PureComponent<AppBarContentProps> {
       ...defaultHostProps
     } = this.props;
     const theme = defaultTheme(incomingTheme);
-    const hostProps = mergeProps(defaultHostProps, PaddingProps(theme), {
-      className: AppBarContentRootStyles(theme),
-    });
+    const hostProps = mergeProps(
+      PaddingProps(theme),
+      AppBarContentRootStyles(theme),
+      defaultHostProps
+    );
     return (
       <div {...hostProps}>
-        <Typography scale={'H6'} baselineBottom={20} >{title}</Typography>
+        <Typography scale={'H6'} baselineBottom={20}>
+          {title}
+        </Typography>
       </div>
     );
   }

@@ -2,13 +2,13 @@ import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { animated, Transition } from 'react-spring';
-import { ButtonClasses, ButtonEmphaze } from '../button/button';
+import { ButtonEmphaze } from '../button/button';
 import { StButton } from '../st-button';
 import { merge, mergeProps } from '../util/hoc.util';
 
 interface TabsFixedClasses {
   tabs?: string;
-  tab?: ButtonClasses;
+  tab?: string;
 }
 
 interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -60,7 +60,7 @@ const defaultTheme = (theme: any): TabsFixedTheme =>
 
 const defaultClasses: TabsFixedClasses = {
   tabs: '',
-  tab: {},
+  tab: '',
 };
 
 const placementToJustify = (placement: TabsFixedPlacement) => {
@@ -87,26 +87,17 @@ const tabsCss = css`
   grid-auto-flow: column;
 `;
 
-const classButton = (theme: TabsFixedTheme, isActive: boolean) => css`
+const classButton = (theme: TabsFixedTheme, isActive: boolean, givenClass?: string) => css`
   box-sizing: content-box;
   background-color: ${theme.tabs.backgroundColor};
   border-bottom: ${isActive ? `2px solid ${theme.tabs.colorActive}` : 'none'};
   border-radius: 0;
   grid-row: 1;
+  padding: 0 16px;
+  color: ${isActive ? theme.tabs.colorActive : theme.tabs.colorInactive};
+  height: ${theme.tabs.totalHeight};
+  ${givenClass};
 `;
-
-const tabButtonClasse = (
-  theme: TabsFixedTheme,
-  isActive: boolean,
-  buttonClasses: ButtonClasses = {}
-): ButtonClasses => ({
-  button: css`
-    padding: 0 16px;
-    color: ${isActive ? theme.tabs.colorActive : theme.tabs.colorInactive};
-    height: ${theme.tabs.totalHeight};
-  `,
-  ...buttonClasses,
-});
 
 interface TabsFixedState {
   activeI: number;
@@ -182,8 +173,7 @@ class TabsFixedImpl extends React.PureComponent<TabsFixedProps> {
                 label={tab.label}
                 icon={tab.icon}
                 onClick={e => onTabChange(tab.id, e)}
-                className={classButton(theme, tab.id === activeTab)}
-                classes={tabButtonClasse(theme, tab.id === activeTab, classes.tab)}
+                className={classButton(theme, tab.id === activeTab, classes.tab)}
               />
             ))}
           </div>

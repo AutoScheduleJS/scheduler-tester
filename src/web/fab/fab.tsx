@@ -11,7 +11,7 @@ export interface FabClasses {
   label?: string;
 }
 
-interface CustomableProps {
+interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
   classes?: FabClasses;
   theme?: any;
 }
@@ -25,7 +25,6 @@ export enum FabSize {
 export interface FabProps extends CustomableProps {
   onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
   size?: FabSize;
-  color?: string;
   label?: string;
   icon?: React.ReactElement<{}>;
 }
@@ -128,6 +127,7 @@ class FabImpl extends React.PureComponent<FabProps> {
       onClick = () => {},
       theme: incomingTheme,
       classes = defaultClasses,
+      ...defaultHostProps
     } = this.props;
     const theme = defaultTheme(incomingTheme);
     const { resting, pressed } = theme.fab.elevation;
@@ -139,7 +139,8 @@ class FabImpl extends React.PureComponent<FabProps> {
           ${FabRootStyles(theme, size, !!icon)} ${classes.root};
         `,
         onClick: onClick,
-      }
+      },
+      defaultHostProps
     );
     return (
       <div {...props}>

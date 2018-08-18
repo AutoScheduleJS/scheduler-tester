@@ -1,14 +1,11 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { ElevationHOC } from '../elevation/elevation';
-import { DivComponent } from '../node-wrapper/node-wrapper';
-import { merge } from '../util/hoc.util';
+import { ElevationProps } from '../elevation/elevation';
+import { merge, mergeProps } from '../util/hoc.util';
 
-interface CustomableProps {
-  classes?: {
-    root: string;
-  };
+interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
+  classes?: {};
   theme?: any;
 }
 
@@ -32,31 +29,32 @@ const defaultTheme = (theme: any): AppBarTheme =>
     theme
   );
 
-const defaultClasses = {
-  root: {},
-};
+const defaultClasses = {};
 
-const AppBarRootStyles = (theme: AppBarTheme) => css`
-  height: ${theme.appBar.totalHeight};
-`;
+const AppBarRootStyles = (theme: AppBarTheme) => ({
+  className: css`
+    height: ${theme.appBar.totalHeight};
+  `,
+});
 
 /**
  * AppBar container. Not responsible for hiding/reveal upon scroll (should be another component -> when tabs & app-bar are unified, this behavior should be)
  */
 class AppBarImpl extends React.PureComponent<AppBarProps> {
   render() {
-    const { children, theme: incomingTheme, classes = defaultClasses } = this.props;
+    const {
+      children,
+      theme: incomingTheme,
+      classes = defaultClasses,
+      ...defaultHostProps
+    } = this.props;
     const theme = defaultTheme(incomingTheme);
-    const Host = ElevationHOC<any>(4, theme)(DivComponent);
-    return (
-      <Host
-        className={css`
-          ${AppBarRootStyles(theme)} ${classes.root};
-        `}
-      >
-        {children}
-      </Host>
+    const hostProps = mergeProps(
+      ElevationProps(4, theme),
+      AppBarRootStyles(theme),
+      defaultHostProps
     );
+    return <div {...hostProps}>{children}</div>;
   }
 }
 
