@@ -147,11 +147,9 @@ class FabImpl extends React.PureComponent<FabProps> {
         {label && (
           <Typography
             scale="Button"
-            classes={{
-              root: css`
-                ${buttonTabCss} ${classes.label};
-              `,
-            }}
+            className={css`
+              ${buttonTabCss} ${classes.label};
+            `}
           >
             {label}
           </Typography>

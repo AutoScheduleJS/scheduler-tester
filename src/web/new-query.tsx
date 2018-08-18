@@ -1,18 +1,9 @@
-import { Icon, withStyles } from '@material-ui/core';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
+import { Icon } from '@material-ui/core';
 import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import { AddQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
 import { css } from 'emotion';
 import * as React from 'react';
 import { Fab } from './fab/fab';
-
-const styles = theme => ({
-  btn: {
-    position: 'absolute',
-    bottom: theme.spacing.unit * 4,
-    right: theme.spacing.unit * 4,
-  } as CSSProperties,
-});
 
 interface INewQueryButtonProps {}
 
@@ -48,4 +39,4 @@ class NewQueryButtonImpl extends React.PureComponent<INewQueryButtonProps & { cl
   }
 }
 
-export const NewQueryButton = withStyles(styles)(NewQueryButtonImpl);
+export const NewQueryButton = NewQueryButtonImpl;

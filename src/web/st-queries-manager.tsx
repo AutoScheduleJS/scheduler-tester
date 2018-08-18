@@ -6,7 +6,10 @@ import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { LayoutMasonry } from './layout-masonry/layout-masonry';
 import QueryCard from './query-card';
+import { breakpoints, BreakpointsEnum } from './responsive/breakpoints';
 import { PaddingProps } from './responsive/padding';
+import { QueryMatcher } from './responsive/query-matcher';
+import { StNewItemLarge } from './st-new-item-large';
 import { connect } from './util/connect';
 import { mergeProps } from './util/hoc.util';
 
@@ -35,6 +38,10 @@ class StQueriesManagerImpl extends React.PureComponent<
     const hostProps = mergeProps(PaddingProps(theme), hostStyles, defaultHostProps);
     return (
       <LayoutMasonry itemWidth={'190px'} {...hostProps}>
+        <QueryMatcher
+          ToRender={StNewItemLarge}
+          mediaQuery={`(min-width: ${breakpoints[BreakpointsEnum.xsmall4]}px)`}
+        />
         {queries.map(query => <QueryCard key={query.id} {...{ query }} />)}
       </LayoutMasonry>
     );
