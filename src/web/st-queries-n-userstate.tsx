@@ -21,7 +21,6 @@ class StQueriesNUserstateImpl extends React.PureComponent<{ theme?: any }> {
     const { theme: incomingTheme } = this.props;
     const theme = defaultTheme(incomingTheme);
     const titleProps = mergeProps(PaddingProps(theme), themeToTitleStyles(theme));
-    console.log('titleProps', titleProps);
     return (
       <React.Fragment>
         <Typography {...titleProps} scale={'Subtitle1'}>

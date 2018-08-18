@@ -47,7 +47,6 @@ const defaultTheme = (theme: any): TimelineTheme =>
   );
 
 const themeToHostStyles = (theme: TimelineTheme) => {
-  console.log(theme);
   const t = theme.timeline;
   const gradientTransparent = '#00000000';
   const gradientOpaque = t.lineColor + 'FF';

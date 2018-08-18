@@ -15,6 +15,7 @@ const theme = createMuiTheme({
 
 const emotionTheme = {
   layout: {
+    name: 'large',
     gutter: '24px',
     margin: '24px',
   },
@@ -38,26 +39,18 @@ const emotionTheme = {
   },
 };
 
-const breakKeyToNewTheme = (_: any, key: string) => {
-  console.log('key: ', key);
+const breakKeyToNewTheme = (theme: any, key: string): any => {
   const widthKey = +key;
   if (Number.isNaN(widthKey)) {
     return;
   }
   if (widthKey < BreakpointsEnum.small2) {
-    return {
-      layout: {
-        gutter: '16px',
-        margin: '16px',
-      },
-    };
-  } else {
-    return {
-      layout: {
-        gutter: '24px',
-        margin: '24px',
-      },
-    };
+    if (theme.layout.name === 'small') {
+      return;
+    }
+    return { layout: { name: 'small', gutter: '16px', margin: '16px' } };
+  } else if (theme.layout.name !== 'large') {
+    return { layout: { name: 'large', gutter: '24px', margin: '24px' } };
   }
 };
 

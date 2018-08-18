@@ -22,6 +22,16 @@ const childStyle = css`
   flex-grow: 1;
 `;
 
+const managementArea = (isLarge: boolean) =>
+  isLarge ? (
+    <StQueriesNUserstate />
+  ) : (
+    <StEdittabs className={childStyle}>
+      <StQueriesManager />
+      <span>Toto</span>
+    </StEdittabs>
+  );
+
 class RootImpl extends React.PureComponent<{}> {
   render() {
     return (
@@ -29,20 +39,14 @@ class RootImpl extends React.PureComponent<{}> {
         <StAppbar />
         <div className={parentStyle}>
           <QueryMatcher mediaQuery={`(min-width: ${breakpoints[BreakpointsEnum.large1]}px)`}>
-            {matches =>
-              matches ? (
-                <StQueriesNUserstate />
-              ) : (
-                <StEdittabs className={childStyle}>
-                  <StQueriesManager />
-                  <span>Toto</span>
-                </StEdittabs>
-              )
-            }
+            {managementArea}
           </QueryMatcher>
           <StDemoViewer className={childStyle} />
         </div>
-        <NewQueryButton />
+        <QueryMatcher
+          ToRender={NewQueryButton}
+          mediaQuery={`(max-width: ${breakpoints[BreakpointsEnum.xsmall4]}px)`}
+        />
         <StEditQuery />
       </React.Fragment>
     );

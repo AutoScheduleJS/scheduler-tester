@@ -3,7 +3,8 @@ import * as React from 'react';
 interface QueryMatcherProps {
   mediaQuery: string;
   defaultMatch?: boolean;
-  children: (v: boolean) => React.ReactNode;
+  children?: (v: boolean) => React.ReactNode;
+  ToRender?: React.ComponentType<any>;
 }
 
 export class QueryMatcher extends React.Component<QueryMatcherProps> {
@@ -28,8 +29,16 @@ export class QueryMatcher extends React.Component<QueryMatcherProps> {
   }
 
   render() {
-    const { children } = this.props;
-    return children(this.state.matches);
+    const { children, ToRender, ...otherProps } = this.props;
+    if (children) {
+      return children(this.state.matches);
+    }
+    if (ToRender && this.state.matches) {
+      delete otherProps.defaultMatch;
+      delete otherProps.mediaQuery;
+      return <ToRender {...otherProps} />;
+    }
+    return null;
   }
 
   componentWillUnmount() {
