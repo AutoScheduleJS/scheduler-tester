@@ -1,7 +1,7 @@
 import { css } from 'emotion';
 import * as React from 'react';
 import { NewQueryButton } from './new-query';
-import { breakpoints } from './responsive/breakpoints';
+import { breakpoints, BreakpointsEnum } from './responsive/breakpoints';
 import { QueryMatcher } from './responsive/query-matcher';
 import { StAppbar } from './st-appbar';
 import { StDemoViewer } from './st-demo-viewer';
@@ -28,7 +28,7 @@ class RootImpl extends React.PureComponent<{}> {
       <React.Fragment>
         <StAppbar />
         <div className={parentStyle}>
-          <QueryMatcher mediaQuery={`(min-width: ${breakpoints.large1}px)`}>
+          <QueryMatcher mediaQuery={`(min-width: ${breakpoints[BreakpointsEnum.large1]}px)`}>
             {matches =>
               matches ? (
                 <StQueriesNUserstate />

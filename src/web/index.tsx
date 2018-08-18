@@ -2,7 +2,7 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { breakpoints } from './responsive/breakpoints';
+import { breakpoints, BreakpointsEnum } from './responsive/breakpoints';
 import { ResponsiveTheme } from './responsive/responsive-theme';
 import { Root } from './root';
 import { merge } from './util/hoc.util';
@@ -14,6 +14,10 @@ const theme = createMuiTheme({
 });
 
 const emotionTheme = {
+  layout: {
+    gutter: '24px',
+    margin: '24px',
+  },
   palette: {
     primary: {
       main: '#3F51B5',
@@ -34,10 +38,32 @@ const emotionTheme = {
   },
 };
 
+const breakKeyToNewTheme = (_: any, key: string) => {
+  console.log('key: ', key);
+  const widthKey = +key;
+  if (Number.isNaN(widthKey)) {
+    return;
+  }
+  if (widthKey < BreakpointsEnum.small2) {
+    return {
+      layout: {
+        gutter: '16px',
+        margin: '16px',
+      },
+    };
+  } else {
+    return {
+      layout: {
+        gutter: '24px',
+        margin: '24px',
+      },
+    };
+  }
+};
+
 const handleBreakpoints = (theme: any, keys: string[]) => {
-  return keys.reduce((acc, cur) => {
-    let updatedTheme;
-    return merge(acc, updatedTheme)
+  return keys.reduce((acc, key) => {
+    return merge(acc, breakKeyToNewTheme(acc, key));
   }, theme);
 };
 
@@ -46,7 +72,7 @@ const rules = Object.entries(breakpoints).map(([key, val], i, arr) => {
   if (i === arr.length - 1) {
     return { key, query };
   }
-  return { key, query: `${query} and (max-width: ${arr[i][1]}px)` };
+  return { key, query: `(max-width: ${arr[i + 1][1] - 1}px) and ${query}` };
 });
 
 const app = (

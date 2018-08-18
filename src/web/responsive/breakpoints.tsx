@@ -1,31 +1,31 @@
-export const breakpoints = {
-  xsmall1: 0,
-  xsmall2: 360,
-  xsmall3: 400,
-  xsmall4: 490,
-  small1: 600,
-  small2: 720,
-  small3: 840,
-  small4: 960,
-  medium1: 1024,
-  medium2: 1280,
-  large1: 1440,
-  large2: 1600,
-  xlarge: 1920,
-};
-
-export interface Breakpoints {
-  xsmall1?: number;
-  xsmall2?: number;
-  xsmall3?: number;
-  xsmall4?: number;
-  small1?: number;
-  small2?: number;
-  small3?: number;
-  small4?: number;
-  medium1?: number;
-  medium2?: number;
-  large1?: number;
-  large2?: number;
-  xlarge?: number;
+export enum BreakpointsEnum {
+  xsmall1,
+  xsmall2,
+  xsmall3,
+  xsmall4,
+  small1,
+  small2,
+  small3,
+  small4,
+  medium1,
+  medium2,
+  large1,
+  large2,
+  xlarge,
 }
+
+export const breakpoints = {
+  [BreakpointsEnum.xsmall1]: 0,
+  [BreakpointsEnum.xsmall2]: 360,
+  [BreakpointsEnum.xsmall3]: 400,
+  [BreakpointsEnum.xsmall4]: 490,
+  [BreakpointsEnum.small1]: 600,
+  [BreakpointsEnum.small2]: 720,
+  [BreakpointsEnum.small3]: 840,
+  [BreakpointsEnum.small4]: 960,
+  [BreakpointsEnum.medium1]: 1024,
+  [BreakpointsEnum.medium2]: 1280,
+  [BreakpointsEnum.large1]: 1440,
+  [BreakpointsEnum.large2]: 1600,
+  [BreakpointsEnum.xlarge]: 1920,
+};

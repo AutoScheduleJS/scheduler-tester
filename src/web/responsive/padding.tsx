@@ -1,30 +1,26 @@
 import { css } from 'emotion';
 import { merge } from '../util/hoc.util';
-import { Breakpoints, breakpoints } from './breakpoints';
 
 interface PaddingTheme {
-  padding: Breakpoints;
+  layout: {
+    margin: string;
+  };
 }
 
 const defaultTheme = (theme: any): PaddingTheme =>
   merge(
     {
-      padding: {
-        xsmall1: 16,
-        small2: 24,
+      layout: {
+        margin: '24px',
       },
     } as PaddingTheme,
     theme
   );
 
 const paddingRootStyles = (theme: PaddingTheme) => {
-  const padding = theme.padding;
-  const paddingStyles = Object.entries(padding).reduce(
-    (acc, [key, val]) => acc + `@media (min-width: ${breakpoints[key]}px) { padding: 0 ${val}px };`,
-    ''
-  );
+  const padding = theme.layout.margin;
   return css`
-    ${paddingStyles};
+    padding: 0 ${padding};
   `;
 };
 
