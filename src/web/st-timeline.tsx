@@ -26,6 +26,7 @@ interface ICmpProps<T extends ITimeItem> {
   range: IRange;
   items: timeItems<T>;
   ItemCmp: React.ComponentType<IItemProps<T>>;
+  opacityRange: IRange;
 }
 
 interface TimelineTheme {
@@ -40,37 +41,64 @@ const defaultTheme = (theme: any): TimelineTheme =>
     {
       timeline: {
         height: '72px',
-        lineColor: theme.palette.secondary.main,
+        lineColor: theme.palette.primary.main,
       },
     } as TimelineTheme,
     theme
   );
 
+const percentToHexString = (percent: number) => {
+  const decimal = Math.round(255 * percent);
+  const suffix = decimal < 17 ? '0' : '';
+  return suffix + decimal.toString(16);
+};
+
 const themeToHostStyles = (theme: TimelineTheme) => {
   const t = theme.timeline;
-  const gradientTransparent = '#00000000';
-  const gradientOpaque = t.lineColor + 'FF';
+
   return css`
     height: ${t.height};
     position: relative;
-    background: linear-gradient(
-      to bottom,
-      ${gradientTransparent} 47%,
-      ${gradientOpaque} 50%,
-      ${gradientTransparent} 53%
-    );
   `;
+};
+
+const lineStyle = (theme, opacityRange) => {
+  const t = theme.timeline;
+  const gradientOpaque = t.lineColor + 'FF';
+  const maskStart = '#FFFFFF' + percentToHexString(opacityRange.start);
+  const maskEnd = '#FFFFFF' + percentToHexString(opacityRange.end);
+  return css`
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 47%;
+    bottom: 47%;
+    z-index: -1;
+    border-radius: 3px;
+    background: linear-gradient(to right, ${maskStart} 0%, ${maskEnd} 100%), ${gradientOpaque};`;
 };
 
 class TimelineImpl<T extends ITimeItem> extends React.PureComponent<ICmpProps<T> & TimelineProps> {
   render() {
-    const { range, items, ItemCmp, theme: incomingTheme, ...defaultHostProps } = this.props;
+    const {
+      range,
+      items,
+      ItemCmp,
+      opacityRange,
+      theme: incomingTheme,
+      ...defaultHostProps
+    } = this.props;
     const theme = defaultTheme(incomingTheme);
     const timeItemCmps = itemsArrayToCmp<T>(computePositionWithRange(range), items, ItemCmp);
     const hostProps = mergeProps(defaultHostProps, {
       className: themeToHostStyles(theme),
     });
-    return <div {...hostProps}>{timeItemCmps}</div>;
+    return (
+      <div {...hostProps}>
+        {timeItemCmps}
+        <div className={lineStyle(theme, opacityRange)} />
+      </div>
+    );
   }
 }
 

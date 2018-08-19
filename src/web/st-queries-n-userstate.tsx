@@ -4,7 +4,7 @@ import * as React from 'react';
 import { PaddingProps } from './responsive/padding';
 import { StQueriesManager } from './st-queries-manager';
 import { Typography } from './typography/typography';
-import { mergeProps, merge } from './util/hoc.util';
+import { merge, mergeProps } from './util/hoc.util';
 
 const themeToTitleStyles = (theme: any) => {
   return {
@@ -16,18 +16,22 @@ const themeToTitleStyles = (theme: any) => {
 };
 const defaultTheme = (theme: any) => merge({ palette: { surface: { on: 'white' } } }, theme);
 
-class StQueriesNUserstateImpl extends React.PureComponent<{ theme?: any }> {
+interface StQueriesNUserstateProps extends React.HTMLAttributes<HTMLDivElement> {
+  theme?: any;
+}
+
+class StQueriesNUserstateImpl extends React.PureComponent<StQueriesNUserstateProps> {
   render() {
-    const { theme: incomingTheme } = this.props;
+    const { theme: incomingTheme, ...defaultHostProps } = this.props;
     const theme = defaultTheme(incomingTheme);
     const titleProps = mergeProps(PaddingProps(theme), themeToTitleStyles(theme));
     return (
-      <React.Fragment>
+      <div {...defaultHostProps}>
         <Typography {...titleProps} scale={'Subtitle1'}>
           Queries
         </Typography>
         <StQueriesManager />
-      </React.Fragment>
+      </div>
     );
   }
 }

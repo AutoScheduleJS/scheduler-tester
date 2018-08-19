@@ -24,7 +24,7 @@ const childStyle = css`
 
 const managementArea = (isLarge: boolean) =>
   isLarge ? (
-    <StQueriesNUserstate />
+    <StQueriesNUserstate className={childStyle} />
   ) : (
     <StEdittabs className={childStyle}>
       <StQueriesManager />
@@ -41,7 +41,7 @@ class RootImpl extends React.PureComponent<{}> {
           <QueryMatcher mediaQuery={`(min-width: ${breakpoints[BreakpointsEnum.large1]}px)`}>
             {managementArea}
           </QueryMatcher>
-          <StDemoViewer className={childStyle} />
+          <StDemoViewer />
         </div>
         <QueryMatcher
           ToRender={NewQueryButton}

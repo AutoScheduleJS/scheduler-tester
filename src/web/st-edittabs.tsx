@@ -5,8 +5,6 @@ import { ThemeProvider } from 'emotion-theming';
 import * as React from 'react';
 import { TabsFixed, TabsFixedPlacement, TabsFixedProps } from './tabs-fixed/tabs-fixed';
 import { connect } from './util/connect';
-import { css } from 'emotion';
-import { mergeProps } from './util/hoc.util';
 
 const selector = ({ ui }: ICoreState) => ({
   activeTab: ui.editTab,
@@ -31,24 +29,19 @@ const adjustedTheme = ancestorTheme => ({
   tabs: { ...ancestorTheme.tabs, backgroundColor: '' },
 });
 
-const tabsFixedInnerStyle = css`
-  flex-grow: 2;
-`;
-
 export class StEdittabs extends React.PureComponent<StEdittabsProps> {
   render() {
     const tabs = [
       { label: 'Queries manager', id: 'qm' },
       { label: 'User-state manager', id: 'usm' },
     ];
-    const tabsFixedProps = mergeProps(this.props, { className: tabsFixedInnerStyle });
     return (
       <ThemeProvider theme={adjustedTheme}>
         <TabsFixedInner
           placement={TabsFixedPlacement.Centered}
           onTabChange={handleNewTab}
           tabs={tabs}
-          {...tabsFixedProps}
+          {...this.props}
         />
       </ThemeProvider>
     );

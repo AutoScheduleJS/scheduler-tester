@@ -33,7 +33,6 @@ interface DemoViewerProps extends React.HTMLAttributes<HTMLDivElement> {
 
 interface DemoViewerTheme {
   demoViewer: {
-    backgroundColor: string;
     shape: string;
   };
 }
@@ -42,7 +41,6 @@ const defaultTheme = (theme: any): DemoViewerTheme =>
   merge(
     {
       demoViewer: {
-        backgroundColor: theme.palette.surface.main,
       },
     } as DemoViewerTheme,
     theme
@@ -51,8 +49,6 @@ const defaultTheme = (theme: any): DemoViewerTheme =>
 const themeToHostStyles = (theme: DemoViewerTheme) => {
   const dv = theme.demoViewer;
   return css`
-    background-color: ${dv.backgroundColor};
-    height: 100%;
     border-radius: 25px 25px 0 0;
   `;
 };
@@ -81,8 +77,8 @@ class DemoViewerImpl extends React.PureComponent<ICmpProps & DemoViewerProps> {
     }
     const config = state.config;
     const ranges = [
-      { start: config.startDate, end: config.endDate / 2 },
-      { start: config.endDate / 2, end: config.endDate },
+      { range: { start: config.startDate, end: config.endDate / 2 }, opacity: { start: 0, end: 0.5 } },
+      { range: { start: config.endDate / 2, end: config.endDate }, opacity: { start: 0.5, end: 1 } },
     ];
     const hostProps = mergeProps(
       PaddingProps(theme),
@@ -94,7 +90,8 @@ class DemoViewerImpl extends React.PureComponent<ICmpProps & DemoViewerProps> {
         <div className={timelinesContainerStyles}>
           {ranges.map(range => (
             <StTimeLine
-              range={range}
+              range={range.range}
+              opacityRange={range.opacity}
               ItemCmp={StMaterialViewer}
               items={mats.map(getMaterial(state)) || []}
             />

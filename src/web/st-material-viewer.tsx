@@ -15,6 +15,7 @@ interface StMaterialViewerTheme {
   materialViewer: {
     height: string;
     backgroundColor: string;
+    color: string;
   };
 }
 
@@ -23,7 +24,8 @@ const defaultTheme = (theme: any): StMaterialViewerTheme =>
     {
       materialViewer: {
         height: '72px',
-        backgroundColor: theme.palette.primary.lightVariant,
+        backgroundColor: theme.palette.surface.main,
+        color: theme.palette.surface.on,
       },
     } as StMaterialViewerTheme,
     theme
@@ -34,8 +36,9 @@ const themeToHostStyles = (theme: StMaterialViewerTheme) => {
   return css`
     height: ${mv.height};
     background-color: ${mv.backgroundColor};
+    color: ${mv.color};
     padding: 16px;
-    border-radius: 4px;
+    border-radius: 16px;
   `;
 };
 
