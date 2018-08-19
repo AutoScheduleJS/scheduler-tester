@@ -1,6 +1,7 @@
 import { IQuery } from '@autoschedule/queries-fn';
 import { ICoreState, coreStateL } from '@scheduler-tester/core-state/core.state';
 import { actionType } from '@scheduler-tester/core-state/core.store';
+import { IUserstateCollection } from '@scheduler-tester/core-state/userstate-collection.interface';
 
 export class EditQueryAction {
   constructor(public query: IQuery) {}
@@ -13,6 +14,7 @@ export class CloseEditAction {
 export type editUiActionType = EditQueryAction | CloseEditAction;
 
 export interface EditUI {
+  userstate: IUserstateCollection | false;
   query: IQuery | false;
   isNew: boolean;
 }

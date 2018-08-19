@@ -1,6 +1,6 @@
 import { css } from 'emotion';
 import * as React from 'react';
-import { NewQueryButton } from './new-query';
+import { NewQueryButton } from './st-new-item';
 import { breakpoints, BreakpointsEnum } from './responsive/breakpoints';
 import { QueryMatcher } from './responsive/query-matcher';
 import { StAppbar } from './st-appbar';

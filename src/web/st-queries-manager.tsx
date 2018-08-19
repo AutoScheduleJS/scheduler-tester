@@ -1,6 +1,7 @@
 import { IQuery } from '@autoschedule/queries-fn';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
+import { AddQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
@@ -40,6 +41,7 @@ class StQueriesManagerImpl extends React.PureComponent<
       <LayoutMasonry itemWidth={'190px'} {...hostProps}>
         <QueryMatcher
           ToRender={StNewItemLarge}
+          action={AddQueryAction}
           mediaQuery={`(min-width: ${breakpoints[BreakpointsEnum.xsmall4]}px)`}
         />
         {queries.map(query => <QueryCard key={query.id} {...{ query }} />)}

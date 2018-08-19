@@ -1,5 +1,6 @@
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
+import { AddUserstateAction } from '@scheduler-tester/core-state/global.ui.reducer';
 import { IUserstateCollection } from '@scheduler-tester/core-state/userstate-collection.interface';
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
@@ -39,6 +40,7 @@ class StUserstateManagerImpl extends React.PureComponent<
       <LayoutMasonry itemWidth={'190px'} {...hostProps}>
         <QueryMatcher
           ToRender={StNewItemLarge}
+          action={AddUserstateAction}
           mediaQuery={`(min-width: ${breakpoints[BreakpointsEnum.xsmall4]}px)`}
         />
         {userstates.map(userstate => <div>{userstate.collectionName}</div>)}

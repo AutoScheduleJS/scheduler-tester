@@ -1,15 +1,16 @@
 import { IQuery, QueryKind } from '@autoschedule/queries-fn';
-import { globalUiReducer$ } from '@scheduler-tester/core-state/global.ui.reducer';
-import { UIState } from '@scheduler-tester/core-state/ui.state';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { IUserstateCollection } from '@autoschedule/userstate-manager/es/data-structures/userstate-collection.interface';
 import { configActionType } from '@scheduler-tester/core-state/config.reducer';
 import { ICoreState, StepOption } from '@scheduler-tester/core-state/core.state';
+import { TabId } from '@scheduler-tester/core-state/edit-tab.ui.reducer';
+import { globalUiReducer$ } from '@scheduler-tester/core-state/global.ui.reducer';
 import { onTestbenchQueriesActionType } from '@scheduler-tester/core-state/on-testbench-queries.reducer';
 import { onTestbenchUserstateActionType } from '@scheduler-tester/core-state/on-testbench-userstate.reducer';
 import { stepOptionActionType } from '@scheduler-tester/core-state/step-option.reducer';
 import { suiteActionType } from '@scheduler-tester/core-state/suites.reducer';
+import { UIState } from '@scheduler-tester/core-state/ui.state';
 import { userstateActionType } from '@scheduler-tester/core-state/userstates.reducer';
-import { IUserstateCollection } from '@autoschedule/userstate-manager/es/data-structures/userstate-collection.interface';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 export type actionType =
   | configActionType
@@ -51,10 +52,11 @@ const initialUserstates: ReadonlyArray<IUserstateCollection> = [
 
 const initialUIStateObj: UIState = {
   edit: {
+    userstate: false,
     query: false,
     isNew: false,
   },
-  editTab: 'qm',
+  editTab: TabId.Queries,
 };
 
 const initialStateObj: ICoreState = {

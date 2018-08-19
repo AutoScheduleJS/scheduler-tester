@@ -2,7 +2,12 @@ import { ICoreState, coreStateL } from '@scheduler-tester/core-state/core.state'
 import { actionType } from '@scheduler-tester/core-state/core.store';
 
 export class UpdateEditTab {
-  constructor(public id: string) {}
+  constructor(public id: TabId) {}
+}
+
+export enum TabId {
+  Queries,
+  Userstates,
 }
 
 export type editTabUiActionType = UpdateEditTab;

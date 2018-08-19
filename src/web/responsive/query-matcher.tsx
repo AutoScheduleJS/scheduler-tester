@@ -5,6 +5,7 @@ interface QueryMatcherProps {
   defaultMatch?: boolean;
   children?: (v: boolean) => React.ReactNode;
   ToRender?: React.ComponentType<any>;
+  [key: string]: any;
 }
 
 export class QueryMatcher extends React.Component<QueryMatcherProps> {

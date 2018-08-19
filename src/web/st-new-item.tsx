@@ -1,6 +1,6 @@
 import { Icon } from '@material-ui/core';
 import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
-import { AddQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
+import { AddItemAction } from '@scheduler-tester/core-state/global.ui.reducer';
 import { css } from 'emotion';
 import * as React from 'react';
 import { Fab } from './fab/fab';
@@ -18,7 +18,7 @@ interface INewQueryButtonProps {}
  */
 class NewQueryButtonImpl extends React.PureComponent<INewQueryButtonProps & { classes: any }> {
   handleNew = () => {
-    actionTrigger$.next(new AddQueryAction());
+    actionTrigger$.next(new AddItemAction());
   };
 
   render() {
