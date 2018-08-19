@@ -9,6 +9,7 @@ import { onTestbenchUserstateActionType } from '@scheduler-tester/core-state/on-
 import { stepOptionActionType } from '@scheduler-tester/core-state/step-option.reducer';
 import { suiteActionType } from '@scheduler-tester/core-state/suites.reducer';
 import { userstateActionType } from '@scheduler-tester/core-state/userstates.reducer';
+import { IUserstateCollection } from '@autoschedule/userstate-manager/es/data-structures/userstate-collection.interface';
 
 export type actionType =
   | configActionType
@@ -41,6 +42,13 @@ const initialSuite: ReadonlyArray<IQuery> = [
   },
 ];
 
+const initialUserstates: ReadonlyArray<IUserstateCollection> = [
+  {
+    collectionName: 'First Collection',
+    data: [],
+  },
+];
+
 const initialUIStateObj: UIState = {
   edit: {
     query: false,
@@ -55,7 +63,7 @@ const initialStateObj: ICoreState = {
   onTestbenchUserstate: 0,
   stepOption: StepOption.last,
   suites: [initialSuite],
-  userstates: [],
+  userstates: [initialUserstates],
   ui: initialUIStateObj,
 };
 

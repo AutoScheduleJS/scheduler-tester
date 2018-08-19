@@ -9,6 +9,7 @@ import { StEditQuery } from './st-edit-query';
 import { StEdittabs } from './st-edittabs';
 import { StQueriesManager } from './st-queries-manager';
 import { StQueriesNUserstate } from './st-queries-n-userstate';
+import { StUserstateManager } from './st-userstate-manager';
 
 const parentStyle = css`
   display: flex;
@@ -28,7 +29,7 @@ const managementArea = (isLarge: boolean) =>
   ) : (
     <StEdittabs className={childStyle}>
       <StQueriesManager />
-      <span>Toto</span>
+      <StUserstateManager />
     </StEdittabs>
   );
 

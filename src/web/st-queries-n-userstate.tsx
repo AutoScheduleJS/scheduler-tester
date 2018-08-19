@@ -3,6 +3,7 @@ import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { PaddingProps } from './responsive/padding';
 import { StQueriesManager } from './st-queries-manager';
+import { StUserstateManager } from './st-userstate-manager';
 import { Typography } from './typography/typography';
 import { merge, mergeProps } from './util/hoc.util';
 
@@ -20,6 +21,19 @@ interface StQueriesNUserstateProps extends React.HTMLAttributes<HTMLDivElement> 
   theme?: any;
 }
 
+const containerStyles = {
+  className: css`
+    display: flex;
+  `,
+};
+
+const childStyles = {
+  className: css`
+    flex-grow: 1;
+    flex-basis: 0;
+  `,
+};
+
 class StQueriesNUserstateImpl extends React.PureComponent<StQueriesNUserstateProps> {
   render() {
     const { theme: incomingTheme, ...defaultHostProps } = this.props;
@@ -27,10 +41,20 @@ class StQueriesNUserstateImpl extends React.PureComponent<StQueriesNUserstatePro
     const titleProps = mergeProps(PaddingProps(theme), themeToTitleStyles(theme));
     return (
       <div {...defaultHostProps}>
-        <Typography {...titleProps} scale={'Subtitle1'}>
-          Queries
-        </Typography>
-        <StQueriesManager />
+        <div {...containerStyles}>
+          <div {...childStyles}>
+            <Typography {...titleProps} scale={'Subtitle1'}>
+              Queries
+            </Typography>
+            <StQueriesManager />
+          </div>
+          <div {...childStyles}>
+            <Typography {...titleProps} scale={'Subtitle1'}>
+              User-state
+            </Typography>
+            <StUserstateManager />
+          </div>
+        </div>
       </div>
     );
   }
