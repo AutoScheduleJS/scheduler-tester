@@ -14,6 +14,7 @@ export interface FabClasses {
 interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
   classes?: FabClasses;
   theme?: any;
+  forwardRef?: any;
 }
 
 export enum FabSize {
@@ -113,7 +114,7 @@ const buttonTabCss = css`
   text-align: center;
 `;
 
-class FabImpl extends React.PureComponent<FabProps> {
+export class FabImpl extends React.PureComponent<FabProps> {
   state = {
     elevationState: {
       elevation: 6,
@@ -125,6 +126,7 @@ class FabImpl extends React.PureComponent<FabProps> {
       size = FabSize.Default,
       icon,
       onClick = () => {},
+      forwardRef,
       theme: incomingTheme,
       classes = defaultClasses,
       ...defaultHostProps
@@ -143,7 +145,7 @@ class FabImpl extends React.PureComponent<FabProps> {
       defaultHostProps
     );
     return (
-      <div {...props}>
+      <div {...props} ref={forwardRef}>
         {icon}
         {label && (
           <Typography
@@ -160,4 +162,8 @@ class FabImpl extends React.PureComponent<FabProps> {
   }
 }
 
-export const Fab = withTheme(FabImpl);
+const FabWithTheme = withTheme(FabImpl);
+
+export const Fab = React.forwardRef((props: FabProps, ref) => (
+  <FabWithTheme {...props} forwardRef={ref} />
+));

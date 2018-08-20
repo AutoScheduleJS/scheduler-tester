@@ -1,21 +1,21 @@
+import { IQuery, sanitize } from '@autoschedule/queries-fn';
 import { configReducer } from '@scheduler-tester/core-state/config.reducer';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { actionType } from '@scheduler-tester/core-state/core.store';
 import { editTabUiReducer$, TabId } from '@scheduler-tester/core-state/edit-tab.ui.reducer';
-import { editUiReducer$ } from '@scheduler-tester/core-state/edit.ui.reducer';
+import { editUiL, editUiReducer$ } from '@scheduler-tester/core-state/edit.ui.reducer';
 import { onTestbenchQueriesReducer$ } from '@scheduler-tester/core-state/on-testbench-queries.reducer';
 import { onTestbenchUserstateReducer$ } from '@scheduler-tester/core-state/on-testbench-userstate.reducer';
 import { stepOptionReducer$ } from '@scheduler-tester/core-state/step-option.reducer';
 import { suitesReducer$, suiteToNewQuery } from '@scheduler-tester/core-state/suites.reducer';
 import { UIState } from '@scheduler-tester/core-state/ui.state';
+import { IUserstateCollection } from '@scheduler-tester/core-state/userstate-collection.interface';
 import { userstateReducer$ } from '@scheduler-tester/core-state/userstates.reducer';
 import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
-import { IQuery, sanitize } from '@autoschedule/queries-fn';
-import { IUserstateCollection } from '@scheduler-tester/core-state/userstate-collection.interface';
 
 export class AddItemAction {
-  constructor() {}
+  constructor(public fromInfo) {}
 }
 
 export class AddQueryAction {
@@ -86,7 +86,7 @@ export const globalUiReducer$ = (
 
 const globalReducer = (state: ICoreState, action: actionType): ICoreState | false => {
   if (action instanceof AddItemAction) {
-    return handleNewItem(state);
+    return handleNewItem(state, action);
   }
   if (action instanceof AddQueryAction) {
     return handleNewQuery(state);
@@ -119,7 +119,7 @@ const handleUpdateQuery = (state: ICoreState, action: UpdateQueryAction): ICoreS
   };
   const ui: UIState = {
     ...state.ui,
-    edit: { userstate: false, query: false, isNew: false },
+    edit: { userstate: false, query: false, isNew: false, fromInfo: null },
   };
   return {
     ...suiteState,
@@ -143,7 +143,7 @@ const handleDeleteQuery = (state: ICoreState, action: DeleteQueryAction): ICoreS
   };
   const ui: UIState = {
     ...state.ui,
-    edit: { userstate: false, query: false, isNew: false },
+    edit: { userstate: false, query: false, isNew: false, fromInfo: null },
   };
   return {
     ...suiteState,
@@ -177,12 +177,12 @@ const findAndUpdateCollections = (
   });
 };
 
-const handleNewItem = (state: ICoreState): ICoreState => {
+const handleNewItem = (state: ICoreState, action: AddItemAction): ICoreState => {
   if (state.ui.editTab === TabId.Queries) {
-    return handleNewQuery(state);
+    return editUiL.fromInfo.set(action.fromInfo)(handleNewQuery(state));
   }
   if (state.ui.editTab === TabId.Userstates) {
-    return handleNewUserstate(state);
+    return editUiL.fromInfo.set(action.fromInfo)(handleNewUserstate(state));
   }
   return state;
 };
@@ -202,6 +202,7 @@ const handleNewQuery = (state: ICoreState): ICoreState => {
       userstate: false,
       query: newQuery,
       isNew: true,
+      fromInfo: null
     },
   };
   return {
@@ -221,7 +222,7 @@ const handleNewUserstate = (state: ICoreState): ICoreState => {
   };
   const ui: UIState = {
     editTab: TabId.Userstates,
-    edit: { userstate: newUserstate, query: false, isNew: true },
+    edit: { userstate: newUserstate, query: false, isNew: true, fromInfo: null },
   };
   return {
     ...suiteState,
@@ -239,7 +240,7 @@ const handleUpdateUserstate = (state: ICoreState, action: UpdateUserstateAction)
   };
   const ui: UIState = {
     ...state.ui,
-    edit: { userstate: false, query: false, isNew: false },
+    edit: { userstate: false, query: false, isNew: false, fromInfo: null },
   };
   return {
     ...suiteState,
@@ -256,7 +257,7 @@ const handleDeleteUserstate = (state: ICoreState, action: DeleteUserstateAction)
   };
   const ui: UIState = {
     ...state.ui,
-    edit: { userstate: false, query: false, isNew: false },
+    edit: { userstate: false, query: false, isNew: false, fromInfo: null },
   };
   return {
     ...suiteState,
