@@ -33,6 +33,11 @@ interface IQueryEditFromState {
 
 interface IqueryEditProps {}
 
+/**
+ * When done, should morph into the card.
+ * How to do that? Elements only morph when mounting, getting position info from unmounting element
+ * -> content is discarded immediately, how to position element absolutely? impossible.
+ */
 class QueryEditCmp extends React.PureComponent<
   IqueryEditProps & IQueryEditFromState & { classes: any; fullScreen: boolean }
 > {
