@@ -39,11 +39,16 @@ class StQueriesManagerImpl extends React.PureComponent<
     const hostProps = mergeProps(PaddingProps(theme), hostStyles, defaultHostProps);
     return (
       <LayoutMasonry itemWidth={'190px'} {...hostProps}>
-        <QueryMatcher
+        {/* <QueryMatcher
           ToRender={StNewItemLarge}
           action={AddQueryAction}
           mediaQuery={`(min-width: ${breakpoints[BreakpointsEnum.xsmall4]}px)`}
-        />
+        /> */}
+      {
+        /**
+         * Use another element than QueryCard to handle morph
+         */
+      }
         {queries.map(query => <QueryCard key={query.id} {...{ query }} />)}
       </LayoutMasonry>
     );

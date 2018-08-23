@@ -44,11 +44,11 @@ class RootImpl extends React.PureComponent<{}> {
           </QueryMatcher>
           <StDemoViewer />
         </div>
-        <QueryMatcher
+        {/* <QueryMatcher
           ToRender={StNewQueryButton}
           mediaQuery={`(max-width: ${breakpoints[BreakpointsEnum.xsmall4]}px)`}
         />
-        <StEditQuery />
+        <StEditQuery /> */}
       </React.Fragment>
     );
   }

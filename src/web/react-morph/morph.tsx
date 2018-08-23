@@ -1,7 +1,7 @@
 import { ColdSubscription } from 'popmotion/lib/action/types';
 import keyframes from 'popmotion/lib/animations/keyframes';
+import { KeyframeProps } from 'popmotion/lib/animations/keyframes/types';
 import spring from 'popmotion/lib/animations/spring';
-import tween from 'popmotion/lib/animations/tween';
 import value, { ValueReaction } from 'popmotion/lib/reactions/value';
 import * as React from 'react';
 import css from 'stylefire/lib/css';
@@ -47,17 +47,21 @@ const interpolateObject = (from = {}, to = {}) => t => ({
   ),
 });
 
-const fadeOutTween = ({ element, options = {} }) =>
-  tween({
-    from: 1,
-    to: 0,
-    ease: p => p,
+const fadeOutTween = ({ element, options = {} }) => {
+  const styler = css(element);
+  return keyframes({
+    values: [{ opacity: 1 }, { opacity: 0 }],
+    easings: [p => p],
+    times: [0, 1],
     ...options,
-  }).start(v => {
+  }).start(style => {
     const node = element;
-    node.style.opacity = v;
-    if (v === 1) node.style.pointerEvents = 'all';
+    styler.set(style);
+    if (style.opacity === 1) {
+      node.style.pointerEvents = 'all';
+    }
   });
+};
 
 const fadeInTween = ({ element, options = {} }) => {
   const styler = css(element);
@@ -80,8 +84,8 @@ const fadeInTween = ({ element, options = {} }) => {
 const hideTween = ({ element }) => ({
   seek: pipe(Math.round, t => {
     const node = element;
-
     node.style.visibility = t > 0 ? 'hidden' : 'visible';
+    console.log('node', node, 't', t, 'style', node.style.visibility);
   }),
 });
 
@@ -106,23 +110,24 @@ interface ISpring {
   damping: number;
 }
 
-type keyOptFunc = (key: string, opts: MorphOptions) => { ref: (node: HTMLDivElement) => void };
-type optFunc = (opts: MorphOptions) => { ref: (node: HTMLDivElement) => void };
+type keyOptFunc = (key: string, opts?: any) => { ref: (node: HTMLDivElement) => void };
+type optFunc = (opts?: Partial<KeyframeProps>) => { ref: (node: HTMLDivElement) => void };
+type noParamFunc = () => { ref: (node: HTMLDivElement) => void };
 
-type childFunc = (
-  data: {
-    from: keyOptFunc;
-    to: keyOptFunc;
-    fadeIn: optFunc;
-    fadeOut: optFunc;
-    seek: (t: number) => void;
-    go: (t: number, opts?: MorphOptions) => void;
-    progress: ValueReaction;
-    state: 'from' | 'to';
-    hide: optFunc;
-    init: (t: number) => void;
-  }
-) => React.ReactNode;
+export interface MorphParameters {
+  from: keyOptFunc;
+  to: keyOptFunc;
+  fadeIn: optFunc;
+  fadeOut: optFunc;
+  seek: (t: number) => void;
+  go: (t: number, opts?: MorphOptions) => void;
+  progress: ValueReaction;
+  state: 'from' | 'to';
+  hide: noParamFunc;
+  init: (t: number) => void;
+}
+
+type childFunc = (data: MorphParameters) => React.ReactNode;
 
 interface MorphProps {
   portalElement?: any;
@@ -134,11 +139,21 @@ interface MorphOptions {
   zIndex?: number;
   getMargins?: boolean;
   easing?: (a: any) => any;
+  limit?: number;
 }
 
 interface ElemWithOpt {
   element: HTMLDivElement;
-  options: MorphOptions;
+  options?: MorphOptions;
+}
+
+interface ElemWithKeyframeOpt {
+  element: HTMLDivElement;
+  options?: Partial<KeyframeProps>;
+}
+
+interface Elem {
+  element: HTMLDivElement;
 }
 
 export class Morph extends React.Component<MorphProps> {
@@ -173,22 +188,23 @@ export class Morph extends React.Component<MorphProps> {
 
   elementsCloned: HTMLDivElement[] = [];
 
-  hideElements: ElemWithOpt[] = [];
-  fadeInElements: ElemWithOpt[] = [];
-  fadeOutElements: ElemWithOpt[] = [];
+  hideElements: Elem[] = [];
+  fadeInElements: ElemWithKeyframeOpt[] = [];
+  fadeOutElements: ElemWithKeyframeOpt[] = [];
 
   isPlaying = false;
   timeline: ColdSubscription[] = [];
 
-  hide = (options: MorphOptions) => ({
+  hide = () => ({
     ref: (node: HTMLDivElement) => {
       const element = node;
-      this.hideElements.push({ element, options });
+      this.hideElements.push({ element });
     },
   });
 
   seek = (t: number) => {
     if (t === 1 || t === 0) {
+      this.state = { state: t ? 'to' : 'from' };
       this.setState({ state: t ? 'to' : 'from' });
     }
 
@@ -197,7 +213,7 @@ export class Morph extends React.Component<MorphProps> {
 
   progress = value(0, this.seek);
 
-  fadeIn = (options: MorphOptions) => ({
+  fadeIn = (options?: Partial<KeyframeProps>) => ({
     ref: (node: HTMLDivElement) => {
       const element = node;
       if (!element) return;
@@ -209,7 +225,7 @@ export class Morph extends React.Component<MorphProps> {
     },
   });
 
-  fadeOut = (options: MorphOptions) => ({
+  fadeOut = (options?: Partial<KeyframeProps>) => ({
     ref: (node: HTMLDivElement) => {
       const element = node;
       if (!element) return;
@@ -219,7 +235,7 @@ export class Morph extends React.Component<MorphProps> {
     },
   });
 
-  from = (key: string, options: MorphOptions) => ({
+  from = (key: string, options?: any) => ({
     ref: (node: HTMLDivElement) => {
       const element = node;
       if (!element || this.elementFrom[key]) return;
@@ -229,11 +245,10 @@ export class Morph extends React.Component<MorphProps> {
     },
   });
 
-  to = (key: string, options: MorphOptions) => ({
+  to = (key: string, options?: any) => ({
     ref: (node: HTMLDivElement) => {
       const element = node;
       if (!element || this.elementTo[key]) return;
-
       element.style.visibility = 'hidden';
       element.style.opacity = '0';
       (element as any).style.willChange = 'transform';
@@ -262,9 +277,15 @@ export class Morph extends React.Component<MorphProps> {
   morph = (key: string) => {
     const {
       element: original,
-      options: { zIndex = 1, getMargins = true, easing: optEasing = x => x, ...options } = {},
+      options: {
+        zIndex = 1,
+        getMargins = true,
+        easing: optEasing = x => x,
+        limit: startLimit = 0,
+        ...options
+      } = {},
     } = this.elementFrom[key];
-    const { element: target } = this.elementTo[key];
+    const { element: target, options: { limit: endLimit = 100 } = {} } = this.elementTo[key];
 
     const originalRect = getBox(original, { getMargins });
     const targetRect = getBox(target, { getMargins });
@@ -308,15 +329,19 @@ export class Morph extends React.Component<MorphProps> {
       scaleY: 1,
     });
 
+    const keyframeStart = startLimit + 0.02;
+    const keyframeMiddle = Math.ceil((endLimit - startLimit) * 0.3);
+
     this.timeline.push(
       // In and out track.
       {
         seek: keyframe({
-          0.01: t => {
+          0.01: () => {},
+          [keyframeStart]: t => {
             hide(originalStyler)(1 - t);
           },
-          30: () => {},
-          100: t => {
+          [keyframeMiddle]: () => {},
+          [endLimit]: t => {
             hide(cloneStyler)(1 - t);
           },
         }),
@@ -324,7 +349,8 @@ export class Morph extends React.Component<MorphProps> {
       // Full track.
       {
         seek: keyframe({
-          100: t => {
+          [keyframeStart]: () => {},
+          [endLimit]: t => {
             pipe(optEasing, cloneTranslateIn, cloneStyler.set)(t);
             pipe(optEasing, targetTranslateFLIP, targetStyler.set)(t);
           },
@@ -333,10 +359,11 @@ export class Morph extends React.Component<MorphProps> {
       // Half way track.
       {
         seek: keyframe({
-          0.01: t => {
+          0.01: () => {},
+          [keyframeStart]: t => {
             hide(cloneStyler)(t);
           },
-          30: t => hide(targetStyler)(t),
+          [keyframeMiddle]: t => hide(targetStyler)(t),
         }),
       }
     );
