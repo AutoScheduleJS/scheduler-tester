@@ -19,6 +19,9 @@ const emotionTheme = {
     gutter: '24px',
     margin: '24px',
   },
+  dialog: {
+    fullscreen: false,
+  },
   palette: {
     primary: {
       main: '#3F51B5',
@@ -40,6 +43,10 @@ const emotionTheme = {
   },
 };
 
+/**
+ *
+ * TODO: improve this gibelish
+ */
 const breakKeyToNewTheme = (theme: any, key: string): any => {
   const widthKey = +key;
   if (Number.isNaN(widthKey)) {
@@ -49,9 +56,22 @@ const breakKeyToNewTheme = (theme: any, key: string): any => {
     if (theme.layout.name === 'small') {
       return;
     }
-    return { layout: { name: 'small', gutter: '16px', margin: '16px' } };
-  } else if (theme.layout.name !== 'large') {
-    return { layout: { name: 'large', gutter: '24px', margin: '24px' } };
+    return {
+      layout: { name: 'small', gutter: '16px', margin: '16px' },
+      dialog: { fullscreen: true },
+    };
+  }
+  if (widthKey < BreakpointsEnum.medium1) {
+    if (theme.layout.name === 'small4') {
+      return;
+    }
+    return { layout: { name: 'small4' }, dialog: { fullscreen: false } };
+  }
+  if (theme.layout.name !== 'large') {
+    return {
+      layout: { name: 'large', gutter: '24px', margin: '24px' },
+      dialog: { fullscreen: true },
+    };
   }
 };
 

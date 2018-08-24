@@ -322,6 +322,10 @@ export class Morph extends React.Component<MorphProps> {
       diffStyle
     );
 
+    /**
+     * Using a curve function: use different easing for X & Y, separate interpolation for X & Y
+     */
+
     const diffTargetStyles = diffRect(originalRect, targetRect);
     const targetTranslateFLIP = interpolateObject(diffTargetStyles, {
       translateX: 0,
