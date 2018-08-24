@@ -1,18 +1,15 @@
 import { IQuery } from '@autoschedule/queries-fn';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
-import { AddQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { LayoutMasonry } from './layout-masonry/layout-masonry';
 import QueryCard from './query-card';
-import { breakpoints, BreakpointsEnum } from './responsive/breakpoints';
 import { PaddingProps } from './responsive/padding';
-import { QueryMatcher } from './responsive/query-matcher';
-import { StNewItemLarge } from './st-new-item-large';
 import { connect } from './util/connect';
 import { mergeProps } from './util/hoc.util';
+import { StEditableItem } from './st-editable-item';
 
 interface IQueriesManagerFromState {
   queries: ReadonlyArray<IQuery>;
@@ -39,16 +36,15 @@ class StQueriesManagerImpl extends React.PureComponent<
     const hostProps = mergeProps(PaddingProps(theme), hostStyles, defaultHostProps);
     return (
       <LayoutMasonry itemWidth={'190px'} {...hostProps}>
+        <StEditableItem />
         {/* <QueryMatcher
           ToRender={StNewItemLarge}
           action={AddQueryAction}
           mediaQuery={`(min-width: ${breakpoints[BreakpointsEnum.xsmall4]}px)`}
         /> */}
-      {
-        /**
+        {/**
          * Use another element than QueryCard to handle morph
-         */
-      }
+         */}
         {queries.map(query => <QueryCard key={query.id} {...{ query }} />)}
       </LayoutMasonry>
     );
