@@ -1,11 +1,9 @@
 import { css } from 'emotion';
 import * as React from 'react';
-import { StNewQueryButton } from './st-new-item';
 import { breakpoints, BreakpointsEnum } from './responsive/breakpoints';
 import { QueryMatcher } from './responsive/query-matcher';
 import { StAppbar } from './st-appbar';
 import { StDemoViewer } from './st-demo-viewer';
-import { StEditQuery } from './st-edit-query';
 import { StEdittabs } from './st-edittabs';
 import { StQueriesManager } from './st-queries-manager';
 import { StQueriesNUserstate } from './st-queries-n-userstate';

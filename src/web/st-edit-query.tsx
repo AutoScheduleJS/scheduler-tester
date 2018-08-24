@@ -1,37 +1,42 @@
+import { IQuery } from '@autoschedule/queries-fn';
 import {
   Button,
   createStyles,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   TextField,
   withStyles,
 } from '@material-ui/core';
-import { ICoreState } from '@scheduler-tester/core-state/core.state';
-import { actionTrigger$, coreState$ } from '@scheduler-tester/core-state/core.store';
+import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import { CloseEditAction } from '@scheduler-tester/core-state/edit.ui.reducer';
 import {
   DeleteQueryAction,
   UpdateQueryAction,
 } from '@scheduler-tester/core-state/global.ui.reducer';
+import { css } from 'emotion';
 import * as React from 'react';
-import { IQuery } from '@autoschedule/queries-fn';
+import { MorphParameters } from './react-morph/morph';
 import { StEditPosition } from './st-edit-position';
-import { connect } from './util/connect';
 import withMobileDialog from './util/withMobileDialog';
 
 const styles = _ =>
   createStyles({
     root: {},
   });
-
-interface IQueryEditFromState {
+interface IqueryEditProps {
   query: IQuery;
   isNew: boolean;
+  morph: MorphParameters;
 }
 
-interface IqueryEditProps {}
+const hostClass = {
+  className: css`
+    position: absolute;
+    top: 45%;
+    left: 40%;
+  `,
+};
 
 /**
  * When done, should morph into the card.
@@ -39,7 +44,7 @@ interface IqueryEditProps {}
  * -> content is discarded immediately, how to position element absolutely? impossible.
  */
 class QueryEditCmp extends React.PureComponent<
-  IqueryEditProps & IQueryEditFromState & { classes: any; fullScreen: boolean }
+  IqueryEditProps & { classes: any; fullScreen: boolean }
 > {
   state = {
     ...this.props.query,
@@ -88,15 +93,10 @@ class QueryEditCmp extends React.PureComponent<
   };
 
   render() {
-    const { fullScreen, query } = this.props;
+    const { morph, fullScreen, query } = this.props;
     const saveLabel = this.props.isNew ? 'create' : 'update';
     return (
-      <Dialog
-        fullScreen={fullScreen}
-        open={!!query}
-        onClose={() => this.handleClose(false)}
-        aria-labelledby="query-edit-dialog-title"
-      >
+      <div {...hostClass} {...morph.to('card')}>
         <DialogTitle id="query-edit-dialog-title">
           Edit {query.name}#{query.id}
         </DialogTitle>
@@ -117,16 +117,9 @@ class QueryEditCmp extends React.PureComponent<
             {saveLabel}
           </Button>
         </DialogActions>
-      </Dialog>
+      </div>
     );
   }
 }
 
-const selector = ({ ui }: ICoreState): IQueryEditFromState => ({
-  query: ui.edit.query as IQuery,
-  isNew: ui.edit.isNew,
-});
-
-export const StEditQuery = withMobileDialog<{}>()(
-  connect(selector, coreState$)(withStyles(styles)(QueryEditCmp))
-);
+export const StEditQuery = withMobileDialog<IqueryEditProps>()(withStyles(styles)(QueryEditCmp));

@@ -9,12 +9,16 @@ import { connect } from './util/connect';
 import { mergeProps } from './util/hoc.util';
 
 interface IEditableItemFromState {
-  queries: ReadonlyArray<IQuery>;
+  itemToEdit: IQuery;
+  isNew: boolean;
 }
 
 interface IEditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
   item?: any;
+  action: any;
+  ItemCardCmp: any;
+  ItemEditCmp: any;
 }
 
 const hostStyles = {
@@ -25,12 +29,26 @@ const hostStyles = {
 
 class StEditableItemImpl extends React.PureComponent<IEditableItemFromState & IEditableItemProps> {
   handleMorph = (data: MorphParameters) => {
-    const { queries, theme, ...defaultHostProps } = this.props;
-    if (!queries) {
-      return false;
-    }
+    const {
+      action,
+      item,
+      isNew,
+      itemToEdit,
+      ItemCardCmp,
+      ItemEditCmp,
+      theme,
+      ...defaultHostProps
+    } = this.props;
     const hostProps = mergeProps(defaultHostProps);
-    return <div {...hostProps}>testest</div>;
+    if (itemToEdit === item || (!item && isNew)) {
+      data.go(1);
+    }
+    return (
+      <div {...hostProps}>
+        <ItemCardCmp morph={data} {...item} action={action} />
+        <ItemEditCmp morph={data} query={itemToEdit} isNew={isNew} />
+      </div>
+    );
   };
 
   render() {
@@ -38,10 +56,12 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemFromState & IE
   }
 }
 
-const selector = ({ onTestbenchQueries, suites }: ICoreState): IEditableItemFromState => ({
-  queries: suites[onTestbenchQueries],
+const selector = ({ ui }: ICoreState): IEditableItemFromState => ({
+  itemToEdit: ui.edit.query as IQuery,
+  isNew: ui.edit.isNew,
 });
 
-export const StEditableItem = connect(selector, coreState$)<{}, IEditableItemFromState>(
-  withTheme(StEditableItemImpl)
-);
+export const StEditableItem = connect(selector, coreState$)<
+  IEditableItemProps,
+  IEditableItemFromState
+>(withTheme(StEditableItemImpl));

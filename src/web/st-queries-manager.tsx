@@ -1,15 +1,18 @@
 import { IQuery } from '@autoschedule/queries-fn';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
+import { AddQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { LayoutMasonry } from './layout-masonry/layout-masonry';
 import QueryCard from './query-card';
 import { PaddingProps } from './responsive/padding';
+import { StEditQuery } from './st-edit-query';
+import { StEditableItem } from './st-editable-item';
+import { StNewItemLarge } from './st-new-item-large';
 import { connect } from './util/connect';
 import { mergeProps } from './util/hoc.util';
-import { StEditableItem } from './st-editable-item';
 
 interface IQueriesManagerFromState {
   queries: ReadonlyArray<IQuery>;
@@ -36,7 +39,11 @@ class StQueriesManagerImpl extends React.PureComponent<
     const hostProps = mergeProps(PaddingProps(theme), hostStyles, defaultHostProps);
     return (
       <LayoutMasonry itemWidth={'190px'} {...hostProps}>
-        <StEditableItem />
+        <StEditableItem
+          action={AddQueryAction}
+          ItemCardCmp={StNewItemLarge}
+          ItemEditCmp={StEditQuery}
+        />
         {/* <QueryMatcher
           ToRender={StNewItemLarge}
           action={AddQueryAction}

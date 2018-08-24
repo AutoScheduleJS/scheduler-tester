@@ -1,6 +1,7 @@
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
+import { Ref } from 'react';
 import { ElevationProps } from '../elevation/elevation';
 import { TypographyProps } from '../typography/typography';
 import { merge, mergeProps } from '../util/hoc.util';
@@ -17,6 +18,7 @@ export enum ButtonEmphaze {
 
 export interface ButtonProps extends CustomableProps {
   emphaze: ButtonEmphaze;
+  forwardedRef?: Ref<HTMLDivElement>;
   label?: string;
   icon?: React.Component;
 }
@@ -90,7 +92,7 @@ const ButtonRootStyles = (theme: ButtonTheme, emphaze: number) => {
 
 class ButtonImpl extends React.PureComponent<ButtonProps> {
   render() {
-    const { label, emphaze, theme: incomingTheme, ...defaultHostProps } = this.props;
+    const { label, emphaze, forwardedRef, theme: incomingTheme, ...defaultHostProps } = this.props;
     const theme = defaultTheme(incomingTheme);
     const elevation = emphaze === ButtonEmphaze.High ? theme.button.elevation : 0;
     const hostProps = mergeProps(
@@ -99,8 +101,19 @@ class ButtonImpl extends React.PureComponent<ButtonProps> {
       TypographyProps('Button'),
       defaultHostProps
     );
-    return <div {...hostProps}>{label}</div>;
+    return (
+      <div ref={forwardedRef} {...hostProps}>
+        {label}
+      </div>
+    );
   }
 }
 
-export const Button = withTheme(ButtonImpl);
+/**
+ * forwardRef must be the last to export.
+ */
+const ButtonImplWithTheme = withTheme(ButtonImpl);
+
+export const Button = React.forwardRef<HTMLDivElement, ButtonProps>((props, ref) => (
+  <ButtonImplWithTheme {...props} forwardedRef={ref} />
+));

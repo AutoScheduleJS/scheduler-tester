@@ -2,10 +2,12 @@ import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Button, ButtonEmphaze } from './button/button';
+import { MorphParameters } from './react-morph/morph';
 
 interface CustomableProps {
   theme?: any;
-  action: () => void;
+  action: any;
+  morph: MorphParameters;
 }
 
 interface StNewItemLargeProps extends CustomableProps {}
@@ -17,8 +19,14 @@ class StNewItemLargeImpl extends React.PureComponent<StNewItemLargeProps> {
   };
 
   render() {
+    const { morph } = this.props;
     return (
-      <Button emphaze={ButtonEmphaze.Medium} label={'+ new'} onClick={() => this.handleNew()} />
+      <Button
+        {...morph.from('card')}
+        emphaze={ButtonEmphaze.Medium}
+        label={'+ new'}
+        onClick={() => this.handleNew()}
+      />
     );
   }
 }

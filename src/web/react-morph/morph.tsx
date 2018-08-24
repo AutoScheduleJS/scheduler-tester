@@ -4,6 +4,7 @@ import { KeyframeProps } from 'popmotion/lib/animations/keyframes/types';
 import spring from 'popmotion/lib/animations/spring';
 import value, { ValueReaction } from 'popmotion/lib/reactions/value';
 import * as React from 'react';
+import { Ref } from 'react';
 import css from 'stylefire/lib/css';
 import { pipe } from '../util/hoc.util';
 import { keyframe } from './keyframe';
@@ -110,9 +111,9 @@ interface ISpring {
   damping: number;
 }
 
-type keyOptFunc = (key: string, opts?: any) => { ref: (node: HTMLDivElement) => void };
-type optFunc = (opts?: Partial<KeyframeProps>) => { ref: (node: HTMLDivElement) => void };
-type noParamFunc = () => { ref: (node: HTMLDivElement) => void };
+type keyOptFunc = (key: string, opts?: any) => { ref: Ref<any> };
+type optFunc = (opts?: Partial<KeyframeProps>) => { ref: Ref<any> };
+type noParamFunc = () => { ref: Ref<any> };
 
 export interface MorphParameters {
   from: keyOptFunc;
