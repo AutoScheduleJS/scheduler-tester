@@ -1,8 +1,6 @@
 import * as Q from '@autoschedule/queries-fn';
-import { Observable } from 'rxjs/Observable';
-import { scan } from 'rxjs/operators';
-import { suitesType } from './core.state';
-import { actionType } from './core.store';
+import { coreStateL, ICoreState } from '@scheduler-tester/core-state/core.state';
+import { actionType } from '@scheduler-tester/core-state/core.store';
 
 /* tslint:disable:no-empty max-classes-per-file */
 
@@ -39,47 +37,42 @@ export type suiteActionType =
   | SuitesQueryUpdateAction
   | SuitesQueryDeleteAction;
 
-export const suitesReducer$ = (
-  init: suitesType,
-  action$: Observable<actionType>
-): Observable<suitesType> => {
-  return action$.pipe(
-    scan((state, action: any) => {
-      if (action instanceof SuitesLoadAction) {
-        return handleLoad(state, action);
-      }
-      if (action instanceof SuitesQueryUpdateAction) {
-        return handleQueryUpdate(state, action);
-      }
-      if (action instanceof SuitesNewAction) {
-        return handleNew(state);
-      }
-      if (action instanceof SuitesQueryNewAction) {
-        return handleQueryNew(state, action);
-      }
-      if (action instanceof SuitesQueryDeleteAction) {
-        return handleQueryDelete(state, action);
-      }
-      return state;
-    }, init)
-  );
+export const suitesReducer$ = (state: ICoreState, action: actionType): ICoreState | false => {
+  if (action instanceof SuitesLoadAction) {
+    return handleLoad(state, action);
+  }
+  if (action instanceof SuitesQueryUpdateAction) {
+    return handleQueryUpdate(state, action);
+  }
+  if (action instanceof SuitesNewAction) {
+    return handleNew(state);
+  }
+  if (action instanceof SuitesQueryNewAction) {
+    return handleQueryNew(state, action);
+  }
+  if (action instanceof SuitesQueryDeleteAction) {
+    return handleQueryDelete(state, action);
+  }
+  return false;
 };
 
-const handleLoad = (state: suitesType, action: SuitesLoadAction): suitesType => {
-  return [...state, ...action.queries];
+const suitesL = coreStateL.suites;
+
+const handleLoad = (state: ICoreState, action: SuitesLoadAction): ICoreState => {
+  return suitesL.set(suites => [...suites, ...action.queries])(state);
 };
 
-const handleNew = (state: suitesType): suitesType => {
-  return [...state, []];
+const handleNew = (state: ICoreState): ICoreState => {
+  return suitesL.set(suites => [...suites, []])(state);
 };
 
 const mapSpecificSuite = (
-  suites: ReadonlyArray<ReadonlyArray<Q.IQuery>>,
   target: ReadonlyArray<Q.IQuery>,
   fn: (s: ReadonlyArray<Q.IQuery>) => ReadonlyArray<Q.IQuery>
-) => suites.map(suite => (suite !== target ? suite : fn(suite)));
+) => (suites: ReadonlyArray<ReadonlyArray<Q.IQuery>>) =>
+  suites.map(suite => (suite !== target ? suite : fn(suite)));
 
-const suiteToNewQuery = (suite: ReadonlyArray<Q.IQuery>): Q.IQuery => {
+export const suiteToNewQuery = (suite: ReadonlyArray<Q.IQuery>): Q.IQuery => {
   const lastQuery = suite[suite.length - 1];
   return Q.queryFactory(
     Q.id((lastQuery ? lastQuery.id : 0) + 1),
@@ -87,16 +80,22 @@ const suiteToNewQuery = (suite: ReadonlyArray<Q.IQuery>): Q.IQuery => {
   );
 };
 
-const handleQueryNew = (state: suitesType, action: SuitesQueryNewAction): suitesType => {
-  return mapSpecificSuite(state, action.suite, suite => [...suite, suiteToNewQuery(suite)]);
-};
-
-const handleQueryDelete = (state: suitesType, action: SuitesQueryDeleteAction): suitesType => {
-  return mapSpecificSuite(state, action.suite, suite => suite.filter(q => q !== action.oldQuery));
-};
-
-const handleQueryUpdate = (state: suitesType, action: SuitesQueryUpdateAction): suitesType => {
-  return mapSpecificSuite(state, action.suite, suite =>
-    suite.map(query => (query !== action.oldQuery ? query : Q.sanitize(action.newQuery)))
+const handleQueryNew = (state: ICoreState, action: SuitesQueryNewAction): ICoreState => {
+  return suitesL.set(mapSpecificSuite(action.suite, suite => [...suite, suiteToNewQuery(suite)]))(
+    state
   );
+};
+
+const handleQueryDelete = (state: ICoreState, action: SuitesQueryDeleteAction): ICoreState => {
+  return suitesL.set(
+    mapSpecificSuite(action.suite, suite => suite.filter(q => q !== action.oldQuery))
+  )(state);
+};
+
+const handleQueryUpdate = (state: ICoreState, action: SuitesQueryUpdateAction): ICoreState => {
+  return suitesL.set(
+    mapSpecificSuite(action.suite, suite =>
+      suite.map(query => (query !== action.oldQuery ? query : Q.sanitize(action.newQuery)))
+    )
+  )(state);
 };

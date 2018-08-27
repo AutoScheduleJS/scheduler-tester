@@ -1,30 +1,24 @@
-import { Observable } from 'rxjs/Observable';
-
-import { scan } from 'rxjs/operators';
-
-import { actionType } from './core.store';
-import { IUserstateCollection } from './userstate-collection.interface';
+import { coreStateL, ICoreState } from '@scheduler-tester/core-state/core.state';
+import { actionType } from '@scheduler-tester/core-state/core.store';
 
 export class OnTestbenchUserstateUpdateAction {
-  constructor(public newSuite: ReadonlyArray<IUserstateCollection>) {}
+  constructor(public newSuiteIndex: number) {}
 }
 
 export type onTestbenchUserstateActionType = OnTestbenchUserstateUpdateAction;
 
 export const onTestbenchUserstateReducer$ = (
-  init: number,
-  action$: Observable<actionType>
-): Observable<number> => {
-  return action$.pipe(
-    scan((state, action: any) => {
-      if (action instanceof OnTestbenchUserstateUpdateAction) {
-        return handleUpdate(action);
-      }
-      return state;
-    }, init)
-  );
+  state: ICoreState,
+  action: actionType
+): ICoreState | false => {
+  if (action instanceof OnTestbenchUserstateUpdateAction) {
+    return handleUpdate(state, action);
+  }
+  return false;
 };
 
-const handleUpdate = (action: OnTestbenchUserstateUpdateAction): ReadonlyArray<IUserstateCollection> => {
-  return action.newSuite || [];
+const handleUpdate = (state: ICoreState, action: OnTestbenchUserstateUpdateAction): ICoreState => {
+  return coreStateL.onTestbenchUserstate.set(
+    action.newSuiteIndex != null ? action.newSuiteIndex : 0
+  )(state);
 };

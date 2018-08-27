@@ -1,6 +1,8 @@
 import { IQuery } from '@autoschedule/queries-fn';
-import { IConfig } from './config.interface';
-import { IUserstateCollection } from './userstate-collection.interface';
+import { lens } from 'lens.ts';
+import { IConfig } from '@scheduler-tester/core-state/config.interface';
+import { IUserstateCollection } from '@scheduler-tester/core-state/userstate-collection.interface';
+import { UIState } from '@scheduler-tester/core-state/ui.state';
 
 export enum StepOption {
   every,
@@ -17,4 +19,7 @@ export interface ICoreState {
   readonly stepOption: StepOption;
   readonly onTestbenchUserstate: number;
   readonly onTestbenchQueries: number;
+  readonly ui: UIState;
 }
+
+export const coreStateL = lens<ICoreState>();

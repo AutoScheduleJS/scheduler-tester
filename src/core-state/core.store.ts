@@ -1,24 +1,16 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-
-import 'rxjs/add/observable/zip';
-
-import { ICoreState, StepOption } from './core.state';
-
-import { configActionType, configReducer$ } from './config.reducer';
-import {
-  onTestbenchQueriesActionType,
-  onTestbenchQueriesReducer$,
-} from './on-testbench-queries.reducer';
-import {
-  onTestbenchUserstateActionType,
-  onTestbenchUserstateReducer$,
-} from './on-testbench-userstate.reducer';
-import { stepOptionActionType, stepOptionReducer$ } from './step-option.reducer';
-import { suiteActionType, suitesReducer$ } from './suites.reducer';
-import { userstateActionType, userstateReducer$ } from './userstates.reducer';
 import { IQuery, QueryKind } from '@autoschedule/queries-fn';
+import { IUserstateCollection } from '@autoschedule/userstate-manager/es/data-structures/userstate-collection.interface';
+import { configActionType } from '@scheduler-tester/core-state/config.reducer';
+import { ICoreState, StepOption } from '@scheduler-tester/core-state/core.state';
+import { TabId } from '@scheduler-tester/core-state/edit-tab.ui.reducer';
+import { globalUiReducer$ } from '@scheduler-tester/core-state/global.ui.reducer';
+import { onTestbenchQueriesActionType } from '@scheduler-tester/core-state/on-testbench-queries.reducer';
+import { onTestbenchUserstateActionType } from '@scheduler-tester/core-state/on-testbench-userstate.reducer';
+import { stepOptionActionType } from '@scheduler-tester/core-state/step-option.reducer';
+import { suiteActionType } from '@scheduler-tester/core-state/suites.reducer';
+import { UIState } from '@scheduler-tester/core-state/ui.state';
+import { userstateActionType } from '@scheduler-tester/core-state/userstates.reducer';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 export type actionType =
   | configActionType
@@ -34,22 +26,7 @@ const stateFn = (
   initialState: ICoreState,
   actions$: Observable<actionType>
 ): Observable<ICoreState> => {
-  const obs: Observable<ICoreState> = Observable.zip(
-    configReducer$(initialState.config, actions$),
-    suitesReducer$(initialState.suites, actions$),
-    userstateReducer$(initialState.userstates, actions$),
-    stepOptionReducer$(initialState.stepOption, actions$),
-    onTestbenchUserstateReducer$(initialState.onTestbenchUserstate, actions$),
-    onTestbenchQueriesReducer$(initialState.onTestbenchQueries, actions$),
-    (config, suites, userstates, stepOption, onTestbenchUserstate, onTestbenchQueries) => ({
-      config,
-      onTestbenchQueries,
-      onTestbenchUserstate,
-      stepOption,
-      suites,
-      userstates,
-    })
-  );
+  const obs: Observable<ICoreState> = globalUiReducer$(initialState, actions$);
 
   const bs = new BehaviorSubject(initialState);
   obs.subscribe(v => bs.next(v));
@@ -66,13 +43,30 @@ const initialSuite: ReadonlyArray<IQuery> = [
   },
 ];
 
+const initialUserstates: ReadonlyArray<IUserstateCollection> = [
+  {
+    collectionName: 'First Collection',
+    data: [],
+  },
+];
+
+const initialUIStateObj: UIState = {
+  edit: {
+    userstate: false,
+    query: false,
+    isNew: false,
+  },
+  editTab: TabId.Queries,
+};
+
 const initialStateObj: ICoreState = {
   config: { endDate: 100, startDate: 0 },
   onTestbenchQueries: 0,
   onTestbenchUserstate: 0,
   stepOption: StepOption.last,
   suites: [initialSuite],
-  userstates: [],
+  userstates: [initialUserstates],
+  ui: initialUIStateObj,
 };
 
 export const coreState$ = stateFn(initialStateObj, actionTrigger$);

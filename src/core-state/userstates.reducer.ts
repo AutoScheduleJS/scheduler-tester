@@ -1,10 +1,6 @@
-import { Observable } from 'rxjs/Observable';
-
-import { scan } from 'rxjs/operators';
-
-import { userstatesType } from './core.state';
-import { actionType } from './core.store';
-import { IUserstateCollection } from './userstate-collection.interface';
+import { coreStateL, ICoreState, userstatesType } from '@scheduler-tester/core-state/core.state';
+import { actionType } from '@scheduler-tester/core-state/core.store';
+import { IUserstateCollection } from '@scheduler-tester/core-state/userstate-collection.interface';
 
 /* tslint:disable:no-empty max-classes-per-file */
 
@@ -36,55 +32,53 @@ export type userstateActionType =
   | UserstateNewAction
   | UserstateCollectionNewAction;
 
-export const userstateReducer$ = (
-  init: userstatesType,
-  action$: Observable<actionType>
-): Observable<userstatesType> => {
-  return action$.pipe(
-    scan((state, action: any) => {
-      if (action instanceof UserstateLoadAction) {
-        return handleLoad(state, action);
-      }
-      if (action instanceof UserstateCollectionUpdateAction) {
-        return handleQueryUpdate(state, action);
-      }
-      if (action instanceof UserstateNewAction) {
-        return handleNew(state);
-      }
-      if (action instanceof UserstateCollectionNewAction) {
-        return handleQueryNew(state, action);
-      }
-      return state;
-    }, init)
-  );
+export const userstateReducer$ = (state: ICoreState, action: actionType): ICoreState | false => {
+  if (action instanceof UserstateLoadAction) {
+    return handleLoad(state, action);
+  }
+  if (action instanceof UserstateCollectionUpdateAction) {
+    return handleQueryUpdate(state, action);
+  }
+  if (action instanceof UserstateNewAction) {
+    return handleNew(state);
+  }
+  if (action instanceof UserstateCollectionNewAction) {
+    return handleQueryNew(state, action);
+  }
+  return false;
 };
 
-const handleLoad = (state: userstatesType, action: UserstateLoadAction): userstatesType => {
-  return [...state, ...action.userstateCol];
+const userstateL = coreStateL.userstates;
+
+const handleLoad = (state: ICoreState, action: UserstateLoadAction): ICoreState => {
+  return userstateL.set(suites => [...suites, ...action.userstateCol])(state);
 };
 
-const handleNew = (state: userstatesType): userstatesType => {
-  return [...state, []];
+const handleNew = (state: ICoreState): ICoreState => {
+  return userstateL.set(suites => [...suites, []])(state);
 };
 
 const mapSpecificSuite = (
-  suites: userstatesType,
   target: ReadonlyArray<IUserstateCollection>,
   fn: (s: ReadonlyArray<IUserstateCollection>) => ReadonlyArray<IUserstateCollection>
-) => suites.map(suite => (suite !== target ? suite : fn(suite)));
+) => (suites: userstatesType) => suites.map(suite => (suite !== target ? suite : fn(suite)));
 
-const handleQueryNew = (state: userstatesType, action: UserstateCollectionNewAction): userstatesType => {
-  return mapSpecificSuite(state, action.userstate, userstate => [
-    ...userstate,
-    { collectionName: 'collection', data: [] },
-  ]);
+const handleQueryNew = (state: ICoreState, action: UserstateCollectionNewAction): ICoreState => {
+  return userstateL.set(
+    mapSpecificSuite(action.userstate, userstate => [
+      ...userstate,
+      { collectionName: 'collection', data: [] },
+    ])
+  )(state);
 };
 
 const handleQueryUpdate = (
-  state: userstatesType,
+  state: ICoreState,
   action: UserstateCollectionUpdateAction
-): userstatesType => {
-  return mapSpecificSuite(state, action.userstate, userstate =>
-    userstate.map(query => (query !== action.oldUserstate ? query : action.newUserstate))
-  );
+): ICoreState => {
+  return userstateL.set(
+    mapSpecificSuite(action.userstate, userstate =>
+      userstate.map(query => (query !== action.oldUserstate ? query : action.newUserstate))
+    )
+  )(state);
 };

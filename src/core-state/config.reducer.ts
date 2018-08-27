@@ -1,9 +1,6 @@
-import { Observable } from 'rxjs/Observable';
-
-import { scan } from 'rxjs/operators';
-
-import { IConfig } from './config.interface';
-import { actionType } from './core.store';
+import { ICoreState } from '@scheduler-tester/core-state/core.state';
+import { actionType } from '@scheduler-tester/core-state/core.store';
+import { IConfig } from '@scheduler-tester/core-state/config.interface';
 
 export class ConfigUpdateAction {
   constructor(public newConfig: IConfig) {}
@@ -11,20 +8,16 @@ export class ConfigUpdateAction {
 
 export type configActionType = ConfigUpdateAction;
 
-export const configReducer$ = (
-  init: IConfig,
-  action$: Observable<actionType>
-): Observable<IConfig> => {
-  return action$.pipe(
-    scan((state, action: any) => {
-      if (action instanceof ConfigUpdateAction) {
-        return handleUpdate(action);
-      }
-      return state;
-    }, init)
-  );
+export const configReducer = (state: ICoreState, action: actionType): ICoreState | false => {
+  if (action instanceof ConfigUpdateAction) {
+    return handleUpdate(state, action);
+  }
+  return false;
 };
 
-const handleUpdate = (action: ConfigUpdateAction): IConfig => {
-  return action.newConfig;
+export const handleUpdate = (state: ICoreState, action: ConfigUpdateAction): ICoreState => {
+  return {
+    ...state,
+    config: action.newConfig,
+  };
 };
