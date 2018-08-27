@@ -98,7 +98,7 @@ class ButtonImpl extends React.PureComponent<ButtonProps> {
     const hostProps = mergeProps(
       ElevationProps(elevation, theme),
       { className: ButtonRootStyles(theme, emphaze) },
-      TypographyProps('Button'),
+      TypographyProps({ scale: 'Button' }),
       defaultHostProps
     );
     return (

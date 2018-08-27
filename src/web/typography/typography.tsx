@@ -6,8 +6,9 @@ import { merge, mergeProps } from '../util/hoc.util';
 interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
 }
-interface TypographyProps extends CustomableProps {
-  scale: keyof TypographyTheme;
+interface ITypographyProps extends CustomableProps {
+  scale: keyof TypographyScale;
+  emphase?: 'high' | 'medium' | 'low';
   baselineTop?: number;
   baselineBottom?: number;
 }
@@ -25,7 +26,7 @@ interface TypographyAttribte {
   LetterSpacing: string;
 }
 
-interface TypographyTheme {
+interface TypographyScale {
   H1: TypographyAttribte;
   H2: TypographyAttribte;
   H3: TypographyAttribte;
@@ -41,7 +42,28 @@ interface TypographyTheme {
   Overline: TypographyAttribte;
 }
 
-const defaultTheme = (theme: any): { typography: TypographyTheme } => {
+interface TypographyTheme {
+  typography: TypographyScale;
+  color: {
+    base: string;
+    high: string;
+    medium: string;
+    low: string;
+  };
+}
+
+const baseTheme = {
+  palette: {
+    surface: {
+      on: '#FFFFFF',
+      highEmphase: 'DD',
+      mediumEmphase: '99',
+      disabled: '61',
+    },
+  },
+};
+
+const defaultTheme = (theme: any = baseTheme): TypographyTheme => {
   const base = {
     typeface: "'Roboto', sans-serif",
     weight: 400,
@@ -74,8 +96,14 @@ const defaultTheme = (theme: any): { typography: TypographyTheme } => {
           size: '0.625rem',
           LetterSpacing: '0.09375rem',
         },
+      } as TypographyScale,
+      color: {
+        base: theme.palette.surface.on,
+        high: theme.palette.surface.highEmphase,
+        medium: theme.palette.surface.mediumEmphase,
+        low: theme.palette.surface.disabled,
       },
-    },
+    } as TypographyTheme,
     theme
   );
 };
@@ -85,9 +113,10 @@ const baselineStrut = distance => `
 `;
 
 const typeScale = (
-  theme: { typography: TypographyTheme },
-  scale: keyof TypographyTheme,
+  theme: TypographyTheme,
+  scale: keyof TypographyScale,
   baselineTop = 0,
+  emphase = 'high',
   baselineBottom?: number
 ): string => {
   const attr = theme.typography[scale];
@@ -98,8 +127,9 @@ const typeScale = (
     position: absolute;
     bottom: ${baselineBottom}px;
   `;
-
+  const color = `${theme.color.base}${theme.color[emphase]}`;
   return css`
+    color: ${color};
     font-family: ${attr.typeface};
     font-weight: ${attr.weight};
     text-transform: ${attr.case === TypographyCase.Sentence ? 'initial' : 'uppercase'};
@@ -118,19 +148,20 @@ const typeScale = (
   `;
 };
 
-class TypographyImpl extends React.PureComponent<TypographyProps> {
+class TypographyImpl extends React.PureComponent<ITypographyProps> {
   render() {
     const {
       children,
       scale,
       baselineTop,
       baselineBottom,
+      emphase,
       theme: incomingTheme,
       ...defaultHostProps
     } = this.props;
     const theme = defaultTheme(incomingTheme);
     const hostProps = mergeProps(
-      { className: typeScale(theme, scale, baselineTop, baselineBottom) },
+      { className: typeScale(theme, scale, baselineTop, emphase, baselineBottom) },
       defaultHostProps
     );
     return <div {...hostProps}>{children}</div>;
@@ -139,12 +170,8 @@ class TypographyImpl extends React.PureComponent<TypographyProps> {
 
 export const Typography = withTheme(TypographyImpl);
 
-export const TypographyProps = (
-  scale: keyof TypographyTheme,
-  baselineTop?: number,
-  baselineBottom?: number,
-  customTheme?: any
-) => {
-  const theme = defaultTheme(customTheme);
-  return { className: typeScale(theme, scale, baselineTop, baselineBottom) };
+export const TypographyProps = (options: ITypographyProps) => {
+  const { theme: incomingTheme, scale, baselineTop, emphase, baselineBottom } = options;
+  const theme = defaultTheme(incomingTheme);
+  return { className: typeScale(theme, scale, baselineTop, emphase, baselineBottom) };
 };

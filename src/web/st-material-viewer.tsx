@@ -4,8 +4,8 @@ import * as React from 'react';
 import { ElevationProps } from './elevation/elevation';
 import { IMaterialUI } from './st-demo-viewer';
 import { IItemProps } from './st-timeline';
-import { merge, mergeProps } from './util/hoc.util';
 import { Typography, TypographyProps } from './typography/typography';
+import { merge, mergeProps } from './util/hoc.util';
 
 interface StMaterialViewerProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
@@ -51,7 +51,7 @@ class StMaterialViewerImpl extends React.PureComponent<
     const hostProps = mergeProps(defaultHostProps, ElevationProps(1, theme), {
       className: themeToHostStyles(theme),
     });
-    const nameProps = mergeProps(TypographyProps('Subtitle1', 0, undefined, theme), {
+    const nameProps = mergeProps(TypographyProps({ scale: 'Subtitle1', theme: theme }), {
       className: css`
         white-space: nowrap;
         text-overflow: ellipsis;

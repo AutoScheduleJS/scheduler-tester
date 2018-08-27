@@ -6,7 +6,7 @@ import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { LayoutMasonry } from './layout-masonry/layout-masonry';
-import QueryCard from './query-card';
+import { StQueryCard } from './st-query-card';
 import { PaddingProps } from './responsive/padding';
 import { StEditQuery } from './st-edit-query';
 import { StEditableItem } from './st-editable-item';
@@ -52,7 +52,7 @@ class StQueriesManagerImpl extends React.PureComponent<
         {/**
          * Use another element than QueryCard to handle morph
          */}
-        {queries.map(query => <QueryCard key={query.id} {...{ query }} />)}
+        {queries.map(query => <StQueryCard key={query.id} {...{ query }} />)}
       </LayoutMasonry>
     );
   }

@@ -27,7 +27,7 @@ const emotionTheme = {
       main: '#3F51B5',
       lightVariant: '#757DE8',
       darkVariant: '#002984',
-      on: 'white',
+      on: '#FFFFFF',
     },
     secondary: {
       main: '#81D4FA',
@@ -38,7 +38,10 @@ const emotionTheme = {
     surface: {
       main: '#424242',
       background: '#303030',
-      on: 'white',
+      on: '#FFFFFF',
+      highEmphase: 'DD',
+      mediumEmphase: '99',
+      disabled: '61',
     },
   },
 };
