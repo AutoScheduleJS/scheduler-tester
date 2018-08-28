@@ -1,13 +1,4 @@
 import { IQuery } from '@autoschedule/queries-fn';
-import {
-  Button,
-  createStyles,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  withStyles,
-} from '@material-ui/core';
 import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import { CloseEditAction } from '@scheduler-tester/core-state/edit.ui.reducer';
 import {
@@ -16,14 +7,10 @@ import {
 } from '@scheduler-tester/core-state/global.ui.reducer';
 import { css } from 'emotion';
 import * as React from 'react';
+import { ButtonEmphaze } from './button/button';
 import { MorphParameters } from './react-morph/morph';
-import { StEditPosition } from './st-edit-position';
-import withMobileDialog from './util/withMobileDialog';
+import { StButton } from './st-button';
 
-const styles = _ =>
-  createStyles({
-    root: {},
-  });
 interface IqueryEditProps {
   query: IQuery;
   isNew: boolean;
@@ -93,33 +80,35 @@ class QueryEditCmp extends React.PureComponent<
   };
 
   render() {
-    const { morph, fullScreen, query } = this.props;
+    const { morph, query } = this.props;
     const saveLabel = this.props.isNew ? 'create' : 'update';
     return (
       <div {...hostClass} {...morph.to('card')}>
-        <DialogTitle id="query-edit-dialog-title">
+        <div id="query-edit-dialog-title">
           Edit {query.name}#{query.id}
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            label="name"
+        </div>
+        <div>
+          <input
+            placeholder="name"
             value={this.state.name}
             onChange={e => this.handleChange('name')(e.target.value)}
           />
-          <StEditPosition
+          {/* <StEditPosition
             position={this.state.position}
             onChanged={this.handleChangeId('position')}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.handleClose(false)}>cancel</Button>
-          <Button onClick={() => this.handleClose(true)} color="secondary">
+          /> */}
+        </div>
+        <div>
+          <StButton emphaze={ButtonEmphaze.Medium} onClick={() => this.handleClose(false)}>
+            cancel
+          </StButton>
+          <StButton emphaze={ButtonEmphaze.High} onClick={() => this.handleClose(true)}>
             {saveLabel}
-          </Button>
-        </DialogActions>
+          </StButton>
+        </div>
       </div>
     );
   }
 }
 
-export const StEditQuery = withMobileDialog<IqueryEditProps>()(withStyles(styles)(QueryEditCmp));
+export const StEditQuery = QueryEditCmp;

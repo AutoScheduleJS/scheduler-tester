@@ -1,7 +1,6 @@
 import { IQuery } from '@autoschedule/queries-fn';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
-import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Morph, MorphParameters } from './react-morph/morph';
@@ -20,12 +19,6 @@ interface IEditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
   ItemCardCmp: any;
   ItemEditCmp: any;
 }
-
-const hostStyles = {
-  className: css`
-    margin-top: 24px;
-  `,
-};
 
 class StEditableItemImpl extends React.PureComponent<IEditableItemFromState & IEditableItemProps> {
   handleMorph = (data: MorphParameters) => {
