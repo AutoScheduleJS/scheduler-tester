@@ -5,6 +5,7 @@ import { Ref } from 'react';
 import { ElevationProps } from '../elevation/elevation';
 import { TypographyProps } from '../typography/typography';
 import { merge, mergeProps } from '../util/hoc.util';
+import { EffectRippleProps } from '../effect-ripple/effect-ripple';
 
 interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
@@ -117,3 +118,5 @@ const ButtonImplWithTheme = withTheme(ButtonImpl);
 export const Button = React.forwardRef<HTMLDivElement, ButtonProps>((props, ref) => (
   <ButtonImplWithTheme {...props} forwardedRef={ref} />
 ));
+
+export const TappableProps = (theme?: any) => mergeProps(EffectRippleProps(theme));

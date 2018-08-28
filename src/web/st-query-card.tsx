@@ -1,10 +1,10 @@
 import { IQuery, QueryKind } from '@autoschedule/queries-fn';
-import { Icon, IconButton } from '@material-ui/core';
 import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import { EditQueryAction } from '@scheduler-tester/core-state/edit.ui.reducer';
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
+import { TappableProps } from './button/button';
 import { CardProps } from './card/card';
 import { Typography } from './typography/typography';
 import { merge, mergeProps, stateHandler } from './util/hoc.util';
@@ -55,6 +55,7 @@ class StQueryCardImpl extends React.PureComponent<IqueryCardProps> {
   };
 
   openEditDialog() {
+    console.log('Open query !');
     actionTrigger$.next(new EditQueryAction(this.props.query));
   }
 
@@ -68,6 +69,10 @@ class StQueryCardImpl extends React.PureComponent<IqueryCardProps> {
         stateHandler: stateHandler(this, 'card'),
       }),
       themeToHostStyle(theme),
+      TappableProps(theme),
+      {
+        onClick: this.openEditDialog.bind(this),
+      },
       defaultHostProps
     );
     return (
@@ -79,9 +84,6 @@ class StQueryCardImpl extends React.PureComponent<IqueryCardProps> {
           #{query.id}
         </Typography>
         <QueryDisplayKind {...{ query }} />
-        <IconButton onClick={this.openEditDialog.bind(this)} aria-label="edit">
-          <Icon>edit</Icon>
-        </IconButton>
       </div>
     );
   }
