@@ -176,7 +176,8 @@ export const ElevationPropsToggle = (
   },
   inactive: number,
   active: number,
-  eventName: string,
+  eventNameIn: string,
+  eventNameOut: string,
   customTheme: any
 ) => {
   const theme = defaultTheme(customTheme);
@@ -186,17 +187,17 @@ export const ElevationPropsToggle = (
     setState({
       elevation: active,
     });
-    addEventListener(eventName, handleMouseUp);
+    addEventListener(eventNameOut, handleMouseUp);
   };
   const handleMouseUp = () => {
     setState({
       elevation: inactive,
     });
-    removeEventListener(eventName, handleMouseUp);
+    removeEventListener(eventNameOut, handleMouseUp);
   };
   return {
     className: ElevationRootStyles(theme, elevation),
-    onMouseDown: handleMouseDown,
+    [eventNameIn]: handleMouseDown,
   };
 };
 
@@ -209,7 +210,7 @@ export const ElevationPropsPress = (
   active: number,
   customTheme: any
 ) => {
-  return ElevationPropsToggle(stateHandler, inactive, active, 'mouseup', customTheme);
+  return ElevationPropsToggle(stateHandler, inactive, active, 'onMouseDown', 'mouseup', customTheme);
 };
 
 export const ElevationPropsHover = (
@@ -221,7 +222,7 @@ export const ElevationPropsHover = (
   active: number,
   customTheme: any
 ) => {
-  return ElevationPropsToggle(stateHandler, inactive, active, 'mouseover', customTheme);
+  return ElevationPropsToggle(stateHandler, inactive, active, 'onMouseOver', 'mouseout', customTheme);
 };
 
 export const Elevation = withTheme(ElevationImpl);
