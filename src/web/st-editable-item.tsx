@@ -32,9 +32,13 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemFromState & IE
       theme,
       ...defaultHostProps
     } = this.props;
+    console.log('render morph');
     const hostProps = mergeProps(defaultHostProps);
     if (itemToEdit === item || (!item && isNew)) {
-      data.go(1);
+      if (data.state === 'from') {
+        console.log('morph -> call go(1)');
+        data.go(1);
+      }
     }
     return (
       <div {...hostProps}>
@@ -45,6 +49,7 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemFromState & IE
   };
 
   render() {
+    console.log('render st-editable-item');
     return <Morph>{this.handleMorph}</Morph>;
   }
 }
