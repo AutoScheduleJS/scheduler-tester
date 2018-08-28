@@ -88,9 +88,7 @@ const ElevationRootStyles = (theme: ElevationTheme, elevation: number) => {
   const ambiantColor = color + ambientOpacity;
   return css`
     transition: box-shadow 100ms cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow:
-      ${umbraZValue[eleIndex]} ${umbraColor},
-      ${penumbraZValue[eleIndex]} ${penumbraColor},
+    box-shadow: ${umbraZValue[eleIndex]} ${umbraColor}, ${penumbraZValue[eleIndex]} ${penumbraColor},
       ${ambiantZValue[eleIndex]} ${ambiantColor};
   `;
 };
@@ -171,13 +169,14 @@ export const ElevationPressHOC = <T extends { className: string }>(
     }
   };
 
-export const ElevationPropsPress = (
+export const ElevationPropsToggle = (
   stateHandler: {
-    state: { elevation: number },
-    setState: (v: any) => void,
+    state: { elevation: number };
+    setState: (v: any) => void;
   },
   inactive: number,
   active: number,
+  eventName: string,
   customTheme: any
 ) => {
   const theme = defaultTheme(customTheme);
@@ -187,18 +186,42 @@ export const ElevationPropsPress = (
     setState({
       elevation: active,
     });
-    addEventListener('mouseup', handleMouseUp);
+    addEventListener(eventName, handleMouseUp);
   };
   const handleMouseUp = () => {
     setState({
       elevation: inactive,
     });
-    removeEventListener('mouseup', handleMouseUp);
+    removeEventListener(eventName, handleMouseUp);
   };
   return {
     className: ElevationRootStyles(theme, elevation),
     onMouseDown: handleMouseDown,
   };
+};
+
+export const ElevationPropsPress = (
+  stateHandler: {
+    state: { elevation: number };
+    setState: (v: any) => void;
+  },
+  inactive: number,
+  active: number,
+  customTheme: any
+) => {
+  return ElevationPropsToggle(stateHandler, inactive, active, 'mouseup', customTheme);
+};
+
+export const ElevationPropsHover = (
+  stateHandler: {
+    state: { elevation: number };
+    setState: (v: any) => void;
+  },
+  inactive: number,
+  active: number,
+  customTheme: any
+) => {
+  return ElevationPropsToggle(stateHandler, inactive, active, 'mouseover', customTheme);
 };
 
 export const Elevation = withTheme(ElevationImpl);

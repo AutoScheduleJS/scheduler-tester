@@ -44,7 +44,7 @@ export const merge = (oldObj, newObj) => {
 
 export const mergeAll = (...objs) => {
   return objs.reduce((acc, cur) => merge(acc, cur));
-}
+};
 
 export const prepareProps = (oProps: any) => {
   const { className } = oProps;
@@ -64,9 +64,17 @@ export const mergeProps = (...props) => {
   return result;
 };
 
-export const stateHandler = <T extends { state: any, setState: (v: any) => any }>(context: T, name: keyof T['state']) => {
+export interface IStateHandler {
+  state: any;
+  setState: (v: any) => any;
+}
+
+export const stateHandler = <T extends IStateHandler>(context: T, name: keyof T['state']) => {
   return {
     state: context.state[name],
-    setState: v => context.setState({ [name]: v })
-  }
-}
+    setState: v =>
+      context.setState({
+        [name]: v,
+      }),
+  };
+};

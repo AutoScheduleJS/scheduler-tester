@@ -7,7 +7,7 @@ import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { CardProps } from './card/card';
 import { Typography } from './typography/typography';
-import { merge, mergeProps } from './util/hoc.util';
+import { merge, mergeProps, stateHandler } from './util/hoc.util';
 
 interface IqueryCardProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
@@ -48,6 +48,12 @@ const defaultTheme = (theme: any) =>
   );
 
 class StQueryCardImpl extends React.PureComponent<IqueryCardProps> {
+  state = {
+    card: {
+      elevation: 1,
+    },
+  };
+
   openEditDialog() {
     actionTrigger$.next(new EditQueryAction(this.props.query));
   }
@@ -55,7 +61,15 @@ class StQueryCardImpl extends React.PureComponent<IqueryCardProps> {
   render() {
     const { query, theme: incomingTheme, ...defaultHostProps } = this.props;
     const theme = defaultTheme(incomingTheme);
-    const hostProps = mergeProps(CardProps(theme), themeToHostStyle(theme), defaultHostProps);
+    const hostProps = mergeProps(
+      CardProps({
+        customTheme: theme,
+        isClickable: true,
+        stateHandler: stateHandler(this, 'card'),
+      }),
+      themeToHostStyle(theme),
+      defaultHostProps
+    );
     return (
       <div {...hostProps}>
         <Typography baselineTop={40} scale="H5">
