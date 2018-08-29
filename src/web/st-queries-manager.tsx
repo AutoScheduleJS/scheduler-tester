@@ -1,16 +1,15 @@
 import { IQuery } from '@autoschedule/queries-fn';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
-import { AddQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { LayoutMasonry } from './layout-masonry/layout-masonry';
-import { StQueryCard } from './st-query-card';
 import { PaddingProps } from './responsive/padding';
 import { StEditQuery } from './st-edit-query';
 import { StEditableItem } from './st-editable-item';
 import { StNewItemLarge } from './st-new-item-large';
+import { StQueryCard } from './st-query-card';
 import { connect } from './util/connect';
 import { mergeProps } from './util/hoc.util';
 
@@ -36,11 +35,13 @@ class StQueriesManagerImpl extends React.PureComponent<
     if (!queries) {
       return false;
     }
+    const nextId = queriesToNextId(queries);
     const hostProps = mergeProps(PaddingProps(theme), hostStyles, defaultHostProps);
     return (
       <LayoutMasonry itemWidth={'190px'} {...hostProps}>
         <StEditableItem
-          action={AddQueryAction}
+          item={{ id: nextId }}
+          isNew={true}
           ItemCardCmp={StNewItemLarge}
           ItemEditCmp={StEditQuery}
         />
@@ -57,6 +58,9 @@ class StQueriesManagerImpl extends React.PureComponent<
     );
   }
 }
+
+const queriesToNextId = (queries: ReadonlyArray<IQuery>): number =>
+  queries.reduce((max, cur) => (max > cur.id ? max : cur.id), 0) + 1;
 
 const selector = ({ onTestbenchQueries, suites }: ICoreState): IQueriesManagerFromState => ({
   queries: suites[onTestbenchQueries],

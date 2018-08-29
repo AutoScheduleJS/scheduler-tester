@@ -5,9 +5,9 @@ import {
   DeleteQueryAction,
   UpdateQueryAction,
 } from '@scheduler-tester/core-state/global.ui.reducer';
-import { css } from 'emotion';
 import * as React from 'react';
 import { ButtonEmphaze } from './button/button';
+import { Dialog } from './modal/dialog';
 import { MorphParameters } from './react-morph/morph';
 import { StButton } from './st-button';
 
@@ -17,55 +17,26 @@ interface IqueryEditProps {
   morph: MorphParameters;
 }
 
-const hostClass = {
-  className: css`
-    position: absolute;
-    top: 45%;
-    left: 40%;
-  `,
-};
+interface QueryEditState extends IQuery {}
 
 /**
  * When done, should morph into the card.
  * How to do that? Elements only morph when mounting, getting position info from unmounting element
  * -> content is discarded immediately, how to position element absolutely? impossible.
  */
-class QueryEditCmp extends React.PureComponent<
-  IqueryEditProps & { classes: any; fullScreen: boolean }
-> {
-  state = {
-    ...this.props.query,
-    position: {
-      ...this.props.query.position,
-      uiId: Date.now(),
-    },
-  };
+class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
+  state: QueryEditState;
 
-  static getDerivedStateFromProps(props, state) {
-    if (state.id === props.query.id || !props.query) {
-      return null;
-    }
-    return {
+  constructor(props: IqueryEditProps) {
+    super(props);
+    this.state = {
       ...props.query,
-      position: {
-        ...props.query.position,
-        uiId: Date.now(),
-      },
     };
   }
 
   handleChange = name => newVal => {
     this.setState({
       [name]: newVal,
-    });
-  };
-
-  handleChangeId = name => newVal => {
-    this.setState({
-      [name]: {
-        ...newVal,
-        uiId: Date.now(),
-      },
     });
   };
 
@@ -82,32 +53,30 @@ class QueryEditCmp extends React.PureComponent<
   render() {
     const { morph, query } = this.props;
     const saveLabel = this.props.isNew ? 'create' : 'update';
-    return (
-      <div {...hostClass} {...morph.to('card')}>
-        <div id="query-edit-dialog-title">
-          Edit {query.name}#{query.id}
-        </div>
-        <div>
-          <input
-            placeholder="name"
-            value={this.state.name}
-            onChange={e => this.handleChange('name')(e.target.value)}
-          />
-          {/* <StEditPosition
-            position={this.state.position}
-            onChanged={this.handleChangeId('position')}
-          /> */}
-        </div>
-        <div>
-          <StButton emphaze={ButtonEmphaze.Medium} onClick={() => this.handleClose(false)}>
-            cancel
-          </StButton>
-          <StButton emphaze={ButtonEmphaze.High} onClick={() => this.handleClose(true)}>
-            {saveLabel}
-          </StButton>
-        </div>
-      </div>
-    );
+    const dialogProps = {
+      morph,
+      dialogTitle: `Edit ${query.name}#${query.id}`,
+      actions: [
+        <StButton
+          label={'cancel'}
+          emphaze={ButtonEmphaze.Medium}
+          onClick={() => this.handleClose(false)}
+        />,
+        <StButton
+          label={saveLabel}
+          emphaze={ButtonEmphaze.High}
+          onClick={() => this.handleClose(true)}
+        />,
+      ],
+      content: (
+        <input
+          placeholder="name"
+          value={this.state.name}
+          onChange={e => this.handleChange('name')(e.target.value)}
+        />
+      ),
+    };
+    return <Dialog {...dialogProps} />;
   }
 }
 

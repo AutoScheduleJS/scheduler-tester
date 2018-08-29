@@ -1,32 +1,21 @@
-import { IQuery } from '@autoschedule/queries-fn';
-import { ICoreState } from '@scheduler-tester/core-state/core.state';
-import { coreState$ } from '@scheduler-tester/core-state/core.store';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Morph, MorphParameters } from './react-morph/morph';
-import { connect } from './util/connect';
 import { mergeProps } from './util/hoc.util';
-
-interface IEditableItemFromState {
-  itemToEdit: IQuery;
-  isNew: boolean;
-}
 
 interface IEditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
-  item?: any;
-  action: any;
+  item: any;
   ItemCardCmp: any;
   ItemEditCmp: any;
+  isNew: boolean;
 }
 
-class StEditableItemImpl extends React.PureComponent<IEditableItemFromState & IEditableItemProps> {
+class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
   handleMorph = (data: MorphParameters) => {
     const {
-      action,
       item,
       isNew,
-      itemToEdit,
       ItemCardCmp,
       ItemEditCmp,
       theme,
@@ -34,16 +23,10 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemFromState & IE
     } = this.props;
     console.log('render morph');
     const hostProps = mergeProps(defaultHostProps);
-    if (itemToEdit === item || (!item && isNew)) {
-      if (data.state === 'from') {
-        console.log('morph -> call go(1)');
-        data.go(1);
-      }
-    }
     return (
       <div {...hostProps}>
-        <ItemCardCmp morph={data} {...item} action={action} />
-        <ItemEditCmp morph={data} query={itemToEdit} isNew={isNew} />
+        <ItemCardCmp morph={data} {...item} onClick={() => data.go(1)} />
+        <ItemEditCmp morph={data} query={item} isNew={isNew} />
       </div>
     );
   };
@@ -54,12 +37,4 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemFromState & IE
   }
 }
 
-const selector = ({ ui }: ICoreState): IEditableItemFromState => ({
-  itemToEdit: ui.edit.query as IQuery,
-  isNew: ui.edit.isNew,
-});
-
-export const StEditableItem = connect(selector, coreState$)<
-  IEditableItemProps,
-  IEditableItemFromState
->(withTheme(StEditableItemImpl));
+export const StEditableItem = withTheme(StEditableItemImpl);
