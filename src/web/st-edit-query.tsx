@@ -76,7 +76,7 @@ class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
         />
       ),
     };
-    return <Dialog {...dialogProps} />;
+    return <Dialog {...dialogProps} scrim={true} />;
   }
 }
 

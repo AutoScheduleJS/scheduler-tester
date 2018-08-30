@@ -69,7 +69,7 @@ const fadeInTween = ({ element, options = {} }) => {
   return keyframes({
     values: [{ opacity: 0 }, { opacity: 1 }],
     easings: [p => p],
-    times: [0.8, 1],
+    times: [0, 1],
     ...options,
   }).start(style => {
     const node = element;

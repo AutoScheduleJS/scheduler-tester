@@ -14,12 +14,15 @@ class StNewItemLargeImpl extends React.PureComponent<StNewItemLargeProps> {
   render() {
     const { morph, key, ...defaultHostProps } = this.props;
     return (
-      <Button
-        {...morph.from('container')}
-        emphaze={ButtonEmphaze.Medium}
-        label={'+ new'}
-        {...defaultHostProps}
-      />
+      <React.Fragment>
+        <Button
+          {...morph.from('container')}
+          emphaze={ButtonEmphaze.Medium}
+          label={'+ new'}
+          {...defaultHostProps}
+        />
+        <div {...morph.from('title')} />
+      </React.Fragment>
     );
   }
 }
