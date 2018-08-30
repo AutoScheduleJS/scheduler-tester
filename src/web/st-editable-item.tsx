@@ -2,6 +2,8 @@ import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Morph, MorphParameters } from './react-morph/morph';
 import { mergeProps } from './util/hoc.util';
+import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
+import { UpdateQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
 
 interface IEditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
@@ -15,7 +17,16 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
   state = {
     opened: false,
   };
+
   handleClick = () => this.setState({ opened: true });
+
+  handleSave = (query) => {
+    if (this.props.isNew) {
+      return;
+    }
+    actionTrigger$.next(new UpdateQueryAction(this.props.item, query))
+  }
+
   handleMorph = (data: MorphParameters) => {
     const { item, isNew, ItemCardCmp, ItemEditCmp, theme, ...defaultHostProps } = this.props;
     console.log('render morph');
@@ -28,7 +39,7 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
     return (
       <div {...hostProps}>
         <ItemCardCmp morph={data} {...item} onClick={this.handleClick} />
-        {this.state.opened && <ItemEditCmp morph={data} query={item} isNew={isNew} />}
+        {this.state.opened && <ItemEditCmp morph={data} query={item} isNew={isNew} handleCancel={() => data.go(0)} />}
       </div>
     );
   };

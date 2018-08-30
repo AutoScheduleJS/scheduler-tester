@@ -16,6 +16,7 @@ export interface DialogProps extends CustomableProps {
   dialogTitle: string;
   content?: React.ReactNode;
   scrim?: boolean;
+  onCancel?: () => void,
   actions: Array<React.ReactNode>;
   morph: MorphParameters;
 }
@@ -99,6 +100,7 @@ class DialogImpl extends React.PureComponent<DialogProps> {
       actions,
       morph,
       scrim,
+      onCancel,
       theme: incomingTheme,
       ...defaultHostProps
     } = this.props;
@@ -117,7 +119,11 @@ class DialogImpl extends React.PureComponent<DialogProps> {
             enter={{ opacity: morph.state === 'from' ? 1 : 0 }}
             leave={{ opacity: morph.state === 'from' ? 0 : 1 }}
           >
-            {props => <animated.div className={themeToScrimClass(theme)} style={props} />}
+            {props => <animated.div
+              className={themeToScrimClass(theme)}
+              onClick={onCancel}
+              style={props} />
+            }
           </Transition>
         )}
         <div {...hostProps} {...morph.to('container')}>

@@ -1,13 +1,7 @@
 import { IQuery } from '@autoschedule/queries-fn';
-import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
-import { CloseEditAction } from '@scheduler-tester/core-state/edit.ui.reducer';
-import {
-  DeleteQueryAction,
-  UpdateQueryAction,
-} from '@scheduler-tester/core-state/global.ui.reducer';
 import * as React from 'react';
 import { ButtonEmphaze } from './button/button';
-import { Dialog } from './modal/dialog';
+import { Dialog, DialogProps } from './modal/dialog';
 import { MorphParameters } from './react-morph/morph';
 import { StButton } from './st-button';
 
@@ -15,6 +9,8 @@ interface IqueryEditProps {
   query: IQuery;
   isNew: boolean;
   morph: MorphParameters;
+  handleSave: (state: IQuery) => void;
+  handleCancel: () => void;
 }
 
 interface QueryEditState extends IQuery {}
@@ -40,32 +36,18 @@ class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
     });
   };
 
-  handleClose = (save: boolean) => {
-    if (!save) {
-      if (this.props.isNew) {
-        return actionTrigger$.next(new DeleteQueryAction(this.props.query));
-      }
-      return actionTrigger$.next(new CloseEditAction());
-    }
-    actionTrigger$.next(new UpdateQueryAction(this.props.query, this.state));
-  };
-
   render() {
-    const { morph, query } = this.props;
+    const { morph, query, handleCancel, handleSave } = this.props;
     const saveLabel = this.props.isNew ? 'create' : 'update';
-    const dialogProps = {
+    const dialogProps: DialogProps = {
       morph,
       dialogTitle: `Edit ${query.name}#${query.id}`,
       actions: [
-        <StButton
-          label={'cancel'}
-          emphaze={ButtonEmphaze.Medium}
-          onClick={() => this.handleClose(false)}
-        />,
+        <StButton label={'cancel'} emphaze={ButtonEmphaze.Medium} onClick={handleCancel} />,
         <StButton
           label={saveLabel}
           emphaze={ButtonEmphaze.High}
-          onClick={() => this.handleClose(true)}
+          onClick={() => handleSave(this.state)}
         />,
       ],
       content: (
@@ -75,6 +57,7 @@ class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
           onChange={e => this.handleChange('name')(e.target.value)}
         />
       ),
+      onCancel: handleCancel,
     };
     return <Dialog {...dialogProps} scrim={true} />;
   }
