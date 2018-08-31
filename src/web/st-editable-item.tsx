@@ -20,12 +20,20 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
 
   handleClick = () => this.setState({ opened: true });
 
-  handleSave = (query) => {
+  handleSave = query => {
     if (this.props.isNew) {
       return;
     }
-    actionTrigger$.next(new UpdateQueryAction(this.props.item, query))
-  }
+    actionTrigger$.next(new UpdateQueryAction(this.props.item, query));
+  };
+
+  handleCancel = (data: MorphParameters) => () => {
+    data.go(0);
+    setTimeout(() => {
+      this.setState({ opened: false });
+      data.clean();
+    }, 700);
+  };
 
   handleMorph = (data: MorphParameters) => {
     const { item, isNew, ItemCardCmp, ItemEditCmp, theme, ...defaultHostProps } = this.props;
@@ -39,7 +47,14 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
     return (
       <div {...hostProps}>
         <ItemCardCmp morph={data} {...item} onClick={this.handleClick} />
-        {this.state.opened && <ItemEditCmp morph={data} query={item} isNew={isNew} handleCancel={() => data.go(0)} />}
+        {this.state.opened && (
+          <ItemEditCmp
+            morph={data}
+            query={item}
+            isNew={isNew}
+            handleCancel={this.handleCancel(data)}
+          />
+        )}
       </div>
     );
   };

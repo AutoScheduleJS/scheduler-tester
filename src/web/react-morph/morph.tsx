@@ -126,6 +126,7 @@ export interface MorphParameters {
   state: 'from' | 'to';
   hide: noParamFunc;
   init: (t: number) => void;
+  clean: () => void;
 }
 
 type childFunc = (data: MorphParameters) => React.ReactNode;
@@ -392,6 +393,16 @@ export class Morph extends React.Component<MorphProps> {
     requestAnimationFrame(() => this.go(to));
   };
 
+  clean = () => {
+    this.timeline = [];
+    // this.elementsCloned.forEach(node => this.props.portalElement.removeChild(node));
+    // this.fadeOutElements = [];
+    // this.fadeInElements = [];
+    // this.hideElements = [];
+    // this.elementFrom = {};
+    // this.elementTo = {};
+  }
+
   render() {
     const renderedChildren = this.props.children({
       from: this.from,
@@ -404,6 +415,7 @@ export class Morph extends React.Component<MorphProps> {
       state: this.state.state,
       hide: this.hide,
       init: this.init,
+      clean: this.clean,
     });
 
     return renderedChildren && React.Children.only(renderedChildren);
