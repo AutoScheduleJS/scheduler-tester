@@ -1,9 +1,7 @@
-import { withTheme } from 'emotion-theming';
-import * as React from 'react';
-import { Morph, MorphParameters } from './react-morph/morph';
-import { mergeProps } from './util/hoc.util';
 import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import { UpdateQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
+import * as React from 'react';
+import { SpringMorph, SpringMorphParameters } from './util/morph';
 
 interface IEditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
@@ -14,55 +12,26 @@ interface IEditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
-  state = {
-    opened: false,
-  };
-
-  handleClick = () => this.setState({ opened: true });
-
   handleSave = query => {
     if (this.props.isNew) {
       return;
     }
     actionTrigger$.next(new UpdateQueryAction(this.props.item, query));
   };
-
-  handleCancel = (data: MorphParameters) => () => {
-    data.go(0);
-    setTimeout(() => {
-      this.setState({ opened: false });
-      data.clean();
-    }, 700);
-  };
-
-  handleMorph = (data: MorphParameters) => {
-    const { item, isNew, ItemCardCmp, ItemEditCmp, theme, ...defaultHostProps } = this.props;
+  handleMorph = (data: SpringMorphParameters) => {
+    const { item, isNew, ItemCardCmp, ItemEditCmp } = this.props;
     console.log('render morph');
-    const hostProps = mergeProps(defaultHostProps);
-    if (this.state.opened && data.state === 'from') {
-      setTimeout(() => {
-        data.go(1);
-      }, 0);
-    }
     return (
-      <div {...hostProps}>
-        <ItemCardCmp morph={data} {...item} onClick={this.handleClick} />
-        {this.state.opened && (
-          <ItemEditCmp
-            morph={data}
-            query={item}
-            isNew={isNew}
-            handleCancel={this.handleCancel(data)}
-          />
-        )}
-      </div>
+      <React.Fragment>
+        <ItemCardCmp {...data.from()} {...item} onClick={() => data.toggle()} />
+        <ItemEditCmp {...data.to()} query={item} isNew={isNew} handleCancel={() => data.toggle()} />
+      </React.Fragment>
     );
   };
 
   render() {
-    console.log('render st-editable-item');
-    return <Morph>{this.handleMorph}</Morph>;
+    return <SpringMorph>{this.handleMorph}</SpringMorph>;
   }
 }
 
-export const StEditableItem = withTheme(StEditableItemImpl);
+export const StEditableItem = StEditableItemImpl;

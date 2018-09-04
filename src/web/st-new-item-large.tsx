@@ -1,30 +1,34 @@
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
+import { Ref } from 'react';
 import { Button, ButtonEmphaze } from './button/button';
-import { MorphParameters } from './react-morph/morph';
 
 interface CustomableProps extends React.ReactHTMLElement<HTMLDivElement> {
   theme?: any;
-  morph: MorphParameters;
 }
 
-interface StNewItemLargeProps extends CustomableProps {}
+interface StNewItemLargeProps extends CustomableProps {
+  forwardedRef?: Ref<HTMLDivElement>;
+}
 
 class StNewItemLargeImpl extends React.PureComponent<StNewItemLargeProps> {
   render() {
-    const { morph, key, ...defaultHostProps } = this.props;
+    const { key, forwardedRef, ...defaultHostProps } = this.props;
     return (
       <React.Fragment>
         <Button
-          {...morph.from('container')}
           emphaze={ButtonEmphaze.Medium}
           label={'+ new'}
           {...defaultHostProps}
+          ref={forwardedRef}
         />
-        <div {...morph.from('title')} />
       </React.Fragment>
     );
   }
 }
 
-export const StNewItemLarge = withTheme(StNewItemLargeImpl);
+const StNewItemLargeWithTheme = withTheme(StNewItemLargeImpl);
+
+export const StNewItemLarge = React.forwardRef<HTMLDivElement, StNewItemLargeProps>(
+  (props: any, ref) => <StNewItemLargeWithTheme {...props} forwardedRef={ref} />
+);

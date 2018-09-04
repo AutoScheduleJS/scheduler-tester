@@ -2,15 +2,14 @@ import { IQuery } from '@autoschedule/queries-fn';
 import * as React from 'react';
 import { ButtonEmphaze } from './button/button';
 import { Dialog, DialogProps } from './modal/dialog';
-import { MorphParameters } from './react-morph/morph';
 import { StButton } from './st-button';
 
 interface IqueryEditProps {
   query: IQuery;
   isNew: boolean;
-  morph: MorphParameters;
   handleSave: (state: IQuery) => void;
   handleCancel: () => void;
+  forwardedRef?: React.Ref<HTMLDivElement>;
 }
 
 interface QueryEditState extends IQuery {}
@@ -37,10 +36,9 @@ class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
   };
 
   render() {
-    const { morph, query, handleCancel, handleSave } = this.props;
+    const { query, handleCancel, handleSave, forwardedRef } = this.props;
     const saveLabel = this.props.isNew ? 'create' : 'update';
     const dialogProps: DialogProps = {
-      morph,
       dialogTitle: `Edit ${query.name}#${query.id}`,
       actions: [
         <StButton label={'cancel'} emphaze={ButtonEmphaze.Medium} onClick={handleCancel} />,
@@ -59,8 +57,10 @@ class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
       ),
       onCancel: handleCancel,
     };
-    return <Dialog {...dialogProps} scrim={true} />;
+    return <Dialog ref={forwardedRef} {...dialogProps} scrim={true} />;
   }
 }
 
-export const StEditQuery = QueryEditCmp;
+export const StEditQuery = React.forwardRef<HTMLDivElement, IqueryEditProps>((props: any, ref) => (
+  <QueryEditCmp {...props} forwardedRef={ref} />
+));

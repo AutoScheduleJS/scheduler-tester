@@ -3,7 +3,6 @@ import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { animated, Transition } from 'react-spring';
 import { ElevationProps } from '../elevation/elevation';
-import { MorphParameters } from '../react-morph/morph';
 import { Typography } from '../typography/typography';
 import { merge, mergeProps } from '../util/hoc.util';
 import { Modal } from './modal';
@@ -16,9 +15,9 @@ export interface DialogProps extends CustomableProps {
   dialogTitle: string;
   content?: React.ReactNode;
   scrim?: boolean;
-  onCancel?: () => void,
+  onCancel?: () => void;
   actions: Array<React.ReactNode>;
-  morph: MorphParameters;
+  forwardedRef?: React.Ref<HTMLDivElement>;
 }
 
 interface DialogTheme {
@@ -98,16 +97,16 @@ class DialogImpl extends React.PureComponent<DialogProps> {
       dialogTitle,
       content,
       actions,
-      morph,
       scrim,
       onCancel,
       theme: incomingTheme,
+      forwardedRef,
       ...defaultHostProps
     } = this.props;
     const theme = defaultTheme(incomingTheme);
     const hostProps = mergeProps(
       ElevationProps(theme.dialog.elevation, theme),
-      DialogRootClass(theme),
+      { className: themeToPosition(theme) },
       defaultHostProps
     );
     return (
@@ -115,28 +114,28 @@ class DialogImpl extends React.PureComponent<DialogProps> {
         {scrim && (
           <Transition
             native
-            from={{ opacity: morph.state === 'from' ? 0 : 1 }}
-            enter={{ opacity: morph.state === 'from' ? 1 : 0 }}
-            leave={{ opacity: morph.state === 'from' ? 0 : 1 }}
+            from={{ opacity: 'from' === 'from' ? 0 : 1 }}
+            enter={{ opacity: 'from' === 'from' ? 1 : 0 }}
+            leave={{ opacity: 'from' === 'from' ? 0 : 1 }}
           >
-            {props => <animated.div
-              className={themeToScrimClass(theme)}
-              onClick={onCancel}
-              style={props} />
-            }
+            {props => (
+              <animated.div className={themeToScrimClass(theme)} onClick={onCancel} style={props} />
+            )}
           </Transition>
         )}
-        <div {...hostProps} {...morph.to('container')}>
-          {content}
-        </div>
-        <div className={themeToPosition(theme)} {...morph.to('title')}>
+        <div ref={forwardedRef} {...hostProps}>
           <Typography scale={'H6'} baselineTop={theme.dialog.titleBaseline}>
             {dialogTitle}
           </Typography>
+          <div {...DialogRootClass(theme)}>{content}</div>
         </div>
       </Modal>
     );
   }
 }
 
-export const Dialog = withTheme(DialogImpl);
+const DialogWithTheme = withTheme(DialogImpl);
+
+export const Dialog = React.forwardRef<HTMLDivElement, DialogProps>((props: any, ref) => (
+  <DialogWithTheme {...props} forwardedRef={ref} />
+));
