@@ -4,7 +4,7 @@ import { ButtonEmphaze } from './button/button';
 import { Dialog, DialogProps } from './modal/dialog';
 import { StButton } from './st-button';
 
-interface IqueryEditProps {
+interface IqueryEditProps extends React.HTMLAttributes<HTMLDivElement> {
   query: IQuery;
   isNew: boolean;
   handleSave: (state: IQuery) => void;
@@ -36,7 +36,7 @@ class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
   };
 
   render() {
-    const { query, handleCancel, handleSave, forwardedRef } = this.props;
+    const { query, handleCancel, handleSave, style, forwardedRef } = this.props;
     const saveLabel = this.props.isNew ? 'create' : 'update';
     const dialogProps: DialogProps = {
       dialogTitle: `Edit ${query.name}#${query.id}`,
@@ -57,7 +57,7 @@ class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
       ),
       onCancel: handleCancel,
     };
-    return <Dialog ref={forwardedRef} {...dialogProps} scrim={true} />;
+    return <Dialog style={style} ref={forwardedRef} {...dialogProps} scrim={true} />;
   }
 }
 

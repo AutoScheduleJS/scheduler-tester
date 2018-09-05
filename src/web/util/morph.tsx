@@ -1,6 +1,6 @@
-import { css } from 'emotion';
+import { Style } from 'jss/css';
 import * as React from 'react';
-import { animated, AnimatedValue, controller as spring, interpolate } from 'react-spring';
+import { AnimatedValue, controller as spring, interpolate } from 'react-spring';
 
 interface SpringMorphProps extends React.HTMLAttributes<HTMLDivElement> {
   children: (params: SpringMorphParameters) => React.ReactNode;
@@ -9,8 +9,10 @@ interface SpringMorphProps extends React.HTMLAttributes<HTMLDivElement> {
 export interface SpringMorphParameters {
   from: () => { ref: React.Ref<any> };
   to: () => { ref: React.Ref<any> };
+  fromStyle: Style;
+  toStyle: Style;
   toggle: () => void;
-  state: 'from' | 'to';
+  state: SpringMorphState;
 }
 
 interface SpringMorphState {
@@ -18,11 +20,7 @@ interface SpringMorphState {
   displayTo: boolean;
 }
 
-const defaultClass = css`
-  display: inline-block;
-`;
-
-export class SpringMorph extends React.PureComponent<SpringMorphProps> {
+export class SpringMorph extends React.Component<SpringMorphProps> {
   // opacity, scaleX, scaleY, translateX, translateY
   fromAnimations = [
     new AnimatedValue(1),
@@ -128,34 +126,36 @@ export class SpringMorph extends React.PureComponent<SpringMorphProps> {
   };
 
   render() {
-    const { children, ...defaultProps } = this.props;
-    const toRender: any = children({
+    const { children } = this.props;
+    return children({
       from: this.from,
       to: this.to,
+      fromStyle: this.interpolateSTyles(this.fromAnimations),
+      toStyle: this.interpolateSTyles(this.toAnimations),
       toggle: this.toggle,
-      state: this.state.state,
+      state: this.state,
     });
-    const childrenArr = toRender.props.children;
-    return (
-      <React.Fragment>
-        <animated.div
-          {...defaultProps}
-          className={defaultClass}
-          style={this.interpolateSTyles(this.fromAnimations)}
-        >
-          {childrenArr[0]}
-        </animated.div>
-        {this.state.displayTo && (
-          <animated.div
-            {...defaultProps}
-            className={defaultClass}
-            style={this.interpolateSTyles(this.toAnimations)}
-          >
-            {childrenArr[1]}
-          </animated.div>
-        )}
-      </React.Fragment>
-    );
+
+    // return (
+    //   <React.Fragment>
+    //     <animated.div
+    //       {...defaultProps}
+    //       className={defaultClass}
+    //       style={this.interpolateSTyles(this.fromAnimations)}
+    //     >
+    //       {childrenArr[0]}
+    //     </animated.div>
+    //     {this.state.displayTo && (
+    //       <animated.div
+    //         {...defaultProps}
+    //         className={defaultClass}
+    //         style={this.interpolateSTyles(this.toAnimations)}
+    //       >
+    //         {childrenArr[1]}
+    //       </animated.div>
+    //     )}
+    //   </React.Fragment>
+    // );
   }
 }
 

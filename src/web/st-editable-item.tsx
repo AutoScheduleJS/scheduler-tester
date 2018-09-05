@@ -23,8 +23,16 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
     console.log('render morph');
     return (
       <React.Fragment>
-        <ItemCardCmp {...data.from()} {...item} onClick={() => data.toggle()} />
-        <ItemEditCmp {...data.to()} query={item} isNew={isNew} handleCancel={() => data.toggle()} />
+        <ItemCardCmp {...data.from()} {...item} style={data.fromStyle} onClick={() => data.toggle()} />
+        {data.state.displayTo && (
+          <ItemEditCmp
+            {...data.to()}
+            query={item}
+            isNew={isNew}
+            style={data.toStyle}
+            handleCancel={() => data.toggle()}
+          />
+        )}
       </React.Fragment>
     );
   };
