@@ -17,7 +17,6 @@ export interface EditUI {
   userstate: IUserstateCollection | false;
   query: IQuery | false;
   isNew: boolean;
-  fromInfo: any;
 }
 
 export const editUiReducer$ = (state: ICoreState, action: actionType): ICoreState | false => {

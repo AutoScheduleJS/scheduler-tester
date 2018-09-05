@@ -3,7 +3,7 @@ import { configReducer } from '@scheduler-tester/core-state/config.reducer';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { actionType } from '@scheduler-tester/core-state/core.store';
 import { editTabUiReducer$, TabId } from '@scheduler-tester/core-state/edit-tab.ui.reducer';
-import { editUiL, editUiReducer$ } from '@scheduler-tester/core-state/edit.ui.reducer';
+import { editUiReducer$ } from '@scheduler-tester/core-state/edit.ui.reducer';
 import { onTestbenchQueriesReducer$ } from '@scheduler-tester/core-state/on-testbench-queries.reducer';
 import { onTestbenchUserstateReducer$ } from '@scheduler-tester/core-state/on-testbench-userstate.reducer';
 import { stepOptionReducer$ } from '@scheduler-tester/core-state/step-option.reducer';
@@ -15,7 +15,7 @@ import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
 
 export class AddItemAction {
-  constructor(public fromInfo) {}
+  constructor() {}
 }
 
 export class AddQueryAction {
@@ -86,7 +86,7 @@ export const globalUiReducer$ = (
 
 const globalReducer = (state: ICoreState, action: actionType): ICoreState | false => {
   if (action instanceof AddItemAction) {
-    return handleNewItem(state, action);
+    return handleNewItem(state);
   }
   if (action instanceof AddQueryAction) {
     return handleNewQuery(state);
@@ -119,7 +119,7 @@ const handleUpdateQuery = (state: ICoreState, action: UpdateQueryAction): ICoreS
   };
   const ui: UIState = {
     ...state.ui,
-    edit: { userstate: false, query: false, isNew: false, fromInfo: null },
+    edit: { userstate: false, query: false, isNew: false },
   };
   return {
     ...suiteState,
@@ -143,7 +143,7 @@ const handleDeleteQuery = (state: ICoreState, action: DeleteQueryAction): ICoreS
   };
   const ui: UIState = {
     ...state.ui,
-    edit: { userstate: false, query: false, isNew: false, fromInfo: null },
+    edit: { userstate: false, query: false, isNew: false },
   };
   return {
     ...suiteState,
@@ -177,12 +177,12 @@ const findAndUpdateCollections = (
   });
 };
 
-const handleNewItem = (state: ICoreState, action: AddItemAction): ICoreState => {
+const handleNewItem = (state: ICoreState): ICoreState => {
   if (state.ui.editTab === TabId.Queries) {
-    return editUiL.fromInfo.set(action.fromInfo)(handleNewQuery(state));
+    return handleNewQuery(state);
   }
   if (state.ui.editTab === TabId.Userstates) {
-    return editUiL.fromInfo.set(action.fromInfo)(handleNewUserstate(state));
+    return handleNewUserstate(state);
   }
   return state;
 };
@@ -202,7 +202,6 @@ const handleNewQuery = (state: ICoreState): ICoreState => {
       userstate: false,
       query: newQuery,
       isNew: true,
-      fromInfo: null
     },
   };
   return {
@@ -222,7 +221,7 @@ const handleNewUserstate = (state: ICoreState): ICoreState => {
   };
   const ui: UIState = {
     editTab: TabId.Userstates,
-    edit: { userstate: newUserstate, query: false, isNew: true, fromInfo: null },
+    edit: { userstate: newUserstate, query: false, isNew: true },
   };
   return {
     ...suiteState,
@@ -240,7 +239,7 @@ const handleUpdateUserstate = (state: ICoreState, action: UpdateUserstateAction)
   };
   const ui: UIState = {
     ...state.ui,
-    edit: { userstate: false, query: false, isNew: false, fromInfo: null },
+    edit: { userstate: false, query: false, isNew: false },
   };
   return {
     ...suiteState,
@@ -257,7 +256,7 @@ const handleDeleteUserstate = (state: ICoreState, action: DeleteUserstateAction)
   };
   const ui: UIState = {
     ...state.ui,
-    edit: { userstate: false, query: false, isNew: false, fromInfo: null },
+    edit: { userstate: false, query: false, isNew: false },
   };
   return {
     ...suiteState,
