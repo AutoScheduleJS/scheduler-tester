@@ -56,6 +56,7 @@ export class SpringMorph extends React.PureComponent<SpringMorphProps> {
         return;
       }
       this.boxFrom = getBox(element);
+      console.log('morph - From', this.boxFrom);
     },
   });
 
@@ -70,6 +71,7 @@ export class SpringMorph extends React.PureComponent<SpringMorphProps> {
       this.fromMorph = diffRect(this.boxFrom, boxTo);
       this.toMorph = diffRect(boxTo, this.boxFrom, true);
       this.fromMorph.forEach((morphVal, i) => this.toAnimations[i + 1].setValue(morphVal));
+      console.log('morph - To', boxTo);
     },
   });
 
@@ -100,6 +102,10 @@ export class SpringMorph extends React.PureComponent<SpringMorphProps> {
   };
 
   launchAnimation = () => {
+    if (!this.toMorph) {
+      console.log('To ref hasnt been called');
+      return setTimeout(() => this.launchAnimation(), 0);
+    }
     if (this.state.state === 'to') {
       this.executeAnimation(0, 1, this.toMorph, this.neutralMorph);
     } else {
