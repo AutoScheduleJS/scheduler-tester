@@ -1,7 +1,7 @@
 import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import { UpdateQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
+import Flipping from 'flipping';
 import * as React from 'react';
-import { SpringMorph, SpringMorphParameters } from './util/morph';
 
 interface IEditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
@@ -12,33 +12,38 @@ interface IEditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
+  state = {
+    displayTo: false,
+  };
+
+  private flipping;
+
+  constructor(props) {
+    super(props);
+    this.flipping = new Flipping();
+  }
+
   handleSave = query => {
     if (this.props.isNew) {
       return;
     }
     actionTrigger$.next(new UpdateQueryAction(this.props.item, query));
   };
-  handleMorph = (data: SpringMorphParameters) => {
-    const { item, isNew, ItemCardCmp, ItemEditCmp } = this.props;
-    console.log('render morph');
-    return (
-      <React.Fragment>
-        <ItemCardCmp {...data.from()} {...item} style={data.fromStyle} onClick={() => data.toggle()} />
-        {data.state.displayTo && (
-          <ItemEditCmp
-            {...data.to()}
-            query={item}
-            isNew={isNew}
-            style={data.toStyle}
-            handleCancel={() => data.toggle()}
-          />
-        )}
-      </React.Fragment>
-    );
+
+  handleClick = () => {
+    this.flipping.read();
   };
 
   render() {
-    return <SpringMorph>{this.handleMorph}</SpringMorph>;
+    const { item, isNew, ItemCardCmp, ItemEditCmp } = this.props;
+    return (
+      <React.Fragment>
+        {!this.state.displayTo && <ItemCardCmp {...item} onClick={() => this.handleClick()} />}
+        {this.state.displayTo && (
+          <ItemEditCmp query={item} isNew={isNew} handleCancel={() => this.handleClick()} />
+        )}
+      </React.Fragment>
+    );
   }
 }
 
