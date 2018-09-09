@@ -13,7 +13,7 @@ interface StNewItemLargeProps extends CustomableProps {
 
 class StNewItemLargeImpl extends React.PureComponent<StNewItemLargeProps> {
   render() {
-    const { key, forwardedRef, ...defaultHostProps } = this.props;
+    const { key, forwardedRef, theme, ...defaultHostProps } = this.props;
     return (
       <React.Fragment>
         <Button

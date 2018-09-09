@@ -1,7 +1,7 @@
 import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import { UpdateQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
-import Flipping from 'flipping';
 import * as React from 'react';
+import { MorphWaa } from './util/morph-waa';
 
 interface IEditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
@@ -11,16 +11,17 @@ interface IEditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
   isNew: boolean;
 }
 
-class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
-  state = {
-    displayTo: false,
-  };
+interface StEditableItemState {
+  state: 'from' | 'to';
+}
 
-  private flipping;
+class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
+  state: StEditableItemState = {
+    state: 'from',
+  };
 
   constructor(props) {
     super(props);
-    this.flipping = new Flipping();
   }
 
   handleSave = query => {
@@ -31,18 +32,17 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
   };
 
   handleClick = () => {
-    this.flipping.read();
+    this.setState({ displayTo: this.state.state === 'from' ? 'to' : 'from' });
   };
 
   render() {
     const { item, isNew, ItemCardCmp, ItemEditCmp } = this.props;
     return (
-      <React.Fragment>
-        {!this.state.displayTo && <ItemCardCmp {...item} onClick={() => this.handleClick()} />}
-        {this.state.displayTo && (
-          <ItemEditCmp query={item} isNew={isNew} handleCancel={() => this.handleClick()} />
-        )}
-      </React.Fragment>
+      <MorphWaa
+        fromNode={<ItemCardCmp {...item} onClick={() => this.handleClick()} />}
+        toNode={<ItemEditCmp query={item} isNew={isNew} handleCancel={() => this.handleClick()} />}
+        state={this.state.state}
+      />
     );
   }
 }

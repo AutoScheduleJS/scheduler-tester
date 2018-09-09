@@ -2,11 +2,10 @@ import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Ref } from 'react';
+import { EffectRippleProps } from '../effect-ripple/effect-ripple';
 import { ElevationProps } from '../elevation/elevation';
 import { TypographyProps } from '../typography/typography';
 import { merge, mergeProps } from '../util/hoc.util';
-import { EffectRippleProps } from '../effect-ripple/effect-ripple';
-import { animated } from 'react-spring';
 
 interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
@@ -104,9 +103,9 @@ class ButtonImpl extends React.PureComponent<ButtonProps> {
       defaultHostProps
     );
     return (
-      <animated.div ref={forwardedRef} {...hostProps}>
+      <div ref={forwardedRef} {...hostProps}>
         {label}
-      </animated.div>
+      </div>
     );
   }
 }

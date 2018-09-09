@@ -109,7 +109,6 @@ class DialogImpl extends React.PureComponent<DialogProps> {
       { className: themeToPosition(theme) },
       defaultHostProps
     );
-    console.log('dialog styles', this.props.style);
     return (
       <Modal>
         {scrim && (
@@ -124,12 +123,12 @@ class DialogImpl extends React.PureComponent<DialogProps> {
             )}
           </Transition>
         )}
-        <animated.div ref={forwardedRef} {...hostProps}>
+        <div ref={forwardedRef} {...hostProps}>
           <Typography scale={'H6'} baselineTop={theme.dialog.titleBaseline}>
             {dialogTitle}
           </Typography>
           <div {...DialogRootClass(theme)}>{content}</div>
-        </animated.div>
+        </div>
       </Modal>
     );
   }

@@ -45,14 +45,6 @@ class StQueriesManagerImpl extends React.PureComponent<
           ItemCardCmp={StNewItemLarge}
           ItemEditCmp={StEditQuery}
         />
-        {/* <QueryMatcher
-          ToRender={StNewItemLarge}
-          action={AddQueryAction}
-          mediaQuery={`(min-width: ${breakpoints[BreakpointsEnum.xsmall4]}px)`}
-        /> */}
-        {/**
-         * Use another element than QueryCard to handle morph
-         */}
         {queries.map(query => <StQueryCard key={query.id} {...{ query }} />)}
       </LayoutMasonry>
     );
