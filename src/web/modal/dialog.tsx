@@ -123,11 +123,13 @@ class DialogImpl extends React.PureComponent<DialogProps> {
             )}
           </Transition>
         )}
-        <div ref={forwardedRef} {...hostProps}>
+        <div {...hostProps}>
           <Typography scale={'H6'} baselineTop={theme.dialog.titleBaseline}>
             {dialogTitle}
           </Typography>
-          <div {...DialogRootClass(theme)}>{content}</div>
+          <div ref={forwardedRef} {...DialogRootClass(theme)}>
+            {content}
+          </div>
         </div>
       </Modal>
     );

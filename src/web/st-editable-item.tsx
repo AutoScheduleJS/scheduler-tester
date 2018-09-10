@@ -1,7 +1,7 @@
 import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import { UpdateQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
 import * as React from 'react';
-import { MorphWaa } from './util/morph-waa';
+import { MorphWaa, MorphWaaChildrenParams } from './util/morph-waa';
 
 interface IEditableItemProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
@@ -32,18 +32,26 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
   };
 
   handleClick = () => {
-    this.setState({ displayTo: this.state.state === 'from' ? 'to' : 'from' });
+    this.setState({ state: this.state.state === 'from' ? 'to' : 'from' });
+  };
+
+  morphRender = (params: MorphWaaChildrenParams) => {
+    const { item, isNew, ItemCardCmp, ItemEditCmp } = this.props;
+    return (
+      <React.Fragment>
+        <ItemCardCmp {...params.from()} {...item} onClick={() => this.handleClick()} />
+        <ItemEditCmp
+          {...params.to()}
+          query={item}
+          isNew={isNew}
+          handleCancel={() => this.handleClick()}
+        />
+      </React.Fragment>
+    );
   };
 
   render() {
-    const { item, isNew, ItemCardCmp, ItemEditCmp } = this.props;
-    return (
-      <MorphWaa
-        fromNode={<ItemCardCmp {...item} onClick={() => this.handleClick()} />}
-        toNode={<ItemEditCmp query={item} isNew={isNew} handleCancel={() => this.handleClick()} />}
-        state={this.state.state}
-      />
-    );
+    return <MorphWaa state={this.state.state}>{this.morphRender}</MorphWaa>;
   }
 }
 

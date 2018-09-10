@@ -1,33 +1,190 @@
 import * as React from 'react';
 
+export interface MorphWaaChildrenParams {
+  from: () => { ref: React.Ref<any> };
+  to: () => { ref: React.Ref<any> };
+}
+
 interface MorphWaaProps {
-  fromNode: React.ReactNode;
-  toNode: React.ReactNode;
   state: 'from' | 'to';
+  children: (params: MorphWaaChildrenParams) => React.ReactFragment;
 }
 
 interface MorphWaaState {
   state: 'from' | 'to';
+  toOpacity: number;
+  animate: boolean;
 }
 
+interface ChildInfo {
+  box: IBox;
+  clone: HTMLElement;
+}
+
+/**
+ * when state change: save data-key from 'from'
+ * save location/additional info
+ * dom change
+ * save location/additional info from 'to'
+ * make 'to' invisible
+ * create div in absolute position for 'to' and 'from'
+ * make them move
+ * when done, remove them and change 'to' opacity to be visible
+ */
 export class MorphWaa extends React.Component<MorphWaaProps> {
   state: MorphWaaState = {
     state: 'from',
+    toOpacity: 0,
+    animate: false,
   };
+
+  private fromInfo: ChildInfo | undefined;
+  private toInfo: ChildInfo | undefined;
+  private fromClones: HTMLElement[] = [];
+  private toClones: HTMLElement[] = [];
 
   static getDerivedStateFromProps(props: MorphWaaProps, state: MorphWaaState) {
     if (props.state === state.state) {
       return null;
     }
-    return { state: props.state };
+    return { state: props.state, animate: true };
   }
 
+  animate = () => {
+    const fromInfo = this.fromInfo;
+    const toInfo = this.toInfo;
+    if (!fromInfo || !toInfo) {
+      console.log('recall animate');
+      setTimeout(() => this.animate(), 0);
+      return;
+    }
+    const start = this.state.state === 'from' ? toInfo.box : fromInfo.box;
+    const end = this.state.state === 'to' ? toInfo.box : fromInfo.box;
+    const fromClone = setStylesFromBox(start, fromInfo.clone);
+    this.fromClones.push(document.body.appendChild(fromClone));
+    const toClone = setStylesFromBox(end, toInfo.clone);
+    this.toClones.push(document.body.appendChild(toClone));
+
+    const fromAnim = fromClone.animate(
+      [
+        {
+          opacity: 1,
+          transform: neutralScale,
+        },
+        {
+          opacity: 0,
+          transform: boxesToTransform(toInfo.box, fromInfo.box, true),
+        },
+      ] as any[],
+      2000
+    );
+    const toAnim = toClone.animate(
+      [
+        { opacity: 0, transform: boxesToTransform(fromInfo.box, toInfo.box, true) },
+        {
+          opacity: 1,
+          transform: neutralScale,
+        },
+      ] as any[],
+      {
+        duration: 2000,
+      }
+    );
+    toAnim.onfinish = () => {
+      this.fromClones = [];
+      this.toClones = [];
+      document.body.removeChild(fromClone);
+      document.body.removeChild(toClone);
+    };
+    // setTimeout(() => {
+    //   fromAnim.pause();
+    //   toAnim.pause();
+    // }, 150);
+  };
+
+  from = (): any => ({
+    ref: (node: HTMLDivElement) => {
+      if (!node || this.fromInfo) {
+        return;
+      }
+      this.fromInfo = elemToChildInfo(node);
+    },
+  });
+
+  to = (): any => ({
+    ref: (node: HTMLDivElement) => {
+      if (!node) {
+        return;
+      }
+      this.toInfo = elemToChildInfo(node);
+    },
+  });
+
   render() {
+    const children: any = this.props.children({ from: this.from, to: this.to });
+    const childArray = React.Children.toArray(children.props.children);
+    if (this.state.animate && !this.fromClones.length) {
+      this.animate();
+    }
     return (
       <React.Fragment>
-        {this.state.state === 'from' && this.props.fromNode}
-        {this.state.state === 'to' && this.props.toNode}
+        {this.state.state === 'from' && childArray[0]}
+        {this.state.state === 'to' && childArray[1]}
       </React.Fragment>
     );
   }
 }
+
+const elemToChildInfo = (elm: HTMLDivElement): ChildInfo => {
+  return {
+    box: getBox(elm),
+    clone: elm.cloneNode(true) as HTMLElement,
+  };
+};
+
+interface IBox {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}
+
+const setStylesFromBox = (box: IBox, elm: HTMLElement) => {
+  elm.style.transformOrigin = '5% top';
+  elm.style.position = 'absolute';
+  elm.style.top = box.top + 'px';
+  elm.style.left = box.left + 'px';
+  elm.style.width = box.width + 'px';
+  elm.style.height = box.height + 'px';
+  return elm;
+};
+
+const neutralScale = 'scale(1, 1) translate(0, 0)';
+
+const boxesToTransform = (a: IBox, b: IBox, scale?: boolean) => {
+  const [scaleX, scaleY, translateX, translateY] = diffRect(a, b, scale);
+  const transformProp = `scale(${scaleX}, ${scaleY}) translate(${translateX}px, ${translateY}px)`;
+  console.log('transfo prop', transformProp);
+  return transformProp;
+};
+
+const diffRect = (a: IBox, b: IBox, scale?: boolean) => {
+  const scaleY = a.height / b.height;
+  const scaleX = a.width / b.width;
+  const translateY = a.top - b.top;
+  const translateX = a.left - b.left;
+  return scale
+    ? [scaleX, scaleY, translateX / scaleX, translateY / scaleY]
+    : [scaleX, scaleY, translateX, translateY];
+};
+
+const getBox = (elm: HTMLDivElement): IBox => {
+  const box = elm.getBoundingClientRect();
+  const iBox = {
+    top: box.top + window.scrollY,
+    left: box.left + window.scrollX,
+    width: box.width,
+    height: box.height,
+  };
+  return iBox;
+};
