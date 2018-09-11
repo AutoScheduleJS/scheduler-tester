@@ -77,7 +77,10 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
           transform: boxesToTransform(toInfo.box, fromInfo.box),
         },
       ] as any[],
-      duration
+      {
+        duration,
+        direction: 'normal',
+      }
     );
     const toAnim = toClone.animate(
       [
@@ -87,7 +90,10 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
           transform: neutralScale,
         },
       ] as any[],
-      duration
+      {
+        duration,
+        direction: 'normal',
+      }
     );
     // setTimeout(() => {
     //   toAnim.pause();
