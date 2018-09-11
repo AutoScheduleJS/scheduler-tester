@@ -59,23 +59,17 @@ const defaultTheme = (
     } as DialogTheme,
     theme
   );
-
-const themeToPosition = (theme: DialogTheme) => css`
-  position: fixed;
-  top: 45%;
-  left: calc(50% - ${theme.dialog.width / 2}px);
-  width: ${theme.dialog.width}px;
-  padding-left: ${theme.dialog.margin}px;
-  padding-right: 8px;
-  padding-bottom: 8px;
-`;
-
 const DialogRootClass = (theme: DialogTheme) => {
   const dialog = theme.dialog;
   return {
     className: css`
-      ${themeToPosition(theme)}
-      padding-top: ${theme.dialog.contentMarginTop}px;
+      position: fixed;
+      top: 45%;
+      left: calc(50% - ${theme.dialog.width / 2}px);
+      width: ${theme.dialog.width}px;
+      padding-left: ${theme.dialog.margin}px;
+      padding-right: 8px;
+      padding-bottom: 8px;
       background-color: ${dialog.backgroundColor};
       ${dialog.shape};
     `,
@@ -106,9 +100,10 @@ class DialogImpl extends React.PureComponent<DialogProps> {
     const theme = defaultTheme(incomingTheme);
     const hostProps = mergeProps(
       ElevationProps(theme.dialog.elevation, theme),
-      { className: themeToPosition(theme) },
+      DialogRootClass(theme),
       defaultHostProps
     );
+    console.log('defaultHostProps', defaultHostProps, hostProps);
     return (
       <Modal>
         {scrim && (
@@ -123,13 +118,11 @@ class DialogImpl extends React.PureComponent<DialogProps> {
             )}
           </Transition>
         )}
-        <div {...hostProps}>
+        <div ref={forwardedRef} {...hostProps}>
           <Typography scale={'H6'} baselineTop={theme.dialog.titleBaseline}>
             {dialogTitle}
           </Typography>
-          <div ref={forwardedRef} {...DialogRootClass(theme)}>
-            {content}
-          </div>
+          <div>{content}</div>
         </div>
       </Modal>
     );

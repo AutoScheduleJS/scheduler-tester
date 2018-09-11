@@ -3,6 +3,7 @@ import * as React from 'react';
 export interface MorphWaaChildrenParams {
   from: () => { ref: React.Ref<any> };
   to: () => { ref: React.Ref<any> };
+  toOpacity: number;
 }
 
 interface MorphWaaProps {
@@ -47,7 +48,7 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
     if (props.state === state.state) {
       return null;
     }
-    return { state: props.state, animate: true };
+    return { state: props.state, animate: true, toOpacity: 0 };
   }
 
   animate = () => {
@@ -64,7 +65,7 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
     this.fromClones.push(document.body.appendChild(fromClone));
     const toClone = setStylesFromBox(end, toInfo.clone);
     this.toClones.push(document.body.appendChild(toClone));
-
+    const duration = 200;
     const fromAnim = fromClone.animate(
       [
         {
@@ -76,25 +77,28 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
           transform: boxesToTransform(toInfo.box, fromInfo.box),
         },
       ] as any[],
-      2000
+      duration
     );
     const toAnim = toClone.animate(
       [
-        { opacity: 1, transform: boxesToTransform(fromInfo.box, toInfo.box) },
+        { opacity: 0, transform: boxesToTransform(fromInfo.box, toInfo.box) },
         {
           opacity: 1,
           transform: neutralScale,
         },
       ] as any[],
-      {
-        duration: 2000,
-      }
+      duration
     );
+    // setTimeout(() => {
+    //   toAnim.pause();
+    //   fromAnim.pause();
+    // }, 150);
     toAnim.onfinish = () => {
       this.fromClones = [];
       this.toClones = [];
       document.body.removeChild(fromClone);
       document.body.removeChild(toClone);
+      this.setState({ toOpacity: 1, animate: false });
     };
   };
 
@@ -117,7 +121,11 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
   });
 
   render() {
-    const children: any = this.props.children({ from: this.from, to: this.to });
+    const children: any = this.props.children({
+      from: this.from,
+      to: this.to,
+      toOpacity: this.state.toOpacity,
+    });
     const childArray = React.Children.toArray(children.props.children);
     if (this.state.animate && !this.fromClones.length) {
       this.animate();
@@ -159,7 +167,7 @@ const neutralScale = 'scale(1, 1) translate(0, 0)';
 
 const boxesToTransform = (a: IBox, b: IBox) => {
   const [scaleX, scaleY, translateX, translateY] = diffRect(a, b);
-  return `matrix(${scaleX}, 0, 0, ${scaleY}, ${translateX}, ${translateY})`
+  return `matrix(${scaleX}, 0, 0, ${scaleY}, ${translateX}, ${translateY})`;
 };
 
 const diffRect = (a: IBox, b: IBox, scale?: boolean) => {

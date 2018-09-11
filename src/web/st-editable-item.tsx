@@ -1,5 +1,6 @@
 import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import { UpdateQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
+import { css } from 'emotion';
 import * as React from 'react';
 import { MorphWaa, MorphWaaChildrenParams } from './util/morph-waa';
 
@@ -45,6 +46,9 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
           query={item}
           isNew={isNew}
           handleCancel={() => this.handleClick()}
+          className={css`
+            opacity: ${params.toOpacity};
+          `}
         />
       </React.Fragment>
     );
