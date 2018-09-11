@@ -73,14 +73,14 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
         },
         {
           opacity: 0,
-          transform: boxesToTransform(toInfo.box, fromInfo.box, true),
+          transform: boxesToTransform(toInfo.box, fromInfo.box),
         },
       ] as any[],
       2000
     );
     const toAnim = toClone.animate(
       [
-        { opacity: 0, transform: boxesToTransform(fromInfo.box, toInfo.box, true) },
+        { opacity: 1, transform: boxesToTransform(fromInfo.box, toInfo.box) },
         {
           opacity: 1,
           transform: neutralScale,
@@ -96,10 +96,6 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
       document.body.removeChild(fromClone);
       document.body.removeChild(toClone);
     };
-    // setTimeout(() => {
-    //   fromAnim.pause();
-    //   toAnim.pause();
-    // }, 150);
   };
 
   from = (): any => ({
@@ -161,11 +157,9 @@ const setStylesFromBox = (box: IBox, elm: HTMLElement) => {
 
 const neutralScale = 'scale(1, 1) translate(0, 0)';
 
-const boxesToTransform = (a: IBox, b: IBox, scale?: boolean) => {
-  const [scaleX, scaleY, translateX, translateY] = diffRect(a, b, scale);
-  const transformProp = `scale(${scaleX}, ${scaleY}) translate(${translateX}px, ${translateY}px)`;
-  console.log('transfo prop', transformProp);
-  return transformProp;
+const boxesToTransform = (a: IBox, b: IBox) => {
+  const [scaleX, scaleY, translateX, translateY] = diffRect(a, b);
+  return `matrix(${scaleX}, 0, 0, ${scaleY}, ${translateX}, ${translateY})`
 };
 
 const diffRect = (a: IBox, b: IBox, scale?: boolean) => {
