@@ -166,7 +166,7 @@ interface IBox {
 }
 
 const setStylesFromBox = ({ box, clone }: ChildInfo) => {
-  clone.style.transformOrigin = '5% top';
+  clone.style.transformOrigin = 'top left';
   clone.style.position = 'absolute';
   clone.style.top = box.top + 'px';
   clone.style.left = box.left + 'px';
