@@ -35,7 +35,6 @@ class StQueriesManagerImpl extends React.PureComponent<
     if (!queries) {
       return false;
     }
-    const nextId = queriesToNextId(queries);
     const hostProps = mergeProps(PaddingProps(theme), hostStyles, defaultHostProps);
     return (
       <LayoutMasonry itemWidth={'190px'} {...hostProps}>
@@ -43,16 +42,12 @@ class StQueriesManagerImpl extends React.PureComponent<
           FromElem={StNewItemLarge}
           ToElem={StEditQuery}
           state={'from'}
-          fromProps={{ item: { id: nextId } }}
         />
         {queries.map(query => <StQueryCard key={query.id} {...{ query }} />)}
       </LayoutMasonry>
     );
   }
 }
-
-const queriesToNextId = (queries: ReadonlyArray<IQuery>): number =>
-  queries.reduce((max, cur) => (max > cur.id ? max : cur.id), 0) + 1;
 
 const selector = ({ onTestbenchQueries, suites }: ICoreState): IQueriesManagerFromState => ({
   queries: suites[onTestbenchQueries],

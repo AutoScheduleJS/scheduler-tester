@@ -26,21 +26,7 @@ class StNewQueryButtonImpl extends React.PureComponent<INewQueryButtonProps & { 
     this.hostRef = React.createRef();
   }
   handleNew = () => {
-    const div = this.hostRef.current;
-    const pos = div ? div.getBoundingClientRect() : null;
-    actionTrigger$.next(
-      new AddItemAction({
-        shape: css`
-          border-radius: 28px;
-          height: 56px;
-          width: 56px;
-        `,
-        position: {
-          top: pos ? pos.top : null,
-          left: pos ? pos.left : null,
-        },
-      })
-    );
+    actionTrigger$.next(new AddItemAction());
   };
 
   render() {

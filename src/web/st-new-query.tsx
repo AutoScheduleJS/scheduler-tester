@@ -5,34 +5,37 @@ import { Dialog, DialogProps } from './modal/dialog';
 import { StButton } from './st-button';
 
 interface IqueryEditProps extends React.HTMLAttributes<HTMLDivElement> {
-  query: IQuery;
-  handleSave: (state: IQuery) => void;
-  handleCancel: () => void;
   forwardedRef?: React.Ref<HTMLDivElement>;
 }
 
-interface QueryEditState extends IQuery {}
+interface QueryEditState {
+  query?: IQuery;
+}
 
 class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
   state: QueryEditState;
 
   constructor(props: IqueryEditProps) {
     super(props);
-    this.state = {
-      ...props.query,
-    };
+    this.state = {};
   }
 
   handleChange = name => newVal => {
     this.setState({
-      [name]: newVal,
+      query: {
+        [name]: newVal,
+      },
     });
   };
 
   render() {
-    const { query, handleCancel, handleSave, style, forwardedRef, ...defaultHostProps } = this.props;
+    const {
+      style,
+      forwardedRef,
+      ...defaultHostProps
+    } = this.props;
     const dialogProps: DialogProps = {
-      dialogTitle: `Edit ${query.name}#${query.id}`,
+      dialogTitle: `New Query`,
       actions: [
         <StButton label={'cancel'} emphaze={ButtonEmphaze.Medium} onClick={handleCancel} />,
         <StButton
@@ -49,7 +52,7 @@ class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
         />
       ),
       onCancel: handleCancel,
-      ...defaultHostProps
+      ...defaultHostProps,
     };
     return <Dialog style={style} ref={forwardedRef} {...dialogProps} scrim={true} />;
   }
