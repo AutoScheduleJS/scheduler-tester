@@ -40,7 +40,14 @@ class StEditableItemImpl extends React.PureComponent<IEditableItemProps> {
     const { item, isNew, ItemCardCmp, ItemEditCmp } = this.props;
     return (
       <React.Fragment>
-        <ItemCardCmp {...params.from()} {...item} onClick={() => this.handleClick()} />
+        <ItemCardCmp
+          {...params.from()}
+          {...item}
+          onClick={() => this.handleClick()}
+          className={css`
+            opacity: ${params.fromOpacity};
+          `}
+        />
         <ItemEditCmp
           {...params.to()}
           query={item}

@@ -4,6 +4,7 @@ export interface MorphWaaChildrenParams {
   from: () => { ref: React.Ref<any> };
   to: () => { ref: React.Ref<any> };
   toOpacity: number;
+  fromOpacity: number;
 }
 
 interface MorphWaaProps {
@@ -14,6 +15,7 @@ interface MorphWaaProps {
 interface MorphWaaState {
   state: 'from' | 'to';
   toOpacity: number;
+  fromOpacity: number;
   animate: boolean;
 }
 
@@ -36,6 +38,7 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
   state: MorphWaaState = {
     state: 'from',
     toOpacity: 0,
+    fromOpacity: 1,
     animate: false,
   };
 
@@ -48,24 +51,22 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
     if (props.state === state.state) {
       return null;
     }
-    return { state: props.state, animate: true, toOpacity: 0 };
+    return { state: props.state, animate: true, toOpacity: 0, fromOpacity: 0 };
   }
 
   animate = () => {
-    const fromInfo = this.fromInfo;
-    const toInfo = this.toInfo;
-    if (!fromInfo || !toInfo) {
-      console.log('recall animate');
-      setTimeout(() => this.animate(), 0);
-      return;
+    if (!this.fromInfo || !this.toInfo) {
+      return setTimeout(() => this.animate(), 0);
     }
-    const start = this.state.state === 'from' ? toInfo.box : fromInfo.box;
-    const end = this.state.state === 'to' ? toInfo.box : fromInfo.box;
-    const fromClone = setStylesFromBox(start, fromInfo.clone);
+    const isForward = this.state.state === 'to';
+    const fromClone = setStylesFromBox(this.fromInfo);
+    const toClone = setStylesFromBox(this.toInfo);
+
     this.fromClones.push(document.body.appendChild(fromClone));
-    const toClone = setStylesFromBox(end, toInfo.clone);
     this.toClones.push(document.body.appendChild(toClone));
-    const duration = 200;
+
+    const duration = 2000;
+    const direction = isForward ? 'normal' : 'reverse';
     const fromAnim = fromClone.animate(
       [
         {
@@ -74,17 +75,17 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
         },
         {
           opacity: 0,
-          transform: boxesToTransform(toInfo.box, fromInfo.box),
+          transform: boxesToTransform(this.toInfo.box, this.fromInfo.box),
         },
       ] as any[],
       {
         duration,
-        direction: 'normal',
+        direction,
       }
     );
     const toAnim = toClone.animate(
       [
-        { opacity: 0, transform: boxesToTransform(fromInfo.box, toInfo.box) },
+        { opacity: 0, transform: boxesToTransform(this.fromInfo.box, this.toInfo.box) },
         {
           opacity: 1,
           transform: neutralScale,
@@ -92,7 +93,7 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
       ] as any[],
       {
         duration,
-        direction: 'normal',
+        direction,
       }
     );
     // setTimeout(() => {
@@ -104,7 +105,11 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
       this.toClones = [];
       document.body.removeChild(fromClone);
       document.body.removeChild(toClone);
-      this.setState({ toOpacity: 1, animate: false });
+      this.setState({
+        toOpacity: isForward ? 1 : 0,
+        animate: false,
+        fromOpacity: isForward ? 0 : 1,
+      });
     };
   };
 
@@ -130,6 +135,7 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
     const children: any = this.props.children({
       from: this.from,
       to: this.to,
+      fromOpacity: this.state.fromOpacity,
       toOpacity: this.state.toOpacity,
     });
     const childArray = React.Children.toArray(children.props.children);
@@ -159,14 +165,14 @@ interface IBox {
   height: number;
 }
 
-const setStylesFromBox = (box: IBox, elm: HTMLElement) => {
-  elm.style.transformOrigin = '5% top';
-  elm.style.position = 'absolute';
-  elm.style.top = box.top + 'px';
-  elm.style.left = box.left + 'px';
-  elm.style.width = box.width + 'px';
-  elm.style.height = box.height + 'px';
-  return elm;
+const setStylesFromBox = ({ box, clone }: ChildInfo) => {
+  clone.style.transformOrigin = '5% top';
+  clone.style.position = 'absolute';
+  clone.style.top = box.top + 'px';
+  clone.style.left = box.left + 'px';
+  clone.style.width = box.width + 'px';
+  clone.style.height = box.height + 'px';
+  return clone;
 };
 
 const neutralScale = 'scale(1, 1) translate(0, 0)';
