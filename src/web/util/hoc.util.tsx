@@ -60,7 +60,9 @@ export const prepareProps = (oProps: any) => {
  */
 export const mergeProps = (...props) => {
   const result = props.reduce(merge);
-  result.className = cx(...props.map(prop => prop.className));
+  result.className = cx(
+    ...props.filter(prop => prop && prop.className).map(prop => prop.className)
+  );
   return result;
 };
 

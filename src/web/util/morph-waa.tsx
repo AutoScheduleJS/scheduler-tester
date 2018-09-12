@@ -1,15 +1,14 @@
 import * as React from 'react';
-
-export interface MorphWaaChildrenParams {
-  from: () => { ref: React.Ref<any> };
-  to: () => { ref: React.Ref<any> };
-  toOpacity: number;
-  fromOpacity: number;
-}
+import { mergeProps } from './hoc.util';
+import { css } from 'emotion';
 
 interface MorphWaaProps {
   state: 'from' | 'to';
-  children: (params: MorphWaaChildrenParams) => React.ReactFragment;
+  FromElem: React.ComponentType<any>;
+  ToElem: React.ComponentType<any>;
+  [key: string]: any;
+  fromProps?: any;
+  toProps?: any;
 }
 
 interface MorphWaaState {
@@ -132,24 +131,43 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
   });
 
   render() {
-    const children: any = this.props.children({
-      from: this.from,
-      to: this.to,
-      fromOpacity: this.state.fromOpacity,
-      toOpacity: this.state.toOpacity,
-    });
-    const childArray = React.Children.toArray(children.props.children);
+    const {
+      FromElem,
+      ToElem,
+      fromProps: defaultFromProps,
+      toProps: defaultToProps,
+      ...defaultProps
+    } = this.props;
+    const { fromOpacity, toOpacity } = this.state;
     if (this.state.animate && !this.fromClones.length) {
       this.animate();
     }
+    const fromProps = mergeProps(
+      this.from(),
+      opacityToClassname(fromOpacity),
+      defaultProps,
+      defaultFromProps
+    );
+    const toProps = mergeProps(
+      this.to(),
+      opacityToClassname(toOpacity),
+      defaultProps,
+      defaultToProps
+    );
     return (
       <React.Fragment>
-        {this.state.state === 'from' && childArray[0]}
-        {this.state.state === 'to' && childArray[1]}
+        {this.state.state === 'from' && <FromElem {...fromProps} />}
+        {this.state.state === 'to' && <ToElem {...toProps} />}
       </React.Fragment>
     );
   }
 }
+
+const opacityToClassname = (opacity: number) => ({
+  className: css`
+    opacity: ${opacity};
+  `,
+});
 
 const elemToChildInfo = (elm: HTMLDivElement): ChildInfo => {
   return {

@@ -13,11 +13,6 @@ interface IqueryEditProps extends React.HTMLAttributes<HTMLDivElement> {
 
 interface QueryEditState extends IQuery {}
 
-/**
- * When done, should morph into the card.
- * How to do that? Elements only morph when mounting, getting position info from unmounting element
- * -> content is discarded immediately, how to position element absolutely? impossible.
- */
 class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
   state: QueryEditState;
 
@@ -41,7 +36,7 @@ class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
       actions: [
         <StButton label={'cancel'} emphaze={ButtonEmphaze.Medium} onClick={handleCancel} />,
         <StButton
-          label='update'
+          label={'create'}
           emphaze={ButtonEmphaze.High}
           onClick={() => handleSave(this.state)}
         />,

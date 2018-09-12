@@ -7,11 +7,11 @@ import * as React from 'react';
 import { LayoutMasonry } from './layout-masonry/layout-masonry';
 import { PaddingProps } from './responsive/padding';
 import { StEditQuery } from './st-edit-query';
-import { StEditableItem } from './st-editable-item';
 import { StNewItemLarge } from './st-new-item-large';
 import { StQueryCard } from './st-query-card';
 import { connect } from './util/connect';
 import { mergeProps } from './util/hoc.util';
+import { MorphWaa } from './util/morph-waa';
 
 interface IQueriesManagerFromState {
   queries: ReadonlyArray<IQuery>;
@@ -39,11 +39,11 @@ class StQueriesManagerImpl extends React.PureComponent<
     const hostProps = mergeProps(PaddingProps(theme), hostStyles, defaultHostProps);
     return (
       <LayoutMasonry itemWidth={'190px'} {...hostProps}>
-        <StEditableItem
-          item={{ id: nextId }}
-          isNew={true}
-          ItemCardCmp={StNewItemLarge}
-          ItemEditCmp={StEditQuery}
+        <MorphWaa
+          FromElem={StNewItemLarge}
+          ToElem={StEditQuery}
+          state={'from'}
+          fromProps={{ item: { id: nextId } }}
         />
         {queries.map(query => <StQueryCard key={query.id} {...{ query }} />)}
       </LayoutMasonry>
