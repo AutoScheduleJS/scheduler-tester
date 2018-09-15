@@ -3,11 +3,11 @@ import { configReducer } from '@scheduler-tester/core-state/config.reducer';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { actionType } from '@scheduler-tester/core-state/core.store';
 import { editTabUiReducer$, TabId } from '@scheduler-tester/core-state/edit-tab.ui.reducer';
-import { editUiReducer$ } from '@scheduler-tester/core-state/edit.ui.reducer';
+import { editUiL, editUiReducer$ } from '@scheduler-tester/core-state/edit.ui.reducer';
 import { onTestbenchQueriesReducer$ } from '@scheduler-tester/core-state/on-testbench-queries.reducer';
 import { onTestbenchUserstateReducer$ } from '@scheduler-tester/core-state/on-testbench-userstate.reducer';
 import { stepOptionReducer$ } from '@scheduler-tester/core-state/step-option.reducer';
-import { suitesReducer$, suiteToNewQuery } from '@scheduler-tester/core-state/suites.reducer';
+import { suitesReducer$ } from '@scheduler-tester/core-state/suites.reducer';
 import { UIState } from '@scheduler-tester/core-state/ui.state';
 import { IUserstateCollection } from '@scheduler-tester/core-state/userstate-collection.interface';
 import { userstateReducer$ } from '@scheduler-tester/core-state/userstates.reducer';
@@ -18,7 +18,11 @@ export class AddItemAction {
   constructor() {}
 }
 
-export class AddQueryAction {
+export class CreateQueryAction {
+  constructor() {}
+}
+
+export class CancelQueryCreationAction {
   constructor() {}
 }
 
@@ -47,7 +51,8 @@ export class DeleteUserstateAction {
 
 export type globalUiActionType =
   | AddItemAction
-  | AddQueryAction
+  | CreateQueryAction
+  | CancelQueryCreationAction
   | UpdateQueryAction
   | DeleteQueryAction
   | AddUserstateAction
@@ -88,8 +93,11 @@ const globalReducer = (state: ICoreState, action: actionType): ICoreState | fals
   if (action instanceof AddItemAction) {
     return handleNewItem(state);
   }
-  if (action instanceof AddQueryAction) {
+  if (action instanceof CreateQueryAction) {
     return handleNewQuery(state);
+  }
+  if (action instanceof CancelQueryCreationAction) {
+    return handleQueryCreationCancellation(state);
   }
   if (action instanceof UpdateQueryAction) {
     return handleUpdateQuery(state, action);
@@ -188,27 +196,25 @@ const handleNewItem = (state: ICoreState): ICoreState => {
 };
 
 const handleNewQuery = (state: ICoreState): ICoreState => {
-  var newQuery: IQuery | false = false;
-  const suiteState: ICoreState = {
-    ...state,
-    suites: findAndUpdateSuite(state, s => {
-      newQuery = suiteToNewQuery(s);
-      return [...s, newQuery];
-    }),
-  };
   const ui: UIState = {
     editTab: TabId.Queries,
     edit: {
       userstate: false,
-      query: newQuery,
+      query: {} as IQuery,
       isNew: true,
     },
   };
   return {
-    ...suiteState,
+    ...state,
     ui,
   };
 };
+
+const handleQueryCreationCancellation = editUiL.set({
+  isNew: false,
+  query: false,
+  userstate: false,
+});
 
 const handleNewUserstate = (state: ICoreState): ICoreState => {
   var newUserstate: IUserstateCollection | false = false;

@@ -64,7 +64,7 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
     this.fromClones.push(document.body.appendChild(fromClone));
     this.toClones.push(document.body.appendChild(toClone));
 
-    const duration = 2000;
+    const duration = 200;
     const direction = isForward ? 'normal' : 'reverse';
     const fromAnim = fromClone.animate(
       [

@@ -1,3 +1,5 @@
+import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
+import { CreateQueryAction } from '@scheduler-tester/core-state/global.ui.reducer';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
 import { Ref } from 'react';
@@ -12,6 +14,10 @@ interface StNewItemLargeProps extends CustomableProps {
 }
 
 class StNewItemLargeImpl extends React.PureComponent<StNewItemLargeProps> {
+  handleClick = () => {
+    actionTrigger$.next(new CreateQueryAction());
+  };
+
   render() {
     const { key, forwardedRef, theme, ...defaultHostProps } = this.props;
     return (
@@ -21,6 +27,7 @@ class StNewItemLargeImpl extends React.PureComponent<StNewItemLargeProps> {
           label={'+ new'}
           {...defaultHostProps}
           ref={forwardedRef}
+          onClick={this.handleClick}
         />
       </React.Fragment>
     );

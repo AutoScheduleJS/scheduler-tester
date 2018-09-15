@@ -28,7 +28,6 @@ export const editUiReducer$ = (state: ICoreState, action: actionType): ICoreStat
   }
   return false;
 };
-
 export const editUiL = coreStateL.ui.edit;
 
 const handleEditQuery = (state: ICoreState, action: EditQueryAction): ICoreState => {
