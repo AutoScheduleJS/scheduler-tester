@@ -1,6 +1,6 @@
+import { css } from 'emotion';
 import * as React from 'react';
 import { mergeProps } from './hoc.util';
-import { css } from 'emotion';
 
 interface MorphWaaProps {
   state: 'from' | 'to';
@@ -9,6 +9,7 @@ interface MorphWaaProps {
   [key: string]: any;
   fromProps?: any;
   toProps?: any;
+  keepFrom?: boolean;
 }
 
 interface MorphWaaState {
@@ -136,6 +137,7 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
       ToElem,
       fromProps: defaultFromProps,
       toProps: defaultToProps,
+      keepFrom,
       ...defaultProps
     } = this.props;
     const { fromOpacity, toOpacity } = this.state;
@@ -156,7 +158,7 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
     );
     return (
       <React.Fragment>
-        {this.state.state === 'from' && <FromElem {...fromProps} />}
+        {(this.state.state === 'from' || keepFrom) && <FromElem {...fromProps} />}
         {this.state.state === 'to' && <ToElem {...toProps} />}
       </React.Fragment>
     );

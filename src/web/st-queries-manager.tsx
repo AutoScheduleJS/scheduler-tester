@@ -41,7 +41,7 @@ class StQueriesManagerImpl extends React.PureComponent<
     const hostProps = mergeProps(PaddingProps(theme), hostStyles, defaultHostProps);
     return (
       <LayoutMasonry itemWidth={'190px'} {...hostProps}>
-        <MorphWaa FromElem={StNewItemLarge} ToElem={StNewQuery} state={addQuery} />
+        <MorphWaa FromElem={StNewItemLarge} ToElem={StNewQuery} state={addQuery} keepFrom={true} />
         {queries.map(query => <StQueryCard key={query.id} {...{ query }} />)}
       </LayoutMasonry>
     );
