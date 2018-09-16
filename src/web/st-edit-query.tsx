@@ -35,7 +35,7 @@ class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
   };
 
   render() {
-    const { query, handleCancel, handleSave, style, forwardedRef, ...defaultHostProps } = this.props;
+    const { query, handleCancel, handleSave, forwardedRef, ...defaultHostProps } = this.props;
     const dialogProps: DialogProps = {
       dialogTitle: `Edit ${query.name}#${query.id}`,
       actions: [
@@ -56,7 +56,7 @@ class QueryEditCmp extends React.PureComponent<IqueryEditProps> {
       onCancel: handleCancel,
       ...defaultHostProps
     };
-    return <Dialog style={style} ref={forwardedRef} {...dialogProps} scrim={true} />;
+    return <Dialog ref={forwardedRef} {...dialogProps} scrim={true} />;
   }
 }
 

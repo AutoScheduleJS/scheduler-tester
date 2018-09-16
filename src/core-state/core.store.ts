@@ -57,6 +57,9 @@ const initialUIStateObj: UIState = {
     isNew: false,
   },
   editTab: TabId.Queries,
+  scrim: {
+    displayScrim: false,
+  },
 };
 
 const initialStateObj: ICoreState = {

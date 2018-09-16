@@ -1,5 +1,6 @@
 import { css } from 'emotion';
 import * as React from 'react';
+import { Scrim } from './modal/scrim';
 import { breakpoints, BreakpointsEnum } from './responsive/breakpoints';
 import { QueryMatcher } from './responsive/query-matcher';
 import { StAppbar } from './st-appbar';
@@ -47,6 +48,7 @@ class RootImpl extends React.PureComponent<{}> {
           mediaQuery={`(max-width: ${breakpoints[BreakpointsEnum.xsmall4]}px)`}
         />
         <StEditQuery /> */}
+        <Scrim />
       </React.Fragment>
     );
   }

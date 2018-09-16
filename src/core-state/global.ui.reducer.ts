@@ -6,6 +6,7 @@ import { editTabUiReducer$, TabId } from '@scheduler-tester/core-state/edit-tab.
 import { editUiL, editUiReducer$ } from '@scheduler-tester/core-state/edit.ui.reducer';
 import { onTestbenchQueriesReducer$ } from '@scheduler-tester/core-state/on-testbench-queries.reducer';
 import { onTestbenchUserstateReducer$ } from '@scheduler-tester/core-state/on-testbench-userstate.reducer';
+import { scrimUiReducer$ } from '@scheduler-tester/core-state/scrim.ui.reducer';
 import { stepOptionReducer$ } from '@scheduler-tester/core-state/step-option.reducer';
 import { suitesReducer$ } from '@scheduler-tester/core-state/suites.reducer';
 import { UIState } from '@scheduler-tester/core-state/ui.state';
@@ -68,6 +69,7 @@ export const globalUiReducer$ = (
       const reducers = [
         configReducer,
         editTabUiReducer$,
+        scrimUiReducer$,
         editUiReducer$,
         onTestbenchQueriesReducer$,
         onTestbenchUserstateReducer$,
@@ -197,6 +199,7 @@ const handleNewItem = (state: ICoreState): ICoreState => {
 
 const handleNewQuery = (state: ICoreState): ICoreState => {
   const ui: UIState = {
+    ...state.ui,
     editTab: TabId.Queries,
     edit: {
       userstate: false,
@@ -226,6 +229,7 @@ const handleNewUserstate = (state: ICoreState): ICoreState => {
     }),
   };
   const ui: UIState = {
+    ...state.ui,
     editTab: TabId.Userstates,
     edit: { userstate: newUserstate, query: false, isNew: true },
   };

@@ -1,7 +1,8 @@
+import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
+import { UpdateScrim } from '@scheduler-tester/core-state/scrim.ui.reducer';
 import { css } from 'emotion';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { animated, Transition } from 'react-spring';
 import { ElevationProps } from '../elevation/elevation';
 import { Typography } from '../typography/typography';
 import { merge, mergeProps } from '../util/hoc.util';
@@ -31,14 +32,9 @@ interface DialogTheme {
     alertBaseline: number;
     backgroundColor: string;
   };
-  scrim: {
-    color: string;
-  };
 }
 
-const defaultTheme = (
-  theme: any = { palette: { surface: { main: '#FFFFFF', on: '#000000' } } }
-): DialogTheme =>
+const defaultTheme = (theme: any = { palette: { surface: { main: '#FFFFFF' } } }): DialogTheme =>
   merge(
     {
       dialog: {
@@ -52,9 +48,6 @@ const defaultTheme = (
         titleBaseline: 40,
         alertBaseline: 38,
         backgroundColor: theme.palette.surface.main,
-      },
-      scrim: {
-        color: theme.palette.surface.on + '51',
       },
     } as DialogTheme,
     theme
@@ -76,16 +69,21 @@ const DialogRootClass = (theme: DialogTheme) => {
   };
 };
 
-const themeToScrimClass = (theme: DialogTheme) => css`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background-color: ${theme.scrim.color};
-`;
-
 class DialogImpl extends React.PureComponent<DialogProps> {
+  componentDidMount() {
+    if (this.props.scrim) {
+      actionTrigger$.next(
+        new UpdateScrim({ displayScrim: true, handleClick: this.props.onCancel })
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.scrim) {
+      actionTrigger$.next(new UpdateScrim({ displayScrim: false }));
+    }
+  }
+
   render() {
     const {
       dialogTitle,
@@ -103,21 +101,8 @@ class DialogImpl extends React.PureComponent<DialogProps> {
       DialogRootClass(theme),
       defaultHostProps
     );
-    console.log('defaultHostProps', defaultHostProps, hostProps);
     return (
       <Modal>
-        {scrim && (
-          <Transition
-            native
-            from={{ opacity: 'from' === 'from' ? 0 : 1 }}
-            enter={{ opacity: 'from' === 'from' ? 1 : 0 }}
-            leave={{ opacity: 'from' === 'from' ? 0 : 1 }}
-          >
-            {props => (
-              <animated.div className={themeToScrimClass(theme)} onClick={onCancel} style={props} />
-            )}
-          </Transition>
-        )}
         <div ref={forwardedRef} {...hostProps}>
           <Typography scale={'H6'} baselineTop={theme.dialog.titleBaseline}>
             {dialogTitle}
