@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import * as React from 'react';
 import { IQueryPosition, ITimeBoundary } from '@autoschedule/queries-fn';
-import { StPositionViewer } from './st-position-viewer';
+import { StPositionViewerSimple } from './st-position-viewer';
 
 const styles = theme =>
   createStyles({
@@ -144,7 +144,7 @@ class EditPositionCmp extends React.PureComponent<IEditPositionProps & { classes
       <ExpansionPanel>
         <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
           <Typography className={classes.heading}>Position</Typography>
-          <StPositionViewer {...positionToSafer(position)} className={classes.secondaryHeading} />
+          <StPositionViewerSimple {...positionToSafer(position)} className={classes.secondaryHeading} />
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <div>

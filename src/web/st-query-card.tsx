@@ -8,6 +8,7 @@ import { TappableProps } from './button/button';
 import { CardProps } from './card/card';
 import { Typography } from './typography/typography';
 import { merge, mergeProps, stateHandler } from './util/hoc.util';
+import { StPositionViewer } from './st-position-viewer';
 
 interface IqueryCardProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: any;
@@ -83,7 +84,7 @@ class StQueryCardImpl extends React.PureComponent<IqueryCardProps> {
         <Typography scale="Subtitle1" emphase={'medium'}>
           #{query.id}
         </Typography>
-        <QueryDisplayKind {...{ query }} />
+        <StPositionViewer position={query.position} />
       </div>
     );
   }

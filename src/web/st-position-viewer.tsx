@@ -1,6 +1,11 @@
+import { IQueryPosition, IQueryPositionDuration, ITimeBoundary } from '@autoschedule/queries-fn';
+import { IConfig } from '@scheduler-tester/core-state/config.interface';
+import { ICoreState } from '@scheduler-tester/core-state/core.state';
+import { coreState$ } from '@scheduler-tester/core-state/core.store';
 import classNames from 'classnames';
+import { withTheme } from 'emotion-theming';
 import * as React from 'react';
-import { ITimeBoundary } from '@autoschedule/queries-fn';
+import { connect } from './util/connect';
 
 interface IPositionViewer {
   start: ITimeBoundary;
@@ -13,7 +18,7 @@ const config = {
   endDate: 50,
 };
 
-export const StPositionViewer: React.SFC<IPositionViewer & { className?: string }> = ({
+export const StPositionViewerSimple: React.SFC<IPositionViewer & { className?: string }> = ({
   className,
   start,
   end,
@@ -33,3 +38,37 @@ export const StPositionViewer: React.SFC<IPositionViewer & { className?: string 
     </div>
   );
 };
+
+interface PositionViewerFromState {
+  config: IConfig;
+}
+
+interface PositionViewerProps extends React.HTMLAttributes<HTMLDivElement> {
+  position: IQueryPosition;
+}
+
+/**
+ * https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71
+ * https://codepen.io/swizec/pen/QdVoOg
+ */
+class StPositionViewerImpl extends React.PureComponent<
+  PositionViewerProps & PositionViewerFromState
+> {
+  render() {
+    const { position, ...defaultHostProps } = this.props;
+    return (
+      <div {...defaultHostProps}>{`pos: ${position.start} - ${position.end} - ${
+        (position as IQueryPositionDuration).duration.target
+      }`}</div>
+    );
+  }
+}
+
+const selector = ({ config }: ICoreState): PositionViewerFromState => ({
+  config,
+});
+
+export const StPositionViewer = connect(selector, coreState$)<
+  PositionViewerProps,
+  PositionViewerFromState
+>(withTheme(StPositionViewerImpl));
