@@ -11,6 +11,7 @@ interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
 export interface LineAreaProps extends CustomableProps {
   width: number;
   height: number;
+  points: [number, number][];
   forwardedRef?: Ref<HTMLDivElement>;
 }
 
