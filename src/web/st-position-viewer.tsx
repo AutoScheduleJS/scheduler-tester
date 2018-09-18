@@ -1,10 +1,11 @@
-import { IQueryPosition, IQueryPositionDuration, ITimeBoundary } from '@autoschedule/queries-fn';
+import { IQueryPosition, ITimeBoundary } from '@autoschedule/queries-fn';
 import { IConfig } from '@scheduler-tester/core-state/config.interface';
 import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
 import classNames from 'classnames';
 import { withTheme } from 'emotion-theming';
 import * as React from 'react';
+import { LineArea } from './line-area/line-area';
 import { connect } from './util/connect';
 
 interface IPositionViewer {
@@ -57,9 +58,9 @@ class StPositionViewerImpl extends React.PureComponent<
   render() {
     const { position, ...defaultHostProps } = this.props;
     return (
-      <div {...defaultHostProps}>{`pos: ${position.start} - ${position.end} - ${
-        (position as IQueryPositionDuration).duration.target
-      }`}</div>
+      <div {...defaultHostProps}>
+        <LineArea width={150} height={80} />
+      </div>
     );
   }
 }
