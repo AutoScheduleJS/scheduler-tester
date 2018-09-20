@@ -4,6 +4,7 @@ import { ICoreState } from '@scheduler-tester/core-state/core.state';
 import { coreState$ } from '@scheduler-tester/core-state/core.store';
 import classNames from 'classnames';
 import { withTheme } from 'emotion-theming';
+import { split } from 'intervals-fn';
 import * as React from 'react';
 import { LineArea } from './line-area/line-area';
 import { connect } from './util/connect';
@@ -48,18 +49,52 @@ interface PositionViewerProps extends React.HTMLAttributes<HTMLDivElement> {
   position: IQueryPosition;
 }
 
-/**
- * https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71
- * https://codepen.io/swizec/pen/QdVoOg
- */
+const propOrDefault = (defaultValue: any, obj: any, propToCheck: Array<any>): any => {
+  if (obj == null) {
+    return defaultValue;
+  }
+  const resultProp = propToCheck.find(prop => obj[prop] != null);
+  return resultProp ? obj[resultProp] : defaultValue;
+};
+
+const positionToPoints = (position: IQueryPosition, config: IConfig): [number, number][] => {
+  const start = split(position.start && position.start.target ? [position.start.target] : [], [
+    {
+      end: propOrDefault(config.endDate, position.start, ['max']) as number,
+      start: propOrDefault(config.startDate, position.start, ['min']) as number,
+    },
+  ]);
+  const end = split(position.end && position.end.target ? [position.end.target] : [], [
+    {
+      end: propOrDefault(config.endDate, position.end, ['max']) as number,
+      start: propOrDefault(config.startDate, position.end, ['min']) as number,
+    },
+  ]);
+  const startArr: [number, number][] =
+    start.length === 1
+      ? [[start[0].start - 1, 1], [start[0].start, 0]]
+      : [[start[0].start, 1], [start[0].end, 0]];
+  const endArr: [number, number][] =
+    end.length === 1
+      ? [[end[0].end - 1, 0], [end[0].end, 1]]
+      : [[end[1].start, 0], [end[1].end, 1]];
+  console.log('points', [...startArr, ...endArr], start, end);
+  return [...startArr, ...endArr];
+};
+
 class StPositionViewerImpl extends React.PureComponent<
   PositionViewerProps & PositionViewerFromState
 > {
   render() {
-    const { position, ...defaultHostProps } = this.props;
+    const { position, config, ...defaultHostProps } = this.props;
     return (
       <div {...defaultHostProps}>
-        <LineArea width={150} height={80} points={[[0, 1], [20, 0], [80, 0], [130, 1]]} division={10} />
+        <LineArea
+          width={150}
+          height={80}
+          points={positionToPoints(position, config) /*[[0, 1], [20, 0], [80, 0], [130, 1]]*/}
+          division={10}
+        />
       </div>
     );
   }
