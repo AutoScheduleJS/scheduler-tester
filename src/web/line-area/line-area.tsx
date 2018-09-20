@@ -17,10 +17,29 @@ export interface LineAreaProps extends CustomableProps {
 }
 
 interface LineAreaTheme {
-  lineArea: {};
+  chart: {
+    palette: {
+      stroke: string;
+      fill: string;
+      fillOpacity: number;
+    };
+  };
 }
 
-const defaultTheme = (theme: any): LineAreaTheme => merge({}, theme);
+const defaultTheme = (theme: any): LineAreaTheme =>
+  merge(
+    {
+      chart: {
+        palette: {
+          stroke: theme.palette.secondary.main,
+          fill: theme.palette.secondary.main,
+          fillOpacity: 0.2,
+        },
+      },
+    },
+    theme
+  );
+
 const themeToClass = theme => {
   console.log(theme);
   return {
@@ -28,14 +47,14 @@ const themeToClass = theme => {
   };
 };
 
-const lineClass = (theme: any) => {
-  console.log(theme);
+const lineClass = (theme: LineAreaTheme) => {
+  const chart = theme.chart;
   return {
     className: css`
       stroke-width: 2;
-      fill: #81d4fa;
-      fill-opacity: 0.2;
-      stroke: #81d4fa;
+      fill: ${chart.palette.fill};
+      fill-opacity: ${chart.palette.fillOpacity};
+      stroke: ${chart.palette.stroke};
     `,
   };
 };
@@ -59,21 +78,19 @@ const pointsToPath = (points: [number, number][]): string => {
   );
 };
 
-const divisorClass = (theme: any) => {
-  console.log(theme);
+const divisorClass = (theme: LineAreaTheme) => {
   return css`
-    stroke-width: 1;
-    stroke: #81d4fa;
-    fill: #81d4fa;
-    fill-opacity: 0.2;
+    stroke-width: 0;
+    fill: ${theme.chart.palette.fill};
+    fill-opacity: 1;
   `;
 };
 
-const createDivisors = (division: number, width: number, theme: any) => {
+const createDivisors = (division: number, width: number, height: number, theme: any) => {
   const step = width / division;
-  return Array(division).fill(null).map((_, i) => (
-    <circle cx={i * step} cy={51} r={3} className={divisorClass(theme)} />
-  ));
+  return Array(division)
+    .fill(null)
+    .map((_, i) => <circle cx={i * step} cy={height} r={2} className={divisorClass(theme)} />);
 };
 
 class LineAreaImpl extends React.PureComponent<LineAreaProps> {
@@ -89,19 +106,21 @@ class LineAreaImpl extends React.PureComponent<LineAreaProps> {
     } = this.props;
     const theme = defaultTheme(incomingTheme);
     const hostProps = mergeProps(themeToClass(theme), defaultHostProps);
-    const path = pointsToPath(points);
-    const divisors = createDivisors(division, width, theme);
-    console.log('divisors', divisors);
+    const baseHeight = height - 15;
+    const path = pointsToPath(
+      points.map(pair => [pair[0], pair[1] * baseHeight] as [number, number])
+    );
+    const divisors = createDivisors(division, width, baseHeight, theme);
     return (
       <svg
         width={width}
         height={height}
         ref={forwardedRef}
         {...hostProps}
-        viewBox={`-10 -10 ${width} ${height}`}
+        viewBox={`0 -10 ${width} ${height}`}
       >
         <path {...lineClass(theme)} d={path} />
-        <line x1={0} y1={51} x2={width} y2={51} className={abscisseClass(theme)} />
+        <line x1={0} y1={baseHeight} x2={width} y2={baseHeight} className={abscisseClass(theme)} />
         {divisors}
       </svg>
     );

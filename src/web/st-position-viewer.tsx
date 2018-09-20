@@ -59,7 +59,7 @@ class StPositionViewerImpl extends React.PureComponent<
     const { position, ...defaultHostProps } = this.props;
     return (
       <div {...defaultHostProps}>
-        <LineArea width={150} height={80} points={[[0, 50], [20, 0], [80, 0], [130, 50]]} division={10} />
+        <LineArea width={150} height={80} points={[[0, 1], [20, 0], [80, 0], [130, 1]]} division={10} />
       </div>
     );
   }
