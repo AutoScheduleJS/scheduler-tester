@@ -57,27 +57,38 @@ const propOrDefault = (defaultValue: any, obj: any, propToCheck: Array<any>): an
   return resultProp ? obj[resultProp] : defaultValue;
 };
 
-const positionToPoints = (position: IQueryPosition, config: IConfig): [number, number][] => {
-  const start = split(position.start && position.start.target ? [position.start.target] : [], [
+const getTipRange = (position: IQueryPosition, tipKind: keyof IQueryPosition, config: IConfig) => {
+  const tip = position[tipKind];
+  return split(tip && tip.target ? [tip.target] : [], [
     {
-      end: propOrDefault(config.endDate, position.start, ['max']) as number,
-      start: propOrDefault(config.startDate, position.start, ['min']) as number,
+      end: propOrDefault(config.endDate, tip, ['max']) as number,
+      start: propOrDefault(config.startDate, tip, ['min']) as number,
     },
   ]);
-  const end = split(position.end && position.end.target ? [position.end.target] : [], [
-    {
-      end: propOrDefault(config.endDate, position.end, ['max']) as number,
-      start: propOrDefault(config.startDate, position.end, ['min']) as number,
-    },
-  ]);
-  const startArr: [number, number][] =
-    start.length === 1
-      ? [[start[0].start - 1, 1], [start[0].start, 0]]
-      : [[start[0].start, 1], [start[0].end, 0]];
-  const endArr: [number, number][] =
-    end.length === 1
-      ? [[end[0].end - 1, 0], [end[0].end, 1]]
-      : [[end[1].start, 0], [end[1].end, 1]];
+};
+
+const tipRangeToPoints = (
+  tip: Array<{ start: number; end: number }>,
+  origin: number,
+  tipKind: keyof IQueryPosition
+): [number, number][] => {
+  const y1 = tipKind === 'start' ? 1 : 0;
+  const y2 = tipKind === 'start' ? 0 : 1;
+
+  return tip.length === 1
+    ? [[origin + tip[0][tipKind] - 1, y1], [origin + tip[0][tipKind], y2]]
+    : [[origin + tip[0].start, y1], [origin + tip[0].end, y2]];
+};
+
+const positionToPoints = (
+  position: IQueryPosition,
+  config: IConfig,
+  origin: number
+): [number, number][] => {
+  const start = getTipRange(position, 'start', config);
+  const end = getTipRange(position, 'end', config);
+  const startArr = tipRangeToPoints(start, origin, 'start');
+  const endArr = tipRangeToPoints(end, origin, 'end');
   console.log('points', [...startArr, ...endArr], start, end);
   return [...startArr, ...endArr];
 };
@@ -87,12 +98,16 @@ class StPositionViewerImpl extends React.PureComponent<
 > {
   render() {
     const { position, config, ...defaultHostProps } = this.props;
+    const points = positionToPoints(position, config, 25);
+
     return (
       <div {...defaultHostProps}>
         <LineArea
           width={150}
           height={80}
-          points={positionToPoints(position, config) /*[[0, 1], [20, 0], [80, 0], [130, 1]]*/}
+          abscissaUnit={1}
+          ordinateUnit={65}
+          points={points}
           division={10}
         />
       </div>

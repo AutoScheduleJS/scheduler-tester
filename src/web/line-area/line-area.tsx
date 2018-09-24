@@ -11,6 +11,8 @@ interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
 export interface LineAreaProps extends CustomableProps {
   width: number;
   height: number;
+  abscissaUnit: number;
+  ordinateUnit: number;
   division: number;
   points: [number, number][];
   forwardedRef?: Ref<HTMLDivElement>;
@@ -68,7 +70,7 @@ const abscisseClass = (theme: any) => {
 };
 
 const pointsToPath = (points: [number, number][]): string => {
-  const drag = 20;
+  const drag = 5; // should be a factor of second[0] - first[0]
   const [first, second, ...others] = points;
   const initialPath = `M${first[0]},${first[1]} C${first[0] + drag},${first[1]} ${second[0] -
     drag},${second[1]} ${second[0]},${second[1]}`;
@@ -100,15 +102,17 @@ class LineAreaImpl extends React.PureComponent<LineAreaProps> {
       height,
       points,
       division,
+      abscissaUnit,
+      ordinateUnit,
       forwardedRef,
       theme: incomingTheme,
       ...defaultHostProps
     } = this.props;
     const theme = defaultTheme(incomingTheme);
     const hostProps = mergeProps(themeToClass(theme), defaultHostProps);
-    const baseHeight = height - 15;
+    const baseHeight = ordinateUnit;
     const path = pointsToPath(
-      points.map(pair => [pair[0], pair[1] * baseHeight] as [number, number])
+      points.map(pair => [pair[0] * abscissaUnit, pair[1] * baseHeight] as [number, number])
     );
     const divisors = createDivisors(division, width, baseHeight, theme);
     return (
