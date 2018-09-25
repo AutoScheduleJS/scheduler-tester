@@ -42,6 +42,7 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
     animate: false,
   };
 
+  private fromNode: HTMLDivElement | undefined; // to compute location just before animation start - prevent false location du to another animation
   private fromInfo: ChildInfo | undefined;
   private toInfo: ChildInfo | undefined;
   private fromClones: HTMLElement[] = [];
@@ -57,6 +58,9 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
   animate = () => {
     if (!this.fromInfo || !this.toInfo) {
       return setTimeout(() => this.animate(), 0);
+    }
+    if (this.fromNode) {
+      this.fromInfo = elemToChildInfo(this.fromNode);
     }
     const isForward = this.state.state === 'to';
     const fromClone = setStylesFromBox(this.fromInfo);
@@ -118,6 +122,7 @@ export class MorphWaa extends React.Component<MorphWaaProps> {
       if (!node || this.fromInfo) {
         return;
       }
+      this.fromNode = node;
       this.fromInfo = elemToChildInfo(node);
     },
   });
