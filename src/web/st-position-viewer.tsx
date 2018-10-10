@@ -89,24 +89,25 @@ const positionToPoints = (
   const end = getTipRange(position, 'end', config);
   const startArr = tipRangeToPoints(start, origin, 'start');
   const endArr = tipRangeToPoints(end, origin, 'end');
-  console.log('points', [...startArr, ...endArr], start, end);
   return [...startArr, ...endArr];
 };
 
 class StPositionViewerImpl extends React.PureComponent<
   PositionViewerProps & PositionViewerFromState
 > {
+  abscissaUnit = 1;
+
   render() {
     const { position, config, ...defaultHostProps } = this.props;
-    const points = positionToPoints(position, config, 25);
-
+    const points = positionToPoints(position, config, 0);
+    const width = (config.endDate - config.startDate) * this.abscissaUnit;
     return (
       <div {...defaultHostProps}>
         <LineArea
-          width={150}
-          height={80}
-          abscissaUnit={1}
-          ordinateUnit={65}
+          width={width}
+          height={40}
+          abscissaUnit={this.abscissaUnit}
+          ordinateUnit={29}
           points={points}
           division={10}
         />

@@ -90,7 +90,7 @@ const divisorClass = (theme: LineAreaTheme) => {
 
 const createDivisors = (division: number, width: number, height: number, theme: any) => {
   const step = width / division;
-  return Array(division)
+  return Array(division + 1)
     .fill(null)
     .map((_, i) => <circle cx={i * step} cy={height} r={2} className={divisorClass(theme)} />);
 };
@@ -115,13 +115,14 @@ class LineAreaImpl extends React.PureComponent<LineAreaProps> {
       points.map(pair => [pair[0] * abscissaUnit, pair[1] * baseHeight] as [number, number])
     );
     const divisors = createDivisors(division, width, baseHeight, theme);
+    const widthMargin = 3;
     return (
       <svg
-        width={width}
+        width={width + widthMargin * 2}
         height={height}
         ref={forwardedRef}
         {...hostProps}
-        viewBox={`0 -10 ${width} ${height}`}
+        viewBox={`-${widthMargin} -10 ${width + widthMargin * 2} ${height}`}
       >
         <path {...lineClass(theme)} d={path} />
         <line x1={0} y1={baseHeight} x2={width} y2={baseHeight} className={abscisseClass(theme)} />
