@@ -1,6 +1,6 @@
 import { css } from 'emotion';
 import { ElevationProps, ElevationPropsHover } from '../elevation/elevation';
-import { merge, mergeProps, IStateHandler } from '../util/hoc.util';
+import { IStateHandler, merge, mergeProps } from '../util/hoc.util';
 
 interface CardTheme {
   card: {
@@ -30,10 +30,11 @@ const defaultTheme = (
     theme
   );
 
-const themeToClassname = (theme: CardTheme) => ({
+const themeToClassname = (theme: CardTheme, isClickable: boolean | undefined) => ({
   className: css`
     background-color: ${theme.card.backgroundColor};
     color: ${theme.card.color};
+    user-select: ${isClickable ? 'none' : 'auto'};
     ${theme.card.shape};
   `,
 });
@@ -47,7 +48,12 @@ export const CardProps = (options: {
   const theme = defaultTheme(customTheme);
   const card = theme.card;
   const elevation = isClickable
-    ? ElevationPropsHover(options.stateHandler as IStateHandler, card.restElevation, card.activeElevation, theme)
+    ? ElevationPropsHover(
+        options.stateHandler as IStateHandler,
+        card.restElevation,
+        card.activeElevation,
+        theme
+      )
     : ElevationProps(card.restElevation, theme);
-  return mergeProps(elevation, themeToClassname(theme));
+  return mergeProps(elevation, themeToClassname(theme, isClickable));
 };
