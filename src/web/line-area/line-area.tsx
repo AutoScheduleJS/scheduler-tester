@@ -24,6 +24,7 @@ interface LineAreaTheme {
       stroke: string;
       fill: string;
       fillOpacity: number;
+      pointColor: string;
     };
   };
 }
@@ -36,6 +37,7 @@ const defaultTheme = (theme: any): LineAreaTheme =>
           stroke: theme.palette.secondary.main,
           fill: theme.palette.secondary.main,
           fillOpacity: 0.2,
+          pointColor: theme.palette.secondary.on,
         },
       },
     },
@@ -83,16 +85,15 @@ const pointsToPath = (points: [number, number][]): string => {
 const divisorClass = (theme: LineAreaTheme) => {
   return css`
     stroke-width: 0;
-    fill: ${theme.chart.palette.fill};
-    fill-opacity: 1;
-  `;
+    fill: ${theme.chart.palette.pointColor};
+    fill-opacity: 1;`;
 };
 
 const createDivisors = (division: number, width: number, height: number, theme: any) => {
   const step = width / division;
   return Array(division + 1)
     .fill(null)
-    .map((_, i) => <circle cx={i * step} cy={height} r={2} className={divisorClass(theme)} />);
+    .map((_, i) => <circle cx={i * step} cy={height} r={1} className={divisorClass(theme)} />);
 };
 
 class LineAreaImpl extends React.PureComponent<LineAreaProps> {
