@@ -12,13 +12,20 @@ interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
 export enum LabelType {
   float,
   fixed,
-  hidden
-};
+  hidden,
+}
+
+export enum LabelStatus {
+  enable,
+  disabled,
+  error,
+}
 
 export interface TextInputProps extends CustomableProps {
   label: string;
   value: string;
   labelType?: LabelType;
+  status?: LabelStatus;
   assistiveMsg?: string;
   leadingIcon?: React.Component;
   trailingIcon?: React.Component;
@@ -31,6 +38,8 @@ interface TextInputTheme {
     shape: string;
     label: string;
     input: string;
+    errorColor: string;
+    activeColor: string;
   };
 }
 
@@ -39,10 +48,8 @@ const defaultTheme = (theme: any): TextInputTheme =>
     {
       textInput: {
         shape: css`
-          border-radius: 4px;
-          padding: 0 16px;
-          height: 36px;
-          min-width: 64px;
+          height: 56px;
+          min-width: 280px;
           color: ${theme.palette.secondary.main};
         `,
       },
@@ -50,19 +57,36 @@ const defaultTheme = (theme: any): TextInputTheme =>
     theme
   );
 
-/**
- * Caution: prettier will add an indesirable space between baselineColor & opacity
- */
 const TextInputRootClass = (theme: TextInputTheme) => {
   const base = css`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    user-select: none;
-    text-align: center;
+    position: relative;
     ${theme.textInput.shape};
   `;
-  return base;
+  return { className: base };
+};
+
+const LabelClass = (theme: TextInputTheme) => {
+  const base = css`
+    transform: translate(5px, 100%);
+  `;
+  return { className: base };
+};
+
+const InputClass = (theme: TextInputTheme) => {
+  const base = css`
+    box-sizing: border-box;
+    background-clip: padding-box;
+    border-radius: 0;
+    background: none;
+    border: 0;
+    outline: 0;
+    padding: 0;
+    position: absolute;
+    bottom: 18px;
+    right: 12px;
+    left: 12px;
+  `;
+  return { className: base };
 };
 
 /**
@@ -79,12 +103,15 @@ class TextInputImpl extends React.PureComponent<TextInputProps> {
     const theme = defaultTheme(incomingTheme);
     const hostProps = mergeProps(
       TextInputRootClass(theme),
-      TypographyProps({ scale: 'Button' }),
+      TypographyProps({ scale: 'Caption' }),
       defaultHostProps
     );
+    const labelProps = mergeProps(LabelClass(theme));
+    const inputProps = mergeProps(TypographyProps({ scale: 'Subtitle1' }), InputClass(theme));
     return (
       <div ref={forwardedRef} {...hostProps}>
-        {label}
+        <div {...labelProps}>{label}</div>
+        <input {...inputProps} />
       </div>
     );
   }
