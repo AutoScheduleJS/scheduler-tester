@@ -38,6 +38,7 @@ interface TextInputTheme {
     shape: string;
     label: string;
     input: string;
+    backgroundColor: string;
     errorColor: string;
     activeColor: string;
   };
@@ -47,9 +48,11 @@ const defaultTheme = (theme: any): TextInputTheme =>
   merge(
     {
       textInput: {
+        backgroundColor: theme.palette.surface.on,
         shape: css`
           height: 56px;
           min-width: 280px;
+          border-radius: 4px 4px 0 0;
           color: ${theme.palette.secondary.main};
         `,
       },
@@ -60,6 +63,7 @@ const defaultTheme = (theme: any): TextInputTheme =>
 const TextInputRootClass = (theme: TextInputTheme) => {
   const base = css`
     position: relative;
+    background-color: ${theme.textInput.backgroundColor};
     ${theme.textInput.shape};
   `;
   return { className: base };
@@ -78,7 +82,7 @@ const LabelClass = (
   const placeHolder = css`
     padding-left: 12px;
     transition: font-size 0.25s, transform 0.25s;
-    transform: translate(0, 17px);
+    transform: translate(0, 14px);
     font-size: 16px;
   `;
   if (labelType === LabelType.fixed) {
@@ -106,13 +110,12 @@ const InputClass = (theme: TextInputTheme) => {
   const base = css`
     box-sizing: border-box;
     background-clip: padding-box;
-    border-radius: 0;
     background: none;
     border: 0;
     outline: 0;
     padding: 0;
     position: absolute;
-    bottom: 18px;
+    bottom: 12px;
     right: 12px;
     left: 12px;
   `;
@@ -143,7 +146,7 @@ class TextInputImpl extends React.PureComponent<TextInputProps> {
     const {
       label,
       value,
-      labelType,
+      labelType = LabelType.float,
       status,
       assistiveMsg,
       leadingIcon,
@@ -153,12 +156,11 @@ class TextInputImpl extends React.PureComponent<TextInputProps> {
       ...defaultHostProps
     } = this.props;
     const theme = defaultTheme(incomingTheme);
-    const hostProps = mergeProps(
-      TextInputRootClass(theme),
-      TypographyProps({ scale: 'Caption' }),
-      defaultHostProps
+    const hostProps = mergeProps(TextInputRootClass(theme), defaultHostProps);
+    const labelProps = mergeProps(
+      TypographyProps({ scale: 'Caption', baselineTop: 20 }),
+      LabelClass(theme, labelType, value, this.state.isActive)
     );
-    const labelProps = mergeProps(LabelClass(theme, labelType, value, this.state.isActive));
     const inputProps = mergeProps(TypographyProps({ scale: 'Subtitle1' }), InputClass(theme));
     return (
       <div
