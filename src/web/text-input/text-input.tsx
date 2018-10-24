@@ -16,7 +16,7 @@ export enum LabelType {
 }
 
 export enum LabelStatus {
-  enable,
+  enabled,
   disabled,
   error,
 }
@@ -65,11 +65,41 @@ const TextInputRootClass = (theme: TextInputTheme) => {
   return { className: base };
 };
 
-const LabelClass = (theme: TextInputTheme) => {
+const LabelClass = (
+  theme: TextInputTheme,
+  labelType: LabelType,
+  value: string,
+  isActive: boolean
+) => {
   const base = css`
-    transform: translate(5px, 100%);
+    padding-left: 12px;
+    transition: font-size 0.25s, transform 0.25s;
   `;
-  return { className: base };
+  const placeHolder = css`
+    padding-left: 12px;
+    transition: font-size 0.25s, transform 0.25s;
+    transform: translate(0, 17px);
+    font-size: 16px;
+  `;
+  if (labelType === LabelType.fixed) {
+    return { className: base };
+  }
+  if (labelType === LabelType.hidden) {
+    if (value || isActive) {
+      return {
+        className: css`
+          display: none;
+        `,
+      };
+    }
+    return { className: placeHolder };
+  }
+  if (value || isActive) {
+    return { className: base };
+  }
+  return {
+    className: placeHolder,
+  };
 };
 
 const InputClass = (theme: TextInputTheme) => {
@@ -89,6 +119,10 @@ const InputClass = (theme: TextInputTheme) => {
   return { className: base };
 };
 
+interface TextInputState {
+  isActive: boolean;
+}
+
 /**
  * Label
  * Container with activator
@@ -98,18 +132,41 @@ const InputClass = (theme: TextInputTheme) => {
  * icons (leading & trailing)
  */
 class TextInputImpl extends React.PureComponent<TextInputProps> {
+  state: TextInputState = {
+    isActive: false,
+  };
+  handleFocus = isFocused => () => {
+    this.setState({ isActive: isFocused });
+  };
+
   render() {
-    const { label, forwardedRef, theme: incomingTheme, ...defaultHostProps } = this.props;
+    const {
+      label,
+      value,
+      labelType,
+      status,
+      assistiveMsg,
+      leadingIcon,
+      trailingIcon,
+      forwardedRef,
+      theme: incomingTheme,
+      ...defaultHostProps
+    } = this.props;
     const theme = defaultTheme(incomingTheme);
     const hostProps = mergeProps(
       TextInputRootClass(theme),
       TypographyProps({ scale: 'Caption' }),
       defaultHostProps
     );
-    const labelProps = mergeProps(LabelClass(theme));
+    const labelProps = mergeProps(LabelClass(theme, labelType, value, this.state.isActive));
     const inputProps = mergeProps(TypographyProps({ scale: 'Subtitle1' }), InputClass(theme));
     return (
-      <div ref={forwardedRef} {...hostProps}>
+      <div
+        ref={forwardedRef}
+        {...hostProps}
+        onFocus={this.handleFocus(true)}
+        onBlur={this.handleFocus(false)}
+      >
         <div {...labelProps}>{label}</div>
         <input {...inputProps} />
       </div>
