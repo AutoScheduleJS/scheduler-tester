@@ -24,6 +24,7 @@ export enum TextInputStatus {
 export interface TextInputProps extends CustomableProps {
   label: string;
   value: string;
+  onNewVal: (val: string) => void;
   labelType?: LabelType;
   status?: TextInputStatus;
   assistiveMsg?: string;
@@ -214,17 +215,28 @@ interface TextInputState {
  * icons (leading & trailing)
  */
 class TextInputImpl extends React.PureComponent<TextInputProps> {
+  inputRef: React.RefObject<any>;
   state: TextInputState = {
     isActive: false,
   };
   handleFocus = isFocused => () => {
-    this.setState({ isActive: isFocused });
+    this.setState({ isActive: isFocused }, () => {
+      if (!isFocused) {
+        return;
+      }
+      this.inputRef.current.focus();
+    });
   };
+  constructor(props) {
+    super(props);
+    this.inputRef = React.createRef();
+  }
 
   render() {
     const {
       label,
       value,
+      onNewVal,
       labelType = LabelType.float,
       status = TextInputStatus.enabled,
       assistiveMsg,
@@ -240,17 +252,21 @@ class TextInputImpl extends React.PureComponent<TextInputProps> {
       TypographyProps({ scale: 'Caption', baselineTop: 20 }),
       LabelClass(theme, labelType, value, status, this.state.isActive)
     );
-    const inputProps = mergeProps(TypographyProps({ scale: 'Subtitle1' }), InputClass(theme));
+    const inputProps = mergeProps(TypographyProps({ scale: 'Subtitle1' }), InputClass(theme), {
+      value,
+      onChange: onNewVal,
+    });
     const activIndicatorProps = ActiveIndicatorClass(theme, status, this.state.isActive);
     return (
       <div
         ref={forwardedRef}
         {...hostProps}
+        onClick={this.handleFocus(true)}
         onFocus={this.handleFocus(true)}
         onBlur={this.handleFocus(false)}
       >
         <div {...labelProps}>{label}</div>
-        <input {...inputProps} />
+        <input {...inputProps} ref={this.inputRef} />
         <div {...activIndicatorProps} />
       </div>
     );
