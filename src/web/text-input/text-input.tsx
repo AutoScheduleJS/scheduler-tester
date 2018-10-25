@@ -15,7 +15,7 @@ export enum LabelType {
   hidden,
 }
 
-export enum LabelStatus {
+export enum TextInputStatus {
   enabled,
   disabled,
   error,
@@ -25,46 +25,82 @@ export interface TextInputProps extends CustomableProps {
   label: string;
   value: string;
   labelType?: LabelType;
-  status?: LabelStatus;
+  status?: TextInputStatus;
   assistiveMsg?: string;
   leadingIcon?: React.Component;
   trailingIcon?: React.Component;
   forwardedRef?: Ref<HTMLDivElement>;
 }
 
+interface TextInputStateTheme {
+  base: string;
+  inactive: string;
+  activated: string;
+  hover: string;
+  disabled: string;
+  error: string;
+}
+
 interface TextInputTheme {
   textInput: {
     size: number;
-    shape: string;
-    label: string;
+    container: TextInputStateTheme;
+    label: TextInputStateTheme;
     input: string;
-    backgroundColor: string;
-    errorColor: string;
-    activeColor: string;
   };
 }
 
-const defaultTheme = (theme: any): TextInputTheme =>
-  merge(
+const defaultTheme = (theme: any): TextInputTheme => {
+  const baseContainerShape = css`
+    height: 56px;
+    min-width: 280px;
+    border-radius: 4px 4px 0 0;
+    background-color: ${theme.palette.surface.baseEmphase + '0b'};
+  `;
+  const baseLabelShape = css`
+    color: ${theme.palette.surface.baseEmphase + theme.palette.surface.mediumEmphase};
+  `;
+  return merge(
     {
       textInput: {
-        backgroundColor: theme.palette.surface.on,
-        shape: css`
-          height: 56px;
-          min-width: 280px;
-          border-radius: 4px 4px 0 0;
-          color: ${theme.palette.secondary.main};
-        `,
+        container: {
+          base: baseContainerShape,
+          inactive: baseContainerShape,
+          activated: baseContainerShape,
+          hover: css`
+            ${baseContainerShape};
+            background-color: ${theme.palette.surface.baseEmphase + '14'};
+            border-bottom: 1px solid ${theme.palette.surface.baseEmphase + '32'};
+          `,
+          disabled: baseContainerShape,
+          error: baseContainerShape,
+        },
+        label: {
+          base: baseLabelShape,
+          inactive: baseLabelShape,
+          activated: css`
+            ${baseLabelShape};
+            color: ${theme.palette.secondary.main};
+          `,
+          hover: baseLabelShape,
+          disabled: css`
+            ${baseLabelShape};
+            color: ${theme.palette.surface.baseEmphase + theme.palette.surface.disabled};
+          `,
+        },
       },
     },
     theme
   );
+};
 
 const TextInputRootClass = (theme: TextInputTheme) => {
   const base = css`
     position: relative;
-    background-color: ${theme.textInput.backgroundColor};
-    ${theme.textInput.shape};
+    ${theme.textInput.container.inactive};
+    &:hover {
+      ${theme.textInput.container.hover};
+    }
   `;
   return { className: base };
 };
@@ -73,20 +109,29 @@ const LabelClass = (
   theme: TextInputTheme,
   labelType: LabelType,
   value: string,
+  status: TextInputStatus,
   isActive: boolean
 ) => {
-  const base = css`
+  const label = theme.textInput.label;
+  const color = isActive
+    ? label.activated
+    : status === TextInputStatus.disabled
+      ? label.disabled
+      : status === TextInputStatus.enabled ? label.inactive : label.error;
+  const floating = css`
     padding-left: 12px;
-    transition: font-size 0.25s, transform 0.25s;
+    transition: font-size 0.25s, transform 0.25s, color 0.25s;
+    color: ${color};
   `;
   const placeHolder = css`
     padding-left: 12px;
-    transition: font-size 0.25s, transform 0.25s;
+    transition: font-size 0.25s, transform 0.25s, color 0.25s;
     transform: translate(0, 14px);
     font-size: 16px;
+    color: ${color};
   `;
   if (labelType === LabelType.fixed) {
-    return { className: base };
+    return { className: floating };
   }
   if (labelType === LabelType.hidden) {
     if (value || isActive) {
@@ -99,7 +144,7 @@ const LabelClass = (
     return { className: placeHolder };
   }
   if (value || isActive) {
-    return { className: base };
+    return { className: floating };
   }
   return {
     className: placeHolder,
@@ -147,7 +192,7 @@ class TextInputImpl extends React.PureComponent<TextInputProps> {
       label,
       value,
       labelType = LabelType.float,
-      status,
+      status = TextInputStatus.enabled,
       assistiveMsg,
       leadingIcon,
       trailingIcon,
@@ -159,7 +204,7 @@ class TextInputImpl extends React.PureComponent<TextInputProps> {
     const hostProps = mergeProps(TextInputRootClass(theme), defaultHostProps);
     const labelProps = mergeProps(
       TypographyProps({ scale: 'Caption', baselineTop: 20 }),
-      LabelClass(theme, labelType, value, this.state.isActive)
+      LabelClass(theme, labelType, value, status, this.state.isActive)
     );
     const inputProps = mergeProps(TypographyProps({ scale: 'Subtitle1' }), InputClass(theme));
     return (
