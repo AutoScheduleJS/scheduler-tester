@@ -33,7 +33,6 @@ export interface TextInputProps extends CustomableProps {
 }
 
 interface TextInputStateTheme {
-  base: string;
   inactive: string;
   activated: string;
   hover: string;
@@ -46,6 +45,7 @@ interface TextInputTheme {
     size: number;
     container: TextInputStateTheme;
     label: TextInputStateTheme;
+    indicator: TextInputStateTheme;
     input: string;
   };
 }
@@ -60,11 +60,21 @@ const defaultTheme = (theme: any): TextInputTheme => {
   const baseLabelShape = css`
     color: ${theme.palette.surface.baseEmphase + theme.palette.surface.mediumEmphase};
   `;
+  const baseIndicatorShape = css`
+    position: absolute;
+    bottom: -2px;
+    height: 2px;
+    left: 0;
+    right: 0;
+    transform-origin: center;
+    transition: transform 0.25s, color 0.25s, height 0.25s;
+    background-color: ${theme.palette.secondary.main};
+    transform: scale(0, 0);
+  `;
   return merge(
     {
       textInput: {
         container: {
-          base: baseContainerShape,
           inactive: baseContainerShape,
           activated: baseContainerShape,
           hover: css`
@@ -76,7 +86,6 @@ const defaultTheme = (theme: any): TextInputTheme => {
           error: baseContainerShape,
         },
         label: {
-          base: baseLabelShape,
           inactive: baseLabelShape,
           activated: css`
             ${baseLabelShape};
@@ -86,6 +95,20 @@ const defaultTheme = (theme: any): TextInputTheme => {
           disabled: css`
             ${baseLabelShape};
             color: ${theme.palette.surface.baseEmphase + theme.palette.surface.disabled};
+          `,
+        },
+        indicator: {
+          inactive: baseIndicatorShape,
+          activated: css`
+            ${baseIndicatorShape};
+            transform: scale(1, 1);
+          `,
+          hover: baseIndicatorShape,
+          disabled: baseIndicatorShape,
+          error: css`
+            ${baseIndicatorShape};
+            transform: scale(1, 1);
+            color: 'red';
           `,
         },
       },
@@ -113,7 +136,7 @@ const LabelClass = (
   isActive: boolean
 ) => {
   const label = theme.textInput.label;
-  const color = isActive
+  const base = isActive
     ? label.activated
     : status === TextInputStatus.disabled
       ? label.disabled
@@ -121,14 +144,14 @@ const LabelClass = (
   const floating = css`
     padding-left: 12px;
     transition: font-size 0.25s, transform 0.25s, color 0.25s;
-    color: ${color};
+    ${base};
   `;
   const placeHolder = css`
     padding-left: 12px;
     transition: font-size 0.25s, transform 0.25s, color 0.25s;
     transform: translate(0, 14px);
     font-size: 16px;
-    color: ${color};
+    ${base};
   `;
   if (labelType === LabelType.fixed) {
     return { className: floating };
@@ -165,6 +188,17 @@ const InputClass = (theme: TextInputTheme) => {
     left: 12px;
   `;
   return { className: base };
+};
+
+const ActiveIndicatorClass = (
+  theme: TextInputTheme,
+  status: TextInputStatus,
+  isActive: boolean
+) => {
+  const indic = theme.textInput.indicator;
+  const indicClass =
+    status === TextInputStatus.error ? indic.error : isActive ? indic.activated : indic.inactive;
+  return { className: indicClass };
 };
 
 interface TextInputState {
@@ -207,6 +241,7 @@ class TextInputImpl extends React.PureComponent<TextInputProps> {
       LabelClass(theme, labelType, value, status, this.state.isActive)
     );
     const inputProps = mergeProps(TypographyProps({ scale: 'Subtitle1' }), InputClass(theme));
+    const activIndicatorProps = ActiveIndicatorClass(theme, status, this.state.isActive);
     return (
       <div
         ref={forwardedRef}
@@ -216,6 +251,7 @@ class TextInputImpl extends React.PureComponent<TextInputProps> {
       >
         <div {...labelProps}>{label}</div>
         <input {...inputProps} />
+        <div {...activIndicatorProps} />
       </div>
     );
   }
