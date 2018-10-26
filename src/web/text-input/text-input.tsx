@@ -254,7 +254,7 @@ class TextInputImpl extends React.PureComponent<TextInputProps> {
     );
     const inputProps = mergeProps(TypographyProps({ scale: 'Subtitle1' }), InputClass(theme), {
       value,
-      onChange: onNewVal,
+      onChange: e => onNewVal(e.target.value),
     });
     const activIndicatorProps = ActiveIndicatorClass(theme, status, this.state.isActive);
     return (

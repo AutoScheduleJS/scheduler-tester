@@ -1,10 +1,12 @@
 import { IQuery } from '@autoschedule/queries-fn';
 import { actionTrigger$ } from '@scheduler-tester/core-state/core.store';
 import { CancelQueryCreationAction } from '@scheduler-tester/core-state/global.ui.reducer';
+import { css } from 'emotion';
 import * as React from 'react';
 import { ButtonEmphaze } from './button/button';
 import { Dialog, DialogProps } from './modal/dialog';
 import { StButton } from './st-button';
+import { TextInput } from './text-input/text-input';
 
 interface INewQueryProps extends React.HTMLAttributes<HTMLDivElement> {
   forwardedRef?: React.Ref<HTMLDivElement>;
@@ -13,6 +15,10 @@ interface INewQueryProps extends React.HTMLAttributes<HTMLDivElement> {
 interface NewQueryState {
   query?: IQuery;
 }
+
+const cancelClassname = css`
+  margin-right: 8px;
+`;
 
 class NewQueryCmp extends React.PureComponent<INewQueryProps> {
   state: NewQueryState;
@@ -41,17 +47,20 @@ class NewQueryCmp extends React.PureComponent<INewQueryProps> {
   render() {
     const { style, forwardedRef, ...defaultHostProps } = this.props;
     const dialogProps: DialogProps = {
-      dialogTitle: `New Query`,
       actions: [
-        <StButton label={'cancel'} emphaze={ButtonEmphaze.Medium} onClick={this.handleCancel} />,
+        <StButton
+          label={'cancel'}
+          emphaze={ButtonEmphaze.Medium}
+          onClick={this.handleCancel}
+          className={cancelClassname}
+        />,
         <StButton label={'create'} emphaze={ButtonEmphaze.High} onClick={this.handleSave} />,
       ],
       content: (
-        <input
-          placeholder="name"
+        <TextInput
+          label={'Name'}
           value={this.state.query ? this.state.query.name : ''}
-          onChange={e => this.handleChange('name')(e.target.value)}
-        />
+          onNewVal={val => this.handleChange('name')(val)} />
       ),
       onCancel: this.handleCancel,
       ...defaultHostProps,

@@ -13,7 +13,7 @@ interface CustomableProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export interface DialogProps extends CustomableProps {
-  dialogTitle: string;
+  dialogTitle?: string;
   content?: React.ReactNode;
   scrim?: boolean;
   onCancel?: () => void;
@@ -69,6 +69,11 @@ const DialogRootClass = (theme: DialogTheme) => {
   };
 };
 
+const actionClassname = css`
+  display: flex;
+  justify-content: flex-end;
+`;
+
 class DialogImpl extends React.PureComponent<DialogProps> {
   componentDidMount() {
     if (this.props.scrim) {
@@ -101,13 +106,17 @@ class DialogImpl extends React.PureComponent<DialogProps> {
       DialogRootClass(theme),
       defaultHostProps
     );
+    const titleElem = dialogTitle ? (
+      <Typography scale={'H6'} baselineTop={theme.dialog.titleBaseline}>
+        {dialogTitle}
+      </Typography>
+    ) : null;
     return (
       <Modal>
         <div ref={forwardedRef} {...hostProps}>
-          <Typography scale={'H6'} baselineTop={theme.dialog.titleBaseline}>
-            {dialogTitle}
-          </Typography>
+          {titleElem}
           <div>{content}</div>
+          <div className={actionClassname}>{actions}</div>
         </div>
       </Modal>
     );
