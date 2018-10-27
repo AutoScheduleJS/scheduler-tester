@@ -30,7 +30,7 @@
     "intervals-fn": "^3.0.3",
     "lens.ts": "^0.5.1",
     "prop-types": "^15.6.2",
-    "react-spring": "^5.7.2"
+    "react-spring": "^6.1.3"
   },
   "devDependencies": {
     "@autoschedule/queries-fn": "^6.2.1",
