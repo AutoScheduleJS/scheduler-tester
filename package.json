@@ -49,7 +49,7 @@
     "parcel-bundler": "^1.9.2",
     "parcel-plugin-typescript": "^1.0.0",
     "prettier": "^1.11.1",
-    "react": "^16.4.2",
+    "react": "^16.6.3",
     "react-dom": "^16.4.2",
     "rxjs": "^6.2.1",
     "rxjs-tslint": "^0.1.5",
