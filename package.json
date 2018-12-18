@@ -46,7 +46,7 @@
     "concurrently": "^3.5.1",
     "del-cli": "^1.1.0",
     "nyc": "^12.0.2",
-    "parcel-bundler": "^1.9.2",
+    "parcel-bundler": "^1.11.0",
     "parcel-plugin-typescript": "^1.0.0",
     "prettier": "^1.11.1",
     "react": "^16.4.2",
