@@ -60,6 +60,6 @@
     "typescript": "^2.9.2",
     "typescript-styled-plugin": "^0.7.0",
     "vue": "^2.5.13",
-    "vue-rx": "^5.0.0"
+    "vue-rx": "^6.1.0"
   }
 }
