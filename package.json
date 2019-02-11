@@ -29,7 +29,7 @@
     "emotion-theming": "^9.2.6",
     "intervals-fn": "^3.0.3",
     "lens.ts": "^0.5.1",
-    "prop-types": "^15.6.2",
+    "prop-types": "^15.7.1",
     "react-spring": "^5.7.2"
   },
   "devDependencies": {
